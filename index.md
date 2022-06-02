@@ -21,7 +21,7 @@ options(repos = c(
 install.packages('kwb.impetus')
 
 # Browse the 'kwb.impetus manual pages
-help(package = ''kwb.impetus')
+help(package = 'kwb.impetus')
 ```
 ## Usage 
 
