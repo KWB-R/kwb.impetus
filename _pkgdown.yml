@@ -2,8 +2,11 @@ url: https://kwb-r.github.io/kwb.impetus
 authors:
   Michael Rustler:
     href: https://mrustl.de
+  IMPETUS:
+    href: <img src='https://climate-impetus.eu/wp-content/uploads/2021/12/horizontal.png' 
+      alt='Project IMPETUS' width='72' />
   Kompetenzzentrum Wasser Berlin gGmbH (KWB):
-    href: http://www.kompetenz-wasser.de
+    href: https://www.kompetenz-wasser.de
     html: <img src='https://publications.kompetenz-wasser.de/img/KWB-Logo.svg' alt='KWB'
       width='72' />
 template:
