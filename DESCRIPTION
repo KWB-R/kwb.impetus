@@ -1,0 +1,21 @@
+Package: kwb.impetus
+Title: R Package with Functions Used in Project IMPETUS
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Michael", "Rustler", , "michael.rustler@kompetenz-wasser.de", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-0647-7726")),
+    person("Kompetenzzentrum Wasser Berlin gGmbH (KWB)", role = "cph")
+  )
+Description: R Package with Functions used in Project IMPETUS.
+License: MIT + file LICENSE
+URL: https://github.com/KWB-R/kwb.impetus
+BugReports: https://github.com/KWB-R/kwb.impetus/issues
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Suggests: 
+    covr,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
