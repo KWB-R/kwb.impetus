@@ -29,7 +29,7 @@ VignetteBuilder:
 Remotes:
     github::kwb-r/kwb.utils,
     github::kwb-r/kwb.pkgbuild,
-    github::kwb-r/wasserportal@dev
+    github::kwb-r/wasserportal
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
