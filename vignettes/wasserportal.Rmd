@@ -82,7 +82,9 @@ scale_color_decades <- function(decades, ...){
 
 ```
 
-
+```{r no_messages, echo = FALSE}
+options(dplyr.summarise.inform = FALSE)
+```
 
 ## Surface Water 
 
