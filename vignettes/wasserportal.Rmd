@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Install R Package
 
-```{r install_r_package}
+```{r install_r_package, eval = FALSE}
 # Enable repository from kwb-r
 options(repos = c(
   kwbr = 'https://kwb-r.r-universe.dev',
