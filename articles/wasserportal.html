@@ -80,9 +80,20 @@
     
     
 <div class="section level2">
-<h2 id="helper-functions">Helper Functions<a class="anchor" aria-label="anchor" href="#helper-functions"></a>
+<h2 id="install-r-package">Install R Package<a class="anchor" aria-label="anchor" href="#install-r-package"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Enable repository from kwb-r</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  kwbr <span class="op">=</span> <span class="st">'https://kwb-r.r-universe.dev'</span>,</span>
+<span>  CRAN <span class="op">=</span> <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Download and install kwb.impetus in R</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'kwb.impetus'</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="define-helper-functions">Define Helper Functions<a class="anchor" aria-label="anchor" href="#define-helper-functions"></a>
+</h2>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/KWB-R/kwb.impetus" class="external-link">kwb.impetus</a></span><span class="op">)</span></span>
 <span><span class="va">csv_to_list</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">variables</span><span class="op">)</span> <span class="op">{</span></span>
 <span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">variables</span><span class="op">)</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
@@ -137,9 +148,9 @@
 <div class="section level2">
 <h2 id="surface-water">Surface Water<a class="anchor" aria-label="anchor" href="#surface-water"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">stations</span> <span class="op">&lt;-</span> <span class="fu">wasserportal</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/wasserportal/man/get_stations.html" class="external-link">get_stations</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing 9 station overviews from Wasserportal Berlin ... ok. (9.11s)</span></span>
+<span><span class="co">#&gt; Importing 9 station overviews from Wasserportal Berlin ... ok. (9.87s)</span></span>
 <span><span class="va">variables</span> <span class="op">&lt;-</span> <span class="fu">wasserportal</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/wasserportal/man/get_surfacewater_variables.html" class="external-link">get_surfacewater_variables</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">variables</span> <span class="op">&lt;-</span> <span class="va">variables</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span>
 <span><span class="va">variables</span></span>
@@ -151,7 +162,7 @@
 <span></span>
 <span><span class="va">wp_master</span> <span class="op">&lt;-</span> <span class="fu">get_master</span><span class="op">(</span><span class="va">stations</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Messstellennummer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">as.double</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Messstellennummer</span><span class="op">)</span><span class="op">)</span> </span>
-<span><span class="co">#&gt; Importing 74 station metadata from Wasserportal Berlin ... ok. (36.69s)</span></span>
+<span><span class="co">#&gt; Importing 74 station metadata from Wasserportal Berlin ... ok. (45.86s)</span></span>
 <span></span>
 <span><span class="va">wp_data</span> <span class="op">&lt;-</span> <span class="fu">csv_to_list</span><span class="op">(</span><span class="va">variables</span><span class="op">)</span> </span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">470435</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">5</span></span></span>
@@ -175,7 +186,7 @@
 <div class="section level3">
 <h3 id="surface-water-level">Surface Water Level<a class="anchor" aria-label="anchor" href="#surface-water-level"></a>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">surfacewater_level_master</span> <span class="op">&lt;-</span> <span class="va">wp_data</span><span class="op">$</span><span class="va">surface_water.water_level</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Parameter</span> <span class="op">==</span> <span class="st">"Wasserstand"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Datum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Datum</span><span class="op">)</span>,</span>
@@ -207,8 +218,6 @@
 <span>                   q05 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert_Pegelstand_mNN</span>, probs <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                   q95 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert_Pegelstand_mNN</span>, probs <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                   <span class="op">)</span> </span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Dekade',</span></span>
-<span><span class="co">#&gt; 'Dekade_Label', 'Monat'. You can override using the `.groups` argument.</span></span>
 <span></span>
 <span></span>
 <span><span class="va">decades</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">surfacewater_level_master_agg</span><span class="op">$</span><span class="va">Dekade_Label</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">surfacewater_level_master_agg</span><span class="op">$</span><span class="va">Dekade_Label</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>,</span>
@@ -274,132 +283,6 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gg</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; agg_png </span></span>
 <span><span class="co">#&gt;       2</span></span></code></pre></div>
@@ -407,7 +290,7 @@
 <div class="section level3">
 <h3 id="surface-water-flow">Surface Water Flow<a class="anchor" aria-label="anchor" href="#surface-water-flow"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">surfacewater_flow_master</span> <span class="op">&lt;-</span> <span class="va">wp_data</span><span class="op">$</span><span class="va">surface_water.flow</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Parameter</span> <span class="op">==</span> <span class="st">"Durchfluss"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>    </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Datum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Datum</span><span class="op">)</span>,</span>
@@ -435,8 +318,6 @@
 <span>                   q05 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert</span>, probs <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                   q95 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert</span>, probs <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                   <span class="op">)</span> </span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Dekade',</span></span>
-<span><span class="co">#&gt; 'Dekade_Label', 'Monat'. You can override using the `.groups` argument.</span></span>
 <span></span>
 <span></span>
 <span></span>
@@ -505,38 +386,6 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gg</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'Messstellennummer', 'Jahr', 'Monat'. You</span></span>
-<span><span class="co">#&gt; can override using the `.groups` argument.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; agg_png </span></span>
 <span><span class="co">#&gt;       2</span></span></code></pre></div>
