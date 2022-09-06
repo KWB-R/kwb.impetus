@@ -62,6 +62,10 @@ round_to_decade <- function(values) {
   }))
 }
 
+floor_decade <- function(value) { 
+  value - value %% 10 
+}
+
 scale_fill_decades <- function(decades, ...){
     ggplot2:::manual_scale(
         'fill', 
@@ -94,13 +98,18 @@ variables <- wasserportal::get_surfacewater_variables()
 variables <- variables[1:2]
 variables
 
-# sw_data_daily_list <- wasserportal::get_daily_surfacewater_data(stations,
-#                                                           variables)
-
 wp_master <- get_master(stations) %>% 
   dplyr::mutate(Messstellennummer = as.double(.data$Messstellennummer)) 
 
+
+# Downloads pre-compiled data (daily updated at 5am UTC) 
+# from https://kwb-r.github.io/wasserportal/daily_surface_water.<parameter_name>.csv
+# see also: https://kwb-r.github.io/wasserportal/articles/surface-water.html
 wp_data <- csv_to_list(variables) 
+
+### Alternatively: download latest data from Wasserportal Berlin (takes a while)
+# wp_data <- wasserportal::get_daily_surfacewater_data(stations, variables) 
+
 
 ```
 
@@ -111,10 +120,10 @@ surfacewater_level_master <- wp_data$surface_water.water_level %>%
   dplyr::filter(.data$Parameter == "Wasserstand") %>%  
   dplyr::mutate(Datum = as.Date(.data$Datum),
                 Jahr = as.integer(format(.data$Datum, "%Y")), 
-                Dekade = round_to_decade(.data$Jahr),
+                Dekade = floor_decade(.data$Jahr),
                 Dekade_Label = sprintf("%d - %d", 
-                                       .data$Dekade - 5, 
-                                       .data$Dekade + 4),
+                                       .data$Dekade, 
+                                       .data$Dekade + 9),
                 Monat = as.factor(format(.data$Datum, "%m"))) %>% 
   dplyr::left_join(wp_master) %>% 
   dplyr::mutate(Tagesmittelwert_Pegelstand_mNN = as.numeric(.data$Pegelnullpunkt_m) + .data$Tagesmittelwert/100) %>%
@@ -212,10 +221,10 @@ surfacewater_flow_master <- wp_data$surface_water.flow %>%
   dplyr::filter(.data$Parameter == "Durchfluss") %>%    
   dplyr::mutate(Datum = as.Date(.data$Datum),
                 Jahr = as.integer(format(.data$Datum, "%Y")), 
-                Dekade = round_to_decade(.data$Jahr),
+                Dekade = floor_decade(.data$Jahr),
                 Dekade_Label = sprintf("%d - %d", 
-                                       .data$Dekade - 5, 
-                                       .data$Dekade + 4),
+                                       .data$Dekade, 
+                                       .data$Dekade + 9),
                 Monat = as.factor(format(.data$Datum, "%m"))) %>% 
   dplyr::left_join(wp_master) %>% 
   dplyr::mutate(Label = sprintf("%s (%s, id: %s, fluss-km: %2.2f)", 
