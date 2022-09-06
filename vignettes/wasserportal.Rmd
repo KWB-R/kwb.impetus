@@ -14,8 +14,19 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Install R Package
 
-## Helper Functions 
+```{r install_r_package}
+# Enable repository from kwb-r
+options(repos = c(
+  kwbr = 'https://kwb-r.r-universe.dev',
+  CRAN = 'https://cloud.r-project.org'))
+# Download and install kwb.impetus in R
+install.packages('kwb.impetus')
+```
+
+
+## Define Helper Functions 
 
 ```{r helper_functions}
 library(kwb.impetus)
