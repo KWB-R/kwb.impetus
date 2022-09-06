@@ -127,6 +127,10 @@
 <span>  <span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
+<span><span class="va">floor_decade</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">{</span> </span>
+<span>  <span class="va">value</span> <span class="op">-</span> <span class="va">value</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html" class="external-link">%%</a></span> <span class="fl">10</span> </span>
+<span><span class="op">}</span></span>
+<span></span>
 <span><span class="va">scale_fill_decades</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">decades</span>, <span class="va">...</span><span class="op">)</span><span class="op">{</span></span>
 <span>    <span class="fu">ggplot2</span><span class="fu">:::</span><span class="fu">manual_scale</span><span class="op">(</span></span>
 <span>        <span class="st">'fill'</span>, </span>
@@ -150,20 +154,21 @@
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">stations</span> <span class="op">&lt;-</span> <span class="fu">wasserportal</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/wasserportal/man/get_stations.html" class="external-link">get_stations</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing 9 station overviews from Wasserportal Berlin ... ok. (9.87s)</span></span>
+<span><span class="co">#&gt; Importing 9 station overviews from Wasserportal Berlin ... ok. (11.13s)</span></span>
 <span><span class="va">variables</span> <span class="op">&lt;-</span> <span class="fu">wasserportal</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/wasserportal/man/get_surfacewater_variables.html" class="external-link">get_surfacewater_variables</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">variables</span> <span class="op">&lt;-</span> <span class="va">variables</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span>
 <span><span class="va">variables</span></span>
 <span><span class="co">#&gt; surface_water.water_level        surface_water.flow </span></span>
 <span><span class="co">#&gt;                      "ws"                      "df"</span></span>
 <span></span>
-<span><span class="co"># sw_data_daily_list &lt;- wasserportal::get_daily_surfacewater_data(stations,</span></span>
-<span><span class="co">#                                                           variables)</span></span>
-<span></span>
 <span><span class="va">wp_master</span> <span class="op">&lt;-</span> <span class="fu">get_master</span><span class="op">(</span><span class="va">stations</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Messstellennummer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">as.double</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Messstellennummer</span><span class="op">)</span><span class="op">)</span> </span>
-<span><span class="co">#&gt; Importing 74 station metadata from Wasserportal Berlin ... ok. (45.86s)</span></span>
+<span><span class="co">#&gt; Importing 74 station metadata from Wasserportal Berlin ... ok. (59.74s)</span></span>
 <span></span>
+<span></span>
+<span><span class="co"># Downloads pre-compiled data (daily updated at 5am UTC) </span></span>
+<span><span class="co"># from https://kwb-r.github.io/wasserportal/daily_surface_water.&lt;parameter_name&gt;.csv</span></span>
+<span><span class="co"># see also: https://kwb-r.github.io/wasserportal/articles/surface-water.html</span></span>
 <span><span class="va">wp_data</span> <span class="op">&lt;-</span> <span class="fu">csv_to_list</span><span class="op">(</span><span class="va">variables</span><span class="op">)</span> </span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">470435</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">5</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span></span>
@@ -182,7 +187,10 @@
 <span><span class="co">#&gt; <span style="color: #0000BB;">date</span> (1): Datum</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
+<span></span>
+<span><span class="co">### Alternatively: download latest data from Wasserportal Berlin (takes a while)</span></span>
+<span><span class="co"># wp_data &lt;- wasserportal::get_daily_surfacewater_data(stations, variables) </span></span></code></pre></div>
 <div class="section level3">
 <h3 id="surface-water-level">Surface Water Level<a class="anchor" aria-label="anchor" href="#surface-water-level"></a>
 </h3>
@@ -191,10 +199,10 @@
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Parameter</span> <span class="op">==</span> <span class="st">"Wasserstand"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Datum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Datum</span><span class="op">)</span>,</span>
 <span>                Jahr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Datum</span>, <span class="st">"%Y"</span><span class="op">)</span><span class="op">)</span>, </span>
-<span>                Dekade <span class="op">=</span> <span class="fu">round_to_decade</span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Jahr</span><span class="op">)</span>,</span>
+<span>                Dekade <span class="op">=</span> <span class="fu">floor_decade</span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Jahr</span><span class="op">)</span>,</span>
 <span>                Dekade_Label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%d - %d"</span>, </span>
-<span>                                       <span class="va">.data</span><span class="op">$</span><span class="va">Dekade</span> <span class="op">-</span> <span class="fl">5</span>, </span>
-<span>                                       <span class="va">.data</span><span class="op">$</span><span class="va">Dekade</span> <span class="op">+</span> <span class="fl">4</span><span class="op">)</span>,</span>
+<span>                                       <span class="va">.data</span><span class="op">$</span><span class="va">Dekade</span>, </span>
+<span>                                       <span class="va">.data</span><span class="op">$</span><span class="va">Dekade</span> <span class="op">+</span> <span class="fl">9</span><span class="op">)</span>,</span>
 <span>                Monat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Datum</span>, <span class="st">"%m"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">wp_master</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Tagesmittelwert_Pegelstand_mNN <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Pegelnullpunkt_m</span><span class="op">)</span> <span class="op">+</span> <span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -295,10 +303,10 @@
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Parameter</span> <span class="op">==</span> <span class="st">"Durchfluss"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>    </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Datum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Datum</span><span class="op">)</span>,</span>
 <span>                Jahr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Datum</span>, <span class="st">"%Y"</span><span class="op">)</span><span class="op">)</span>, </span>
-<span>                Dekade <span class="op">=</span> <span class="fu">round_to_decade</span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Jahr</span><span class="op">)</span>,</span>
+<span>                Dekade <span class="op">=</span> <span class="fu">floor_decade</span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Jahr</span><span class="op">)</span>,</span>
 <span>                Dekade_Label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%d - %d"</span>, </span>
-<span>                                       <span class="va">.data</span><span class="op">$</span><span class="va">Dekade</span> <span class="op">-</span> <span class="fl">5</span>, </span>
-<span>                                       <span class="va">.data</span><span class="op">$</span><span class="va">Dekade</span> <span class="op">+</span> <span class="fl">4</span><span class="op">)</span>,</span>
+<span>                                       <span class="va">.data</span><span class="op">$</span><span class="va">Dekade</span>, </span>
+<span>                                       <span class="va">.data</span><span class="op">$</span><span class="va">Dekade</span> <span class="op">+</span> <span class="fl">9</span><span class="op">)</span>,</span>
 <span>                Monat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Datum</span>, <span class="st">"%m"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">wp_master</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%s (%s, id: %s, fluss-km: %2.2f)"</span>, </span>
