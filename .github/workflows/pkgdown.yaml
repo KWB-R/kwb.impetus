@@ -4,12 +4,15 @@ on:
       - main
       - master
       - dev
-
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    # Run this job every month on the 2nd at 05:00 a.m UTC ('0 5 * * *')
+    - cron:  '0 5 2 * *'
 name: pkgdown
 
 jobs:
   pkgdown:
-    runs-on: windows-latest
+    runs-on: macOS-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -41,10 +44,9 @@ jobs:
 
       - name: Install package
         run: R CMD INSTALL .
-        shell: cmd
 
       - name: Deploy package
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          Rscript -e 'pkgdown::deploy_to_branch(new_process = FALSE)'
+          Rscript -e 'kwb.pkgbuild::deploy_to_branch_with_extra_files(vignettes_file_pattern_to_copy = "\\\.json$|\\\.csv$|\\\.html$")'
