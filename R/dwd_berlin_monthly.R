@@ -16,10 +16,11 @@
 #'   \item{parameter}{parameter name}
 #'   \item{url}{full url to raw data file}
 #' }
+#' @export
 #' @examples 
 #' \dontrun{
 #' ############################################################################
-#' #### R code used for creation of "dwd_berlin_monthly.rds§ 
+#' #### R code used for creation of "dwd_berlin_monthly.rds"
 #' ############################################################################
 #' 
 #' remotes::install_github("kwb-r/kwb.dwd@dev")

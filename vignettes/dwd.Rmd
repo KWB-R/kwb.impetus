@@ -1,0 +1,21 @@
+---
+title: "Deutscher Wetterdienst (DWD)"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Deutscher Wetterdienst (DWD)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(kwb.impetus)
+
+DT::datatable(kwb.impetus::dwd_berlin_monthly)
+```

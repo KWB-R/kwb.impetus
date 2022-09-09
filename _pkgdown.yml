@@ -22,3 +22,17 @@ template:
 development:
   mode: auto
 
+navbar:
+ components:
+   articles:
+    text: Articles
+    menu:
+    - text: "Data Analysis"
+    - text: DWD
+      href: articles/dwd.html
+    - text: Wasserportal
+      href: articles/wasserportal.html
+    - text: -------
+    - text: "Modelling"
+    - text: not available yet!
+    #  href: articles/b1.html

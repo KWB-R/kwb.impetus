@@ -16,6 +16,7 @@ Imports:
 Suggests: 
     covr,
     dplyr,
+    DT,
     ggplot2,
     jsonlite,
     knitr,

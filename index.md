@@ -25,4 +25,12 @@ help(package = 'kwb.impetus')
 ```
 ## Usage 
 
-Checkout the [Workflow](articles/workflow.html) article on how to use this R package.
+Checkout the `Data Analysis` workflows for the Berlin case study site: 
+
+- [Deutscher Wetterdienst (DWD)](articles/dwd.html) using monthly open-data on 
+`precitiptation` (`1881-01` - `2022-08`) and `potential evaporation` 
+(`1991-01` - `2022-08`). For details on how this dataset was pre-processed, see 
+here: [dwd_berlin_monthly](reference/dwd_berlin_monthly.html) and
+
+- [Wasserportal](articles/wasserportal.html) for `surface water level/flow` and 
+`groundwater level` from Berlin (https://wasserportal.berlin.de).
