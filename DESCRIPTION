@@ -19,6 +19,7 @@ Suggests:
     ggplot2,
     jsonlite,
     knitr,
+    kwb.dwd,
     kwb.utils,
     kwb.pkgbuild,
     readr,
@@ -27,6 +28,7 @@ Suggests:
 VignetteBuilder: 
     knitr
 Remotes:
+    github::kwb-r/kwb.dwd@dev,
     github::kwb-r/kwb.utils,
     github::kwb-r/kwb.pkgbuild,
     github::kwb-r/wasserportal
@@ -34,3 +36,5 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
+Depends: 
+    R (>= 2.10)
