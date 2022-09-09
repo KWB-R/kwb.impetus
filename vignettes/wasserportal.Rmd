@@ -62,37 +62,6 @@ get_master_name <- function(para_name) {
 }
 
 
-round_to_decade <- function(values) {
-  unlist(lapply(values, function(value) {
-   decade <- value - value %% 10 
-     if (value %% 10 >= 5) {
-       decade <- decade + 10
-     }
-   decade
-  }))
-}
-
-floor_decade <- function(value) { 
-  value - value %% 10 
-}
-
-scale_fill_decades <- function(decades, ...){
-    ggplot2:::manual_scale(
-        'fill', 
-        values = setNames(decades$values, 
-                          decades$names), 
-        ...
-    )
-}
-
-scale_color_decades <- function(decades, ...){
-    ggplot2:::manual_scale(
-        'color', 
-        values = setNames(decades$values, 
-                          decades$names), 
-        ...
-    )
-}
 
 ```
 
@@ -131,7 +100,7 @@ surfacewater_level_master <- wp_data[[get_data_name(para_name)]] %>%
   dplyr::filter(.data$Parameter == "Wasserstand") %>%  
   dplyr::mutate(Datum = as.Date(.data$Datum),
                 Jahr = as.integer(format(.data$Datum, "%Y")), 
-                Dekade = floor_decade(.data$Jahr),
+                Dekade = kwb.impetus::floor_decade(.data$Jahr),
                 Dekade_Label = sprintf("%d - %d", 
                                        .data$Dekade, 
                                        .data$Dekade + 9),
@@ -196,8 +165,8 @@ gg <- p1 %>%
                                            ymax = "q95", 
                                            fill = "Dekade_Label"), 
                        alpha = 0.1) + 
-  scale_fill_decades(decades) +
-  scale_color_decades(decades) +
+  kwb.impetus::scale_fill_decades(decades) +
+  kwb.impetus::scale_color_decades(decades) +
   ggplot2::geom_point() +
   ggplot2::geom_point(ggplot2::aes(x = as.integer(.data$Monat),
                                    y = .data$Monatsmittelwert_Pegelstand_mNN), 
@@ -234,7 +203,7 @@ surfacewater_flow_master <- wp_data[[get_data_name(para_name)]] %>%
   dplyr::filter(.data$Parameter == "Durchfluss") %>%    
   dplyr::mutate(Datum = as.Date(.data$Datum),
                 Jahr = as.integer(format(.data$Datum, "%Y")), 
-                Dekade = floor_decade(.data$Jahr),
+                Dekade = kwb.impetus::floor_decade(.data$Jahr),
                 Dekade_Label = sprintf("%d - %d", 
                                        .data$Dekade, 
                                        .data$Dekade + 9),
@@ -298,8 +267,8 @@ gg <- p1 %>%
                                            ymax = "q95", 
                                            fill = "Dekade_Label"), 
                        alpha = 0.1) + 
-  scale_fill_decades(decades) +
-  scale_color_decades(decades) +
+  kwb.impetus::scale_fill_decades(decades) +
+  kwb.impetus::scale_color_decades(decades) +
   ggplot2::geom_point() +
   ggplot2::geom_point(ggplot2::aes(x = as.integer(.data$Monat),
                                    y = .data$Monatsmittelwert), 
@@ -339,7 +308,7 @@ groundwater_level_master <- wp_data[[get_data_name(para_name)]] %>%
   dplyr::filter(.data$Parameter == "GW-Stand") %>%    
   dplyr::mutate(Datum = as.Date(.data$Datum),
                 Jahr = as.integer(format(.data$Datum, "%Y")), 
-                Dekade = floor_decade(.data$Jahr),
+                Dekade = kwb.impetus::floor_decade(.data$Jahr),
                 Dekade_Label = sprintf("%d - %d", 
                                        .data$Dekade, 
                                        .data$Dekade + 9),
@@ -403,8 +372,8 @@ gg <- p1 %>%
                                            ymax = "q95", 
                                            fill = "Dekade_Label"), 
                        alpha = 0.1) + 
-  scale_fill_decades(decades) +
-  scale_color_decades(decades) +
+  kwb.impetus::scale_fill_decades(decades) +
+  kwb.impetus::scale_color_decades(decades) +
   ggplot2::geom_point() +
   ggplot2::geom_point(ggplot2::aes(x = as.integer(.data$Monat),
                                    y = .data$Monatsmittelwert), 

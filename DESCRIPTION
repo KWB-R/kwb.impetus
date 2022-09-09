@@ -12,12 +12,12 @@ License: MIT + file LICENSE
 URL: https://github.com/KWB-R/kwb.impetus
 BugReports: https://github.com/KWB-R/kwb.impetus/issues
 Imports: 
+    ggplot2,
     magrittr
 Suggests: 
     covr,
     dplyr,
     DT,
-    ggplot2,
     jsonlite,
     knitr,
     kwb.dwd,
