@@ -162,7 +162,7 @@
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">stations</span> <span class="op">&lt;-</span> <span class="fu">wasserportal</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/wasserportal/man/get_stations.html" class="external-link">get_stations</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing 9 station overviews from Wasserportal Berlin ... ok. (11.27s)</span></span>
+<span><span class="co">#&gt; Importing 9 station overviews from Wasserportal Berlin ... ok. (10.34s)</span></span>
 <span><span class="va">variables</span> <span class="op">&lt;-</span> <span class="fu">wasserportal</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/wasserportal/man/get_surfacewater_variables.html" class="external-link">get_surfacewater_variables</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">variables</span> <span class="op">&lt;-</span> <span class="va">variables</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span>
 <span> </span>
@@ -249,7 +249,7 @@
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
 <span><span class="va">wp_data</span> <span class="op">&lt;-</span> <span class="fu">wasserportal</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/wasserportal/man/wp_timeseries_data_to_list.html" class="external-link">wp_timeseries_data_to_list</a></span><span class="op">(</span><span class="va">overview_names</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">470565</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">5</span></span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">470626</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">5</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Delimiter:</span> ","</span></span>
 <span><span class="co">#&gt; <span style="color: #BB0000;">chr</span>  (2): Parameter, Einheit</span></span>
@@ -258,7 +258,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">110361</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">5</span></span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">110374</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">5</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Delimiter:</span> ","</span></span>
 <span><span class="co">#&gt; <span style="color: #BB0000;">chr</span>  (2): Parameter, Einheit</span></span>
@@ -267,7 +267,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">178182</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">9</span></span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">178228</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">9</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Delimiter:</span> ","</span></span>
 <span><span class="co">#&gt; <span style="color: #BB0000;">chr</span>  (4): Zeitpunkt Minimum, Zeitpunkt Maximum, Parameter, Einheit</span></span>
@@ -276,7 +276,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">79097</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">9</span></span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">79098</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">9</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Delimiter:</span> ","</span></span>
 <span><span class="co">#&gt; <span style="color: #BB0000;">chr</span>  (4): Zeitpunkt Minimum, Zeitpunkt Maximum, Parameter, Einheit</span></span>
@@ -304,7 +304,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">77913</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">9</span></span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">77923</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">9</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Delimiter:</span> ","</span></span>
 <span><span class="co">#&gt; <span style="color: #BB0000;">chr</span>  (4): Zeitpunkt Minimum, Zeitpunkt Maximum, Parameter, Einheit</span></span>
@@ -313,19 +313,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
-<span><span class="co">#&gt; ⠙ 0 extracted |  79 MB ( 16 MB/s) | 4.9s</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ⠹ 0 extracted | 121 MB ( 15 MB/s) | 8s</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ⠸ 0 extracted | 155 MB ( 14 MB/s) | 11s</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ⠼ 0 extracted | 193 MB ( 14 MB/s) | 14.1s</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ⠴ 0 extracted | 237 MB ( 14 MB/s) | 17.2s</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ⠦ 0 extracted | 275 MB ( 14 MB/s) | 20.3s</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">7285180</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">5</span></span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">7285204</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">5</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Delimiter:</span> ","</span></span>
 <span><span class="co">#&gt; <span style="color: #BB0000;">chr</span>  (2): Parameter, Einheit</span></span>
@@ -373,7 +361,7 @@
 <span>                                <span class="va">.data</span><span class="op">$</span><span class="va">Gewaesser</span>, </span>
 <span>                                <span class="va">.data</span><span class="op">$</span><span class="va">Messstellennummer</span>, </span>
 <span>                                <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Flusskilometer</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing 63 station metadata from Wasserportal Berlin ... ok. (34.79s)</span></span>
+<span><span class="co">#&gt; Importing 63 station metadata from Wasserportal Berlin ... ok. (38.93s)</span></span>
 <span><span class="co">#&gt; Joining, by = "Messstellennummer"</span></span>
 <span></span>
 <span><span class="va">surfacewater_level_master_agg</span> <span class="op">&lt;-</span> <span class="va">surfacewater_level_master</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
@@ -476,7 +464,7 @@
 <span>                                <span class="va">.data</span><span class="op">$</span><span class="va">Gewaesser</span>, </span>
 <span>                                <span class="va">.data</span><span class="op">$</span><span class="va">Messstellennummer</span>, </span>
 <span>                                <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Flusskilometer</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing 16 station metadata from Wasserportal Berlin ... ok. (10.42s)</span></span>
+<span><span class="co">#&gt; Importing 16 station metadata from Wasserportal Berlin ... ok. (10.32s)</span></span>
 <span><span class="co">#&gt; Joining, by = "Messstellennummer"</span></span>
 <span></span>
 <span><span class="va">surfacewater_flow_master_agg</span> <span class="op">&lt;-</span> <span class="va">surfacewater_flow_master</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
@@ -590,7 +578,7 @@
 <span>                                <span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">as.double</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Gelaendeoberkante_GOK_m_ue_NHN</span><span class="op">)</span>,</span>
 <span>                                <span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">as.double</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Filteroberkante_m_u_GOK</span><span class="op">)</span>, </span>
 <span>                                <span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">as.double</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Filterunterkante_m_u_GOK</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing 878 station metadata from Wasserportal Berlin ... ok. (7.95s)</span></span>
+<span><span class="co">#&gt; Importing 878 station metadata from Wasserportal Berlin ... ok. (9.01s)</span></span>
 <span><span class="co">#&gt; Joining, by = "Messstellennummer"</span></span>
 <span></span>
 <span><span class="va">groundwater_level_master_agg</span> <span class="op">&lt;-</span> <span class="va">groundwater_level_master</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
