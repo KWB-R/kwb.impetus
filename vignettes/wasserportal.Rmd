@@ -75,7 +75,7 @@ label_river_km <- function(data) {
   )
 }
 
-set_date_year_decade_month_columns <- function(data) {
+set_date_year_decade_month <- function(data) {
   data %>% 
     dplyr::mutate(
       Datum = as.Date(.data$Datum),
@@ -102,6 +102,54 @@ decade_ribbons <- function(alpha = 0.1) {
     ), 
     alpha = alpha
   )
+}
+
+group_by_site_decade_month_label <- function(data) {
+  data %>%
+    dplyr::group_by(
+      .data$Messstellennummer, 
+      .data$Dekade,
+      .data$Dekade_Label, 
+      .data$Monat, 
+      .data$Label
+    )
+}
+
+group_by_site_year_month_label <- function(data) {
+  data %>%
+    dplyr::group_by(
+      .data$Messstellennummer, 
+      .data$Jahr,
+      .data$Monat, 
+      .data$Label
+    )
+}
+
+summarise_daily_mean_levels <- function(data) {
+  data %>%
+    dplyr::summarise(
+      Monatsmittelwert_Pegelstand_mNN = mean(.data$Tagesmittelwert_Pegelstand_mNN),
+      q05 = numeric_quantile(.data$Tagesmittelwert_Pegelstand_mNN, 0.05),
+      q95 = numeric_quantile(.data$Tagesmittelwert_Pegelstand_mNN, 0.95)
+    )
+}
+
+summarise_daily_mean_values <- function(data) {
+  data %>%
+    dplyr::summarise(
+      Monatsmittelwert = mean(.data$Tagesmittelwert),
+      q05 = numeric_quantile(.data$Tagesmittelwert, 0.05),
+      q95 = numeric_quantile(.data$Tagesmittelwert, 0.95),
+    ) 
+}
+
+summarise_measurements <- function(data) {
+  data %>%
+    dplyr::summarise(
+      Monatsmittelwert = mean(.data$Messwert),
+      q05 = numeric_quantile(.data$Messwert, 0.05),
+      q95 = numeric_quantile(.data$Messwert, 0.95),
+    ) 
 }
 ```
 
@@ -137,7 +185,7 @@ para_name <- "surface-water_water-level"
 
 surfacewater_level_master <- wp_data[[get_data_name(para_name)]] %>% 
   dplyr::filter(.data$Parameter == "Wasserstand") %>%  
-  set_date_year_decade_month_columns() %>%
+  set_date_year_decade_month() %>%
   dplyr::left_join(get_master(wp_master[[get_master_name(para_name)]])) %>% 
   dplyr::mutate(
     Tagesmittelwert_Pegelstand_mNN = as.numeric(.data$Pegelnullpunkt_m) +
@@ -149,18 +197,8 @@ surfacewater_level_master <- wp_data[[get_data_name(para_name)]] %>%
   dplyr::mutate(Label = label_river_km(.data))
 
 surfacewater_level_master_agg <- surfacewater_level_master %>% 
-  dplyr::group_by(
-    .data$Messstellennummer, 
-    .data$Dekade,
-    .data$Dekade_Label, 
-    .data$Monat, 
-    .data$Label
-  ) %>% 
-  dplyr::summarise(
-    Monatsmittelwert_Pegelstand_mNN = mean(.data$Tagesmittelwert_Pegelstand_mNN),
-    q05 = numeric_quantile(.data$Tagesmittelwert_Pegelstand_mNN, 0.05),
-    q95 = numeric_quantile(.data$Tagesmittelwert_Pegelstand_mNN, 0.95),
-  )
+  group_by_site_decade_month_label() %>% 
+  summarise_daily_mean_levels()
 
 decades <- decades_tibble(surfacewater_level_master_agg$Dekade_Label)
 
@@ -180,17 +218,8 @@ for (id in ids) {
   
   p2 <- surfacewater_level_master %>% 
     dplyr::filter(.data$Jahr == max(.data$Jahr)) %>% 
-    dplyr::group_by(
-      .data$Messstellennummer, 
-      .data$Jahr,
-      .data$Monat, 
-      .data$Label
-    ) %>% 
-    dplyr::summarise(
-      Monatsmittelwert_Pegelstand_mNN = mean(.data$Tagesmittelwert_Pegelstand_mNN),
-      q05 = numeric_quantile(.data$Tagesmittelwert_Pegelstand_mNN, 0.05),
-      q95 = numeric_quantile(.data$Tagesmittelwert_Pegelstand_mNN, 0.95)
-    ) %>% 
+    group_by_site_year_month_label() %>% 
+    summarise_daily_mean_levels() %>% 
     dplyr::filter(.data$Messstellennummer == id) 
   
   n_decades <- length(unique(p1$Dekade_Label))
@@ -256,18 +285,8 @@ surfacewater_flow_master <- wp_data[[get_data_name(para_name)]] %>%
   dplyr::mutate(Label = label_river_km(.data))
 
 surfacewater_flow_master_agg <- surfacewater_flow_master %>%  
-  dplyr::group_by(
-    .data$Messstellennummer, 
-    .data$Dekade,
-    .data$Dekade_Label, 
-    .data$Monat, 
-    .data$Label
-  ) %>% 
-  dplyr::summarise(
-    Monatsmittelwert = mean(.data$Tagesmittelwert),
-    q05 = numeric_quantile(.data$Tagesmittelwert, 0.05),
-    q95 = numeric_quantile(.data$Tagesmittelwert, 0.95),
-  ) 
+  group_by_site_decade_month_label() %>% 
+  summarise_daily_mean_values()
 
 decades <- decades_tibble(surfacewater_flow_master_agg$Dekade_Label)
 
@@ -287,17 +306,8 @@ for (id in ids) {
   
   p2 <- surfacewater_flow_master %>% 
     dplyr::filter(.data$Jahr == max(.data$Jahr)) %>% 
-    dplyr::group_by(
-      .data$Messstellennummer, 
-      .data$Jahr,
-      .data$Monat, 
-      .data$Label
-    ) %>% 
-    dplyr::summarise(
-      Monatsmittelwert = mean(.data$Tagesmittelwert),
-      q05 = numeric_quantile(.data$Tagesmittelwert, 0.05),
-      q95 = numeric_quantile(.data$Tagesmittelwert, 0.95)
-    ) %>% 
+    group_by_site_year_month_label() %>% 
+    summarise_daily_mean_values() %>% 
     dplyr::filter(.data$Messstellennummer == id) 
   
   n_decades <- length(unique(p1$Dekade_Label))
@@ -354,7 +364,7 @@ para_name <- "groundwater_level"
 
 groundwater_level_master <- wp_data[[get_data_name(para_name)]] %>% 
   dplyr::filter(.data$Parameter == "GW-Stand") %>%    
-  set_date_year_decade_month_columns() %>% 
+  set_date_year_decade_month() %>% 
   dplyr::left_join(get_master(wp_master[[get_master_name(para_name)]])) %>% 
   dplyr::mutate(Label = sprintf(
     "%s (%s, %s, gok: %.1f m, fok-fuk: %.1f-%.1f m)", 
@@ -366,19 +376,9 @@ groundwater_level_master <- wp_data[[get_data_name(para_name)]] %>%
     as.double(.data$Filterunterkante_m_u_GOK)
   ))
 
-groundwater_level_master_agg <- groundwater_level_master %>%  
-  dplyr::group_by(
-    .data$Messstellennummer, 
-    .data$Dekade,
-    .data$Dekade_Label, 
-    .data$Monat, 
-    .data$Label
-  ) %>% 
-  dplyr::summarise(
-    Monatsmittelwert = mean(.data$Messwert),
-    q05 = numeric_quantile(.data$Messwert, 0.05),
-    q95 = numeric_quantile(.data$Messwert, 0.95),
-  ) 
+groundwater_level_master_agg <- groundwater_level_master %>%
+  group_by_site_decade_month_label() %>% 
+  summarise_measurements()
 
 decades <- decades_tibble(groundwater_level_master_agg$Dekade_Label)
 
@@ -398,17 +398,8 @@ for (id in ids) {
   
   p2 <- groundwater_level_master %>% 
     dplyr::filter(.data$Jahr == max(.data$Jahr)) %>% 
-    dplyr::group_by(
-      .data$Messstellennummer, 
-      .data$Jahr,
-      .data$Monat, 
-      .data$Label
-    ) %>% 
-    dplyr::summarise(
-      Monatsmittelwert = mean(.data$Messwert),
-      q05 = numeric_quantile(.data$Messwert, 0.05),
-      q95 = numeric_quantile(.data$Messwert, 0.95)
-    ) %>% 
+    group_by_site_year_month_label() %>% 
+    summarise_measurements() %>% 
     dplyr::filter(.data$Messstellennummer == id) 
   
   n_decades <- length(unique(p1$Dekade_Label))
