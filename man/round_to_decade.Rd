@@ -7,7 +7,7 @@
 round_to_decade(values)
 }
 \arguments{
-\item{value}{year}
+\item{values}{year}
 }
 \value{
 decade

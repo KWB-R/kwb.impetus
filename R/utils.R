@@ -1,7 +1,7 @@
 #' round to decade
 #' @description rounds to next decade if end year is >=5 or floors to previous 
 #' decade if end year <5.
-#' @param value year
+#' @param values year
 #'
 #' @return decade
 #' @export
@@ -37,14 +37,14 @@ floor_decade <- function(value) {
 #' @param ... additional arguments passed to xxx
 #'
 #' @return re-scales ggplot2
+#' @importFrom stats setNames
 #' @export
 #' @noRd
 #' @noMd
 scale_fill_decades <- function(decades, ...){
   ggplot2:::manual_scale(
     'fill', 
-    values = setNames(decades$values, 
-                      decades$names), 
+    values = stats::setNames(decades$values, decades$names), 
     ...
   )
 }
