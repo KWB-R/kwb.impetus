@@ -78,13 +78,6 @@ set_date_year_decade_month <- function(data) {
     )
 }
 
-decades_tibble <- function(decade_labels) {
-  tibble::tibble(
-    names = sort(unique(decade_labels)),
-    values = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red')
-  )
-}
-
 decade_ribbons <- function(alpha = 0.1) {
   ggplot2::geom_ribbon(
     ggplot2::aes_string(
@@ -192,7 +185,7 @@ surfacewater_level_master_agg <- surfacewater_level_master %>%
   group_by_site_decade_month_label() %>% 
   summarise_daily_mean_levels()
 
-decades <- decades_tibble(surfacewater_level_master_agg$Dekade_Label)
+decades <- kwb.impetus::decades_tibble(surfacewater_level_master_agg$Dekade_Label)
 
 kwb.utils::preparePdf(
   "surface-water_level.pdf",
@@ -280,7 +273,7 @@ surfacewater_flow_master_agg <- surfacewater_flow_master %>%
   group_by_site_decade_month_label() %>% 
   summarise_daily_mean_values()
 
-decades <- decades_tibble(surfacewater_flow_master_agg$Dekade_Label)
+decades <- kwb.impetus::decades_tibble(surfacewater_flow_master_agg$Dekade_Label)
 
 kwb.utils::preparePdf(
   "surface-water_flow.pdf",
@@ -372,7 +365,7 @@ groundwater_level_master_agg <- groundwater_level_master %>%
   group_by_site_decade_month_label() %>% 
   summarise_measurements()
 
-decades <- decades_tibble(groundwater_level_master_agg$Dekade_Label)
+decades <- kwb.impetus::decades_tibble(groundwater_level_master_agg$Dekade_Label)
 
 kwb.utils::preparePdf(
   "groundwater_level.pdf",

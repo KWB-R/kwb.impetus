@@ -7,6 +7,30 @@ decade_label <- function(decade) {
   sprintf("%d - %d", decade, decade + 9L)
 }
 
+#' Tibble with Decade Names and Values
+#' 
+#' @param decade_labels decade labels
+#' @param values colour values
+#' @return tibble with columns \code{names} and \code{values}
+#' @export
+decades_tibble <- function(decade_labels, colors = c(
+  'darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'
+))
+{
+  decade_labels <- sort(unique(decade_labels))
+  
+  n_colors_missing <- length(decade_labels) - length(colors)
+  
+  if (n_colors_missing) {
+    colors <- c(rep("black", n_colors_missing), colors)
+  }
+  
+  tibble::tibble(
+    names = decade_labels,
+    values = colors
+  )
+}
+
 #' Unnamed Quantile Value
 #' 
 #' @param x vector of numeric
