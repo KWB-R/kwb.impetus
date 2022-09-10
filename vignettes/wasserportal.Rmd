@@ -60,6 +60,49 @@ get_master_name <- function(para_name) {
 numeric_quantile <- function(x, prob) {
   as.numeric(quantile(x, probs = prob))
 }
+
+decade_label <- function(decade) {
+  sprintf("%d - %d", decade, decade + 9L)
+}
+
+label_river_km <- function(data) {
+  sprintf(
+    "%s (%s, id: %s, fluss-km: %2.2f)", 
+    data$Name,
+    data$Gewaesser, 
+    data$Messstellennummer, 
+    as.numeric(data$Flusskilometer)
+  )
+}
+
+set_date_year_decade_month_columns <- function(data) {
+  data %>% 
+    dplyr::mutate(
+      Datum = as.Date(.data$Datum),
+      Jahr = as.integer(format(.data$Datum, "%Y")), 
+      Dekade = kwb.impetus::floor_decade(.data$Jahr),
+      Dekade_Label = decade_label(.data$Dekade),
+      Monat = as.factor(format(.data$Datum, "%m"))
+    )
+}
+
+decades_tibble <- function(decade_labels) {
+  tibble::tibble(
+    names = sort(unique(decade_labels)),
+    values = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red')
+  )
+}
+
+decade_ribbons <- function(alpha = 0.1) {
+  ggplot2::geom_ribbon(
+    ggplot2::aes_string(
+      ymin = "q05", 
+      ymax = "q95", 
+      fill = "Dekade_Label"
+    ), 
+    alpha = alpha
+  )
+}
 ```
 
 ```{r no_messages, echo = FALSE}
@@ -94,25 +137,16 @@ para_name <- "surface-water_water-level"
 
 surfacewater_level_master <- wp_data[[get_data_name(para_name)]] %>% 
   dplyr::filter(.data$Parameter == "Wasserstand") %>%  
-  dplyr::mutate(
-    Datum = as.Date(.data$Datum),
-    Jahr = as.integer(format(.data$Datum, "%Y")), 
-    Dekade = kwb.impetus::floor_decade(.data$Jahr),
-    Dekade_Label = sprintf("%d - %d", .data$Dekade, .data$Dekade + 9L),
-    Monat = as.factor(format(.data$Datum, "%m"))
-  ) %>% 
+  set_date_year_decade_month_columns() %>%
   dplyr::left_join(get_master(wp_master[[get_master_name(para_name)]])) %>% 
-  dplyr::mutate(Tagesmittelwert_Pegelstand_mNN = as.numeric(.data$Pegelnullpunkt_m) + .data$Tagesmittelwert/100) %>%
+  dplyr::mutate(
+    Tagesmittelwert_Pegelstand_mNN = as.numeric(.data$Pegelnullpunkt_m) +
+      .data$Tagesmittelwert / 100
+  ) %>%
   ### remove -777 for messstellennummer 5867000 (few values in 2000) resulted by step above
   dplyr::filter(.data$Tagesmittelwert_Pegelstand_mNN != -777) %>%
   dplyr::select(- .data$Pegelnullpunkt_m) %>% 
-  dplyr::mutate(Label = sprintf(
-    "%s (%s, id: %s, fluss-km: %2.2f)", 
-    .data$Name,
-    .data$Gewaesser, 
-    .data$Messstellennummer, 
-    as.numeric(.data$Flusskilometer)
-  ))
+  dplyr::mutate(Label = label_river_km(.data))
 
 surfacewater_level_master_agg <- surfacewater_level_master %>% 
   dplyr::group_by(
@@ -128,10 +162,7 @@ surfacewater_level_master_agg <- surfacewater_level_master %>%
     q95 = numeric_quantile(.data$Tagesmittelwert_Pegelstand_mNN, 0.95),
   )
 
-decades <- tibble::tibble(
-  names = sort(unique(surfacewater_level_master_agg$Dekade_Label)),
-  values = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red')
-)
+decades <- decades_tibble(surfacewater_level_master_agg$Dekade_Label)
 
 kwb.utils::preparePdf(
   "surface-water_level.pdf",
@@ -157,8 +188,8 @@ for (id in ids) {
     ) %>% 
     dplyr::summarise(
       Monatsmittelwert_Pegelstand_mNN = mean(.data$Tagesmittelwert_Pegelstand_mNN),
-      q05 = quantile(.data$Tagesmittelwert_Pegelstand_mNN, probs = 0.05),
-      q95 = quantile(.data$Tagesmittelwert_Pegelstand_mNN, probs = 0.95)
+      q05 = numeric_quantile(.data$Tagesmittelwert_Pegelstand_mNN, 0.05),
+      q95 = numeric_quantile(.data$Tagesmittelwert_Pegelstand_mNN, 0.95)
     ) %>% 
     dplyr::filter(.data$Messstellennummer == id) 
   
@@ -171,12 +202,7 @@ for (id in ids) {
       col = as.factor(.data$Dekade_Label))
     ) + 
     #ggplot2::geom_point(alpha = 0.5) + 
-    ggplot2::geom_ribbon(ggplot2::aes_string(
-      ymin = "q05", 
-      ymax = "q95", 
-      fill = "Dekade_Label"
-    ), 
-    alpha = 0.1) + 
+    decade_ribbons() + 
     kwb.impetus::scale_fill_decades(decades) +
     kwb.impetus::scale_color_decades(decades) +
     ggplot2::geom_point() +
@@ -223,17 +249,11 @@ surfacewater_flow_master <- wp_data[[get_data_name(para_name)]] %>%
     Datum = as.Date(.data$Datum),
     Jahr = as.integer(format(.data$Datum, "%Y")), 
     Dekade = kwb.impetus::floor_decade(.data$Jahr),
-    Dekade_Label = sprintf("%d - %d", .data$Dekade, .data$Dekade + 9L),
+    Dekade_Label = decade_label(.data$Dekade),
     Monat = as.factor(format(.data$Datum, "%m"))
   ) %>% 
   dplyr::left_join(get_master(wp_master[[get_master_name(para_name)]])) %>% 
-  dplyr::mutate(Label = sprintf(
-    "%s (%s, id: %s, fluss-km: %2.2f)", 
-    .data$Name,
-    .data$Gewaesser, 
-    .data$Messstellennummer, 
-    as.numeric(.data$Flusskilometer))
-  )
+  dplyr::mutate(Label = label_river_km(.data))
 
 surfacewater_flow_master_agg <- surfacewater_flow_master %>%  
   dplyr::group_by(
@@ -249,10 +269,7 @@ surfacewater_flow_master_agg <- surfacewater_flow_master %>%
     q95 = numeric_quantile(.data$Tagesmittelwert, 0.95),
   ) 
 
-decades <- tibble::tibble(
-  names = sort(unique(surfacewater_flow_master_agg$Dekade_Label)),
-  values = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red')
-)
+decades <- decades_tibble(surfacewater_flow_master_agg$Dekade_Label)
 
 kwb.utils::preparePdf(
   "surface-water_flow.pdf",
@@ -278,8 +295,8 @@ for (id in ids) {
     ) %>% 
     dplyr::summarise(
       Monatsmittelwert = mean(.data$Tagesmittelwert),
-      q05 = quantile(.data$Tagesmittelwert, probs = 0.05),
-      q95 = quantile(.data$Tagesmittelwert, probs = 0.95)
+      q05 = numeric_quantile(.data$Tagesmittelwert, 0.05),
+      q95 = numeric_quantile(.data$Tagesmittelwert, 0.95)
     ) %>% 
     dplyr::filter(.data$Messstellennummer == id) 
   
@@ -292,13 +309,7 @@ for (id in ids) {
       col = as.factor(.data$Dekade_Label))
     ) + 
     #ggplot2::geom_point(alpha = 0.5) + 
-    ggplot2::geom_ribbon(
-      ggplot2::aes_string(
-        ymin = "q05", 
-        ymax = "q95", 
-        fill = "Dekade_Label"
-      ), 
-      alpha = 0.1) + 
+    decade_ribbons() + 
     kwb.impetus::scale_fill_decades(decades) +
     kwb.impetus::scale_color_decades(decades) +
     ggplot2::geom_point() +
@@ -343,13 +354,7 @@ para_name <- "groundwater_level"
 
 groundwater_level_master <- wp_data[[get_data_name(para_name)]] %>% 
   dplyr::filter(.data$Parameter == "GW-Stand") %>%    
-  dplyr::mutate(
-    Datum = as.Date(.data$Datum),
-    Jahr = as.integer(format(.data$Datum, "%Y")), 
-    Dekade = kwb.impetus::floor_decade(.data$Jahr),
-    Dekade_Label = sprintf("%d - %d", .data$Dekade, .data$Dekade + 9L),
-    Monat = as.factor(format(.data$Datum, "%m"))
-  ) %>% 
+  set_date_year_decade_month_columns() %>% 
   dplyr::left_join(get_master(wp_master[[get_master_name(para_name)]])) %>% 
   dplyr::mutate(Label = sprintf(
     "%s (%s, %s, gok: %.1f m, fok-fuk: %.1f-%.1f m)", 
@@ -375,10 +380,7 @@ groundwater_level_master_agg <- groundwater_level_master %>%
     q95 = numeric_quantile(.data$Messwert, 0.95),
   ) 
 
-decades <- tibble::tibble(
-  names = sort(unique(groundwater_level_master_agg$Dekade_Label)),
-  values = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red')
-)
+decades <- decades_tibble(groundwater_level_master_agg$Dekade_Label)
 
 kwb.utils::preparePdf(
   "groundwater_level.pdf",
@@ -404,8 +406,8 @@ for (id in ids) {
     ) %>% 
     dplyr::summarise(
       Monatsmittelwert = mean(.data$Messwert),
-      q05 = quantile(.data$Messwert, probs = 0.05),
-      q95 = quantile(.data$Messwert, probs = 0.95)
+      q05 = numeric_quantile(.data$Messwert, 0.05),
+      q95 = numeric_quantile(.data$Messwert, 0.95)
     ) %>% 
     dplyr::filter(.data$Messstellennummer == id) 
   
@@ -418,14 +420,7 @@ for (id in ids) {
       col = as.factor(.data$Dekade_Label)
     )) + 
     #ggplot2::geom_point(alpha = 0.5) + 
-    ggplot2::geom_ribbon(
-      ggplot2::aes_string(
-        ymin = "q05", 
-        ymax = "q95", 
-        fill = "Dekade_Label"
-      ), 
-      alpha = 0.1
-    ) + 
+    decade_ribbons() + 
     kwb.impetus::scale_fill_decades(decades) +
     kwb.impetus::scale_color_decades(decades) +
     ggplot2::geom_point() +
