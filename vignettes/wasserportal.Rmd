@@ -57,14 +57,6 @@ get_master_name <- function(para_name) {
   paste0("stations_", para_name)
 }
 
-numeric_quantile <- function(x, prob) {
-  as.numeric(quantile(x, probs = prob))
-}
-
-decade_label <- function(decade) {
-  sprintf("%d - %d", decade, decade + 9L)
-}
-
 label_river_km <- function(data) {
   sprintf(
     "%s (%s, id: %s, fluss-km: %2.2f)", 
@@ -81,7 +73,7 @@ set_date_year_decade_month <- function(data) {
       Datum = as.Date(.data$Datum),
       Jahr = as.integer(format(.data$Datum, "%Y")), 
       Dekade = kwb.impetus::floor_decade(.data$Jahr),
-      Dekade_Label = decade_label(.data$Dekade),
+      Dekade_Label = kwb.impetus::decade_label(.data$Dekade),
       Monat = as.factor(format(.data$Datum, "%m"))
     )
 }
@@ -129,8 +121,8 @@ summarise_daily_mean_levels <- function(data) {
   data %>%
     dplyr::summarise(
       Monatsmittelwert_Pegelstand_mNN = mean(.data$Tagesmittelwert_Pegelstand_mNN),
-      q05 = numeric_quantile(.data$Tagesmittelwert_Pegelstand_mNN, 0.05),
-      q95 = numeric_quantile(.data$Tagesmittelwert_Pegelstand_mNN, 0.95)
+      q05 = kwb.impetus::numeric_quantile(.data$Tagesmittelwert_Pegelstand_mNN, 0.05),
+      q95 = kwb.impetus::numeric_quantile(.data$Tagesmittelwert_Pegelstand_mNN, 0.95)
     )
 }
 
@@ -138,8 +130,8 @@ summarise_daily_mean_values <- function(data) {
   data %>%
     dplyr::summarise(
       Monatsmittelwert = mean(.data$Tagesmittelwert),
-      q05 = numeric_quantile(.data$Tagesmittelwert, 0.05),
-      q95 = numeric_quantile(.data$Tagesmittelwert, 0.95),
+      q05 = kwb.impetus::numeric_quantile(.data$Tagesmittelwert, 0.05),
+      q95 = kwb.impetus::numeric_quantile(.data$Tagesmittelwert, 0.95),
     ) 
 }
 
@@ -147,8 +139,8 @@ summarise_measurements <- function(data) {
   data %>%
     dplyr::summarise(
       Monatsmittelwert = mean(.data$Messwert),
-      q05 = numeric_quantile(.data$Messwert, 0.05),
-      q95 = numeric_quantile(.data$Messwert, 0.95),
+      q05 = kwb.impetus::numeric_quantile(.data$Messwert, 0.05),
+      q95 = kwb.impetus::numeric_quantile(.data$Messwert, 0.95),
     ) 
 }
 ```
@@ -278,7 +270,7 @@ surfacewater_flow_master <- wp_data[[get_data_name(para_name)]] %>%
     Datum = as.Date(.data$Datum),
     Jahr = as.integer(format(.data$Datum, "%Y")), 
     Dekade = kwb.impetus::floor_decade(.data$Jahr),
-    Dekade_Label = decade_label(.data$Dekade),
+    Dekade_Label = kwb.impetus::decade_label(.data$Dekade),
     Monat = as.factor(format(.data$Datum, "%m"))
   ) %>% 
   dplyr::left_join(get_master(wp_master[[get_master_name(para_name)]])) %>% 

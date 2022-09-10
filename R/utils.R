@@ -1,3 +1,21 @@
+#' Label for Decade Year Range
+#' 
+#' @param decade start of decade as integer, e.g. 1990L
+#' @return character string, e.g. "1990 - 1999"
+#' @export
+decade_label <- function(decade) {
+  sprintf("%d - %d", decade, decade + 9L)
+}
+
+#' Unnamed Quantile Value
+#' 
+#' @param x vector of numeric
+#' @param prob probability passed to \code{\link{quantile}}
+#' @export
+numeric_quantile <- function(x, prob) {
+  as.numeric(quantile(x, probs = prob))
+}
+
 #' round to decade
 #' @description rounds to next decade if end year is >=5 or floors to previous 
 #' decade if end year <5.
