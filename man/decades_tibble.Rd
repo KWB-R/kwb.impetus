@@ -12,7 +12,7 @@ decades_tibble(
 \arguments{
 \item{decade_labels}{decade labels}
 
-\item{values}{colour values}
+\item{colors}{colour values}
 }
 \value{
 tibble with columns \code{names} and \code{values}

@@ -10,7 +10,7 @@ decade_label <- function(decade) {
 #' Tibble with Decade Names and Values
 #' 
 #' @param decade_labels decade labels
-#' @param values colour values
+#' @param colors colour values
 #' @return tibble with columns \code{names} and \code{values}
 #' @export
 decades_tibble <- function(decade_labels, colors = c(
@@ -35,9 +35,10 @@ decades_tibble <- function(decade_labels, colors = c(
 #' 
 #' @param x vector of numeric
 #' @param prob probability passed to \code{\link{quantile}}
+#' @importFrom stats quantile
 #' @export
 numeric_quantile <- function(x, prob) {
-  as.numeric(quantile(x, probs = prob))
+  as.numeric(stats::quantile(x, probs = prob))
 }
 
 #' round to decade
