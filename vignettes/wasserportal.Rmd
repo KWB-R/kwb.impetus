@@ -3,8 +3,10 @@ title: "Wasserportal"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Wasserportal}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -158,6 +160,12 @@ ggplot2_scale_x_continuous_12 <- function() {
 ggplot2_facet_wrap_decade <- function(ncol) {
   ggplot2::facet_wrap(~ .data$Dekade_Label, nrow = 1L, ncol = ncol)
 }
+
+ggplot2_theme_and_labels <- function(what, title) {
+  ggplot2::theme_bw() + 
+    ggplot2::theme(legend.position = "bottom") +
+    ggplot2_labels_monthly_mean(what, title)
+}
 ```
 
 ```{r no_messages, echo = FALSE}
@@ -252,14 +260,8 @@ for (id in ids) {
     ggplot2_scale_x_continuous_12() +
     #ggplot2::geom_boxplot() +
     ggplot2_facet_wrap_decade(ncol = length(unique(p1$Dekade_Label))) +
-    ggplot2::theme_bw() + 
-    ggplot2::theme(legend.position = "bottom") +
-    ggplot2_labels_monthly_mean(
-      what = "Pegelstand (m NN)", 
-      x = "Monatsnummer", 
-      title = unique(p1$Label)
-    )
-  
+    ggplot2_theme_and_labels("Pegelstand (m NN)", title = unique(p1$Label))
+
   plot(gg)
 }
 
@@ -332,12 +334,7 @@ for (id in ids) {
     ggplot2_scale_x_continuous_12() +
     #ggplot2::geom_boxplot() +
     ggplot2_facet_wrap_decade(ncol = length(unique(p1$Dekade_Label))) +
-    ggplot2::theme_bw() + 
-    ggplot2::theme(legend.position="bottom") +
-    ggplot2_labels_monthly_mean(
-      what = "Durchfluss (m\u00B3/s)", 
-      title = unique(p1$Label)
-    )
+    ggplot2_theme_and_labels("Durchfluss (m\u00B3/s)", title = unique(p1$Label))
 
   plot(gg)
 }
@@ -415,12 +412,7 @@ for (id in ids) {
     ggplot2_scale_x_continuous_12() +
     #ggplot2::geom_boxplot() +
     ggplot2_facet_wrap_decade(ncol = length(unique(p1$Dekade_Label))) +
-    ggplot2::theme_bw() + 
-    ggplot2::theme(legend.position="bottom") +
-    ggplot2_labels_monthly_mean(
-      what = "Grundwasserstand (m NN)", 
-      title = unique(p1$Label)
-    )
+    ggplot2_theme_and_labels("Grundwasserstand (m NN)", title = unique(p1$Label))
   
   plot(gg)
 }
