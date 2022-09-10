@@ -126,14 +126,6 @@
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"stations_"</span>, <span class="va">para_name</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">numeric_quantile</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">prob</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">x</span>, probs <span class="op">=</span> <span class="va">prob</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">decade_label</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">decade</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%d - %d"</span>, <span class="va">decade</span>, <span class="va">decade</span> <span class="op">+</span> <span class="fl">9L</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
 <span><span class="va">label_river_km</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span></span>
 <span>    <span class="st">"%s (%s, id: %s, fluss-km: %2.2f)"</span>, </span>
@@ -150,16 +142,9 @@
 <span>      Datum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Datum</span><span class="op">)</span>,</span>
 <span>      Jahr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Datum</span>, <span class="st">"%Y"</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>      Dekade <span class="op">=</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/floor_decade.html">floor_decade</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Jahr</span><span class="op">)</span>,</span>
-<span>      Dekade_Label <span class="op">=</span> <span class="fu">decade_label</span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Dekade</span><span class="op">)</span>,</span>
+<span>      Dekade_Label <span class="op">=</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/decade_label.html">decade_label</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Dekade</span><span class="op">)</span>,</span>
 <span>      Monat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Datum</span>, <span class="st">"%m"</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">decades_tibble</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">decade_labels</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
-<span>    names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">decade_labels</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'darkblue'</span>, <span class="st">'blue'</span>, <span class="st">'darkgreen'</span>, <span class="st">'lightgreen'</span>, <span class="st">'orange'</span>, <span class="st">'red'</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">decade_ribbons</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">alpha</span> <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">{</span></span>
@@ -198,8 +183,8 @@
 <span>  <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span></span>
 <span>      Monatsmittelwert_Pegelstand_mNN <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert_Pegelstand_mNN</span><span class="op">)</span>,</span>
-<span>      q05 <span class="op">=</span> <span class="fu">numeric_quantile</span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert_Pegelstand_mNN</span>, <span class="fl">0.05</span><span class="op">)</span>,</span>
-<span>      q95 <span class="op">=</span> <span class="fu">numeric_quantile</span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert_Pegelstand_mNN</span>, <span class="fl">0.95</span><span class="op">)</span></span>
+<span>      q05 <span class="op">=</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/numeric_quantile.html">numeric_quantile</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert_Pegelstand_mNN</span>, <span class="fl">0.05</span><span class="op">)</span>,</span>
+<span>      q95 <span class="op">=</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/numeric_quantile.html">numeric_quantile</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert_Pegelstand_mNN</span>, <span class="fl">0.95</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
@@ -207,8 +192,8 @@
 <span>  <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span></span>
 <span>      Monatsmittelwert <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert</span><span class="op">)</span>,</span>
-<span>      q05 <span class="op">=</span> <span class="fu">numeric_quantile</span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert</span>, <span class="fl">0.05</span><span class="op">)</span>,</span>
-<span>      q95 <span class="op">=</span> <span class="fu">numeric_quantile</span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert</span>, <span class="fl">0.95</span><span class="op">)</span>,</span>
+<span>      q05 <span class="op">=</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/numeric_quantile.html">numeric_quantile</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert</span>, <span class="fl">0.05</span><span class="op">)</span>,</span>
+<span>      q95 <span class="op">=</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/numeric_quantile.html">numeric_quantile</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert</span>, <span class="fl">0.95</span><span class="op">)</span>,</span>
 <span>    <span class="op">)</span> </span>
 <span><span class="op">}</span></span>
 <span></span>
@@ -216,8 +201,8 @@
 <span>  <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span></span>
 <span>      Monatsmittelwert <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Messwert</span><span class="op">)</span>,</span>
-<span>      q05 <span class="op">=</span> <span class="fu">numeric_quantile</span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Messwert</span>, <span class="fl">0.05</span><span class="op">)</span>,</span>
-<span>      q95 <span class="op">=</span> <span class="fu">numeric_quantile</span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Messwert</span>, <span class="fl">0.95</span><span class="op">)</span>,</span>
+<span>      q05 <span class="op">=</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/numeric_quantile.html">numeric_quantile</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Messwert</span>, <span class="fl">0.05</span><span class="op">)</span>,</span>
+<span>      q95 <span class="op">=</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/numeric_quantile.html">numeric_quantile</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Messwert</span>, <span class="fl">0.95</span><span class="op">)</span>,</span>
 <span>    <span class="op">)</span> </span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
@@ -226,7 +211,7 @@
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">stations</span> <span class="op">&lt;-</span> <span class="fu">wasserportal</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/wasserportal/man/get_stations.html" class="external-link">get_stations</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing 9 station overviews from Wasserportal Berlin ... ok. (8.61s)</span></span>
+<span><span class="co">#&gt; Importing 9 station overviews from Wasserportal Berlin ... ok. (18.67s)</span></span>
 <span><span class="va">variables</span> <span class="op">&lt;-</span> <span class="fu">wasserportal</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/wasserportal/man/get_surfacewater_variables.html" class="external-link">get_surfacewater_variables</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">variables</span> <span class="op">&lt;-</span> <span class="va">variables</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span>
 <span></span>
@@ -418,14 +403,14 @@
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert_Pegelstand_mNN</span> <span class="op">!=</span> <span class="op">-</span><span class="fl">777</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span> <span class="va">.data</span><span class="op">$</span><span class="va">Pegelnullpunkt_m</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Label <span class="op">=</span> <span class="fu">label_river_km</span><span class="op">(</span><span class="va">.data</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing 63 station metadata from Wasserportal Berlin ... ok. (34.08s)</span></span>
+<span><span class="co">#&gt; Importing 63 station metadata from Wasserportal Berlin ... ok. (28.57s)</span></span>
 <span><span class="co">#&gt; Joining, by = "Messstellennummer"</span></span>
 <span></span>
 <span><span class="va">surfacewater_level_master_agg</span> <span class="op">&lt;-</span> <span class="va">surfacewater_level_master</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">group_by_site_decade_month_label</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">summarise_daily_mean_levels</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">decades</span> <span class="op">&lt;-</span> <span class="fu">decades_tibble</span><span class="op">(</span><span class="va">surfacewater_level_master_agg</span><span class="op">$</span><span class="va">Dekade_Label</span><span class="op">)</span></span>
+<span><span class="va">decades</span> <span class="op">&lt;-</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/decades_tibble.html">decades_tibble</a></span><span class="op">(</span><span class="va">surfacewater_level_master_agg</span><span class="op">$</span><span class="va">Dekade_Label</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">kwb.utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kwb.utils/man/preparePdf.html" class="external-link">preparePdf</a></span><span class="op">(</span></span>
 <span>  <span class="st">"surface-water_level.pdf"</span>,</span>
@@ -506,19 +491,19 @@
 <span>    Datum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Datum</span><span class="op">)</span>,</span>
 <span>    Jahr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Datum</span>, <span class="st">"%Y"</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>    Dekade <span class="op">=</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/floor_decade.html">floor_decade</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Jahr</span><span class="op">)</span>,</span>
-<span>    Dekade_Label <span class="op">=</span> <span class="fu">decade_label</span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Dekade</span><span class="op">)</span>,</span>
+<span>    Dekade_Label <span class="op">=</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/decade_label.html">decade_label</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Dekade</span><span class="op">)</span>,</span>
 <span>    Monat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Datum</span>, <span class="st">"%m"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="fu">get_master</span><span class="op">(</span><span class="va">wp_master</span><span class="op">[[</span><span class="fu">get_master_name</span><span class="op">(</span><span class="va">para_name</span><span class="op">)</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Label <span class="op">=</span> <span class="fu">label_river_km</span><span class="op">(</span><span class="va">.data</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing 16 station metadata from Wasserportal Berlin ... ok. (9.76s)</span></span>
+<span><span class="co">#&gt; Importing 16 station metadata from Wasserportal Berlin ... ok. (11.02s)</span></span>
 <span><span class="co">#&gt; Joining, by = "Messstellennummer"</span></span>
 <span></span>
 <span><span class="va">surfacewater_flow_master_agg</span> <span class="op">&lt;-</span> <span class="va">surfacewater_flow_master</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  </span>
 <span>  <span class="fu">group_by_site_decade_month_label</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">summarise_daily_mean_values</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">decades</span> <span class="op">&lt;-</span> <span class="fu">decades_tibble</span><span class="op">(</span><span class="va">surfacewater_flow_master_agg</span><span class="op">$</span><span class="va">Dekade_Label</span><span class="op">)</span></span>
+<span><span class="va">decades</span> <span class="op">&lt;-</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/decades_tibble.html">decades_tibble</a></span><span class="op">(</span><span class="va">surfacewater_flow_master_agg</span><span class="op">$</span><span class="va">Dekade_Label</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">kwb.utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kwb.utils/man/preparePdf.html" class="external-link">preparePdf</a></span><span class="op">(</span></span>
 <span>  <span class="st">"surface-water_flow.pdf"</span>,</span>
@@ -610,14 +595,14 @@
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">as.double</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Filteroberkante_m_u_GOK</span><span class="op">)</span>, </span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">as.double</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Filterunterkante_m_u_GOK</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing 878 station metadata from Wasserportal Berlin ... ok. (6.81s)</span></span>
+<span><span class="co">#&gt; Importing 878 station metadata from Wasserportal Berlin ... ok. (6.86s)</span></span>
 <span><span class="co">#&gt; Joining, by = "Messstellennummer"</span></span>
 <span></span>
 <span><span class="va">groundwater_level_master_agg</span> <span class="op">&lt;-</span> <span class="va">groundwater_level_master</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">group_by_site_decade_month_label</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">summarise_measurements</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">decades</span> <span class="op">&lt;-</span> <span class="fu">decades_tibble</span><span class="op">(</span><span class="va">groundwater_level_master_agg</span><span class="op">$</span><span class="va">Dekade_Label</span><span class="op">)</span></span>
+<span><span class="va">decades</span> <span class="op">&lt;-</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/decades_tibble.html">decades_tibble</a></span><span class="op">(</span><span class="va">groundwater_level_master_agg</span><span class="op">$</span><span class="va">Dekade_Label</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">kwb.utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kwb.utils/man/preparePdf.html" class="external-link">preparePdf</a></span><span class="op">(</span></span>
 <span>  <span class="st">"groundwater_level.pdf"</span>,</span>
