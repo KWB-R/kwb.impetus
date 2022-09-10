@@ -45,6 +45,16 @@ summarise_means <- function(data) {
       mean = mean(.data$mean)
     )  
 }
+
+filter_for_parameter <- function(data, parameter) {
+  data %>%
+    dplyr::filter(.data$parameter == parameter)
+}
+
+filter_for_max_year <- function(data, year) {
+  data %>%
+    dplyr::filter(.data$Jahr == max(.data$Jahr))
+}
 ```
 
 ```{r setup}
@@ -62,10 +72,8 @@ options(dplyr.summarise.inform = FALSE)
 ### Precipitation
 
 ```{r precipitation}
-para_name <- "precipitation"
-
 precipitation <- kwb.impetus::dwd_berlin_monthly %>% 
-  dplyr::filter(.data$parameter == para_name) %>%  
+  filter_for_parameter("precipitation") %>%  
   dplyr::mutate(
     Jahr = as.integer(.data$year), 
     Dekade = kwb.impetus::floor_decade(.data$year),
@@ -78,25 +86,9 @@ precipitation_agg <- precipitation %>%
   group_by_decade_month_label() %>% 
   summarise_means()
 
-n_decades <- length(unique(precipitation_agg$Dekade_Label))
-
-decade_colors <- c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red')
-
-n_colors <- length(decade_colors)
-
-n_colors_to_fill <- n_decades - n_colors
-
-decades <- tibble::tibble(
-  names = unique(precipitation_agg$Dekade_Label)[order(unique(precipitation_agg$Dekade_Label))],
-  values = c(
-    rep("black", n_colors_to_fill), 
-    'darkblue',
-    'blue', 
-    'darkgreen', 
-    'lightgreen', 
-    'orange', 
-    'red'
-  )
+decades <- kwb.impetus::decades_tibble(
+  decade_labels = precipitation_agg$Dekade_Label,
+  colors = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red')
 )
 
 precipitation_decade_annual <- precipitation_agg %>%  
@@ -119,11 +111,9 @@ kwb.utils::preparePdf(
 p1 <- precipitation_agg
 
 p2 <- precipitation %>% 
-  dplyr::filter(.data$Jahr == max(.data$Jahr)) %>% 
+  filter_for_max_year() %>% 
   group_by_year_month() %>% 
   summarise_means()
-
-n_decades <- length(unique(p1$Dekade_Label))
 
 gg <- p1 %>% 
   ggplot2::ggplot(mapping = ggplot2::aes(
@@ -161,7 +151,7 @@ gg <- p1 %>%
   ggplot2::facet_wrap( 
     ~ .data$Dekade_Label,
     nrow = 1L, 
-    ncol = n_decades
+    ncol = length(unique(p1$Dekade_Label))
   ) +
   ggplot2::theme_bw() + 
   ggplot2::theme(legend.position = "bottom") +
@@ -181,10 +171,8 @@ dev.off()
 ### Potential Evaporation
 
 ```{r potential_evaporation}
-para_name <- "potential evaporation"
-
 potential_evaporation <- kwb.impetus::dwd_berlin_monthly %>% 
-  dplyr::filter(.data$parameter == para_name) %>%  
+  filter_for_parameter("potential evaporation") %>%  
   dplyr::mutate(
     Jahr = as.integer(.data$year), 
     Dekade = kwb.impetus::floor_decade(.data$year),
@@ -197,15 +185,9 @@ potential_evaporation_agg <- potential_evaporation %>%
   group_by_decade_month_label %>% 
   summarise_means()
 
-n_decades <- length(unique(potential_evaporation_agg$Dekade_Label))
-
-decade_colors <- c('darkgreen', 'lightgreen', 'orange', 'red')
-
-n_colors <- length(decade_colors)
-
-decades <- tibble::tibble(
-  names = unique(potential_evaporation_agg$Dekade_Label)[order(unique(potential_evaporation_agg$Dekade_Label))],
-  values = decade_colors
+decades <- kwb.impetus::decades_tibble(
+  decade_labels = potential_evaporation_agg$Dekade_Label,
+  colors = c('darkgreen', 'lightgreen', 'orange', 'red')
 )
 
 potential_evaporation_decade_annual <- potential_evaporation_agg %>%  
@@ -228,11 +210,9 @@ kwb.utils::preparePdf(
 p1 <- potential_evaporation_agg
 
 p2 <- potential_evaporation %>% 
-  dplyr::filter(.data$Jahr == max(.data$Jahr)) %>% 
+  filter_for_max_year() %>% 
   group_by_year_month() %>% 
   summarise_means()
-
-n_decades <- length(unique(p1$Dekade_Label))
 
 gg <- p1 %>% 
   ggplot2::ggplot(mapping = ggplot2::aes(
@@ -265,7 +245,7 @@ gg <- p1 %>%
   ggplot2::facet_wrap(
     ~ .data$Dekade_Label,
     nrow = 1L, 
-    ncol = n_decades
+    ncol = length(unique(p1$Dekade_Label))
   ) +
   ggplot2::theme_bw() + 
   ggplot2::theme(legend.position="bottom") +
