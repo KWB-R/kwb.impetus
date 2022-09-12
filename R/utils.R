@@ -1,7 +1,60 @@
+#' Label for Decade Year Range
+#' 
+#' @param decade start of decade as integer, e.g. 1990L
+#' @return character string, e.g. "1990 - 1999"
+#' @export
+decade_label <- function(decade) {
+  sprintf("%d - %d", decade, decade + 9L)
+}
+
+#' Tibble with Decade Names and Values
+#' 
+#' @param decade_labels decade labels
+#' @param colors colour values
+#' @return tibble with columns \code{names} and \code{values}
+#' @export
+decades_tibble <- function(decade_labels, colors = c(
+  'darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'
+))
+{
+  decade_labels <- sort(unique(decade_labels))
+  
+  n_colors_missing <- length(decade_labels) - length(colors)
+  
+  if (n_colors_missing < 0L) {
+    
+    message(sprintf(
+      "More colors (%d) than labels (%d). Removing last colors", 
+      length(colors), length(decade_labels)
+    ))
+    
+    colors <- colors[seq_along(decade_labels)]
+  }
+  
+  if (n_colors_missing > 0L) {
+    colors <- c(rep("black", n_colors_missing), colors)
+  }
+  
+  tibble::tibble(
+    names = decade_labels,
+    values = colors
+  )
+}
+
+#' Unnamed Quantile Value
+#' 
+#' @param x vector of numeric
+#' @param prob probability passed to \code{\link{quantile}}
+#' @importFrom stats quantile
+#' @export
+numeric_quantile <- function(x, prob) {
+  as.numeric(stats::quantile(x, probs = prob))
+}
+
 #' round to decade
 #' @description rounds to next decade if end year is >=5 or floors to previous 
 #' decade if end year <5.
-#' @param value year
+#' @param values year
 #'
 #' @return decade
 #' @export
@@ -37,14 +90,14 @@ floor_decade <- function(value) {
 #' @param ... additional arguments passed to xxx
 #'
 #' @return re-scales ggplot2
+#' @importFrom stats setNames
 #' @export
 #' @noRd
 #' @noMd
 scale_fill_decades <- function(decades, ...){
   ggplot2:::manual_scale(
     'fill', 
-    values = setNames(decades$values, 
-                      decades$names), 
+    values = stats::setNames(decades$values, decades$names), 
     ...
   )
 }
