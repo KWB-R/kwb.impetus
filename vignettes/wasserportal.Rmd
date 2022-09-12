@@ -250,47 +250,60 @@ kwb.utils::preparePdf(
   height.cm = 21
 )
 
-ids <- unique(surfacewater_level_master_agg$Messstellennummer)
+plot_for_all_sites <- function(
+    master_data_agg, master_data, summarise_fun, y_column, what
+)
+{
+  ids <- unique(master_data_agg$Messstellennummer)
 
-for (id in ids) {
-
-  p1 <- surfacewater_level_master_agg %>% 
-    dplyr::filter(.data$Messstellennummer == id) 
-  
-  p2 <- surfacewater_level_master %>% 
-    dplyr::filter(.data$Jahr == max(.data$Jahr)) %>% 
-    group_by_site_year_month_label() %>% 
-    summarise_daily_mean_levels() %>% 
-    dplyr::filter(.data$Messstellennummer == id) 
-  
-  gg <- p1 %>% 
-    ggplot2::ggplot(mapping = ggplot2::aes(
-      x = as.integer(.data$Monat), 
-      y = .data$Monatsmittelwert_Pegelstand_mNN,
-      col = as.factor(.data$Dekade_Label))
-    ) + 
-    #ggplot2::geom_point(alpha = 0.5) + 
-    decade_ribbons() + 
-    kwb.impetus::scale_fill_decades(decades) +
-    kwb.impetus::scale_color_decades(decades) +
-    ggplot2::geom_point() +
-    ggplot2::geom_point(ggplot2::aes(
-      x = as.integer(.data$Monat),
-      y = .data$Monatsmittelwert_Pegelstand_mNN), 
-      data = p2,
-      col = "darkgrey",
-      alpha = 0.5, 
-      inherit.aes = FALSE,
-      show.legend = FALSE
-    ) +
-    ggplot2_scale_x_continuous_12() +
-    #ggplot2::geom_boxplot() +
-    ggplot2_facet_wrap_decade(ncol = length(unique(p1$Dekade_Label))) +
-    ggplot2_theme() + 
-    ggplot2_labels_monthly_mean("Pegelstand (m NN)", title= unique(p1$Label))
-  
-  plot(gg)
+  for (id in ids) {
+    
+    p1 <- master_data_agg %>% 
+      dplyr::filter(.data$Messstellennummer == id) 
+    
+    p2 <- master_data %>% 
+      dplyr::filter(.data$Jahr == max(.data$Jahr)) %>% 
+      group_by_site_year_month_label() %>% 
+      summarise_fun() %>% 
+      dplyr::filter(.data$Messstellennummer == id) 
+    
+    gg <- p1 %>% 
+      ggplot2::ggplot(mapping = ggplot2::aes(
+        x = as.integer(.data$Monat), 
+        y = .data[[y_column]],
+        col = as.factor(.data$Dekade_Label))
+      ) + 
+      #ggplot2::geom_point(alpha = 0.5) + 
+      decade_ribbons() + 
+      kwb.impetus::scale_fill_decades(decades) +
+      kwb.impetus::scale_color_decades(decades) +
+      ggplot2::geom_point() +
+      ggplot2::geom_point(ggplot2::aes(
+        x = as.integer(.data$Monat),
+        y = .data[[y_column]]), 
+        data = p2,
+        col = "darkgrey",
+        alpha = 0.5, 
+        inherit.aes = FALSE,
+        show.legend = FALSE
+      ) +
+      ggplot2_scale_x_continuous_12() +
+      #ggplot2::geom_boxplot() +
+      ggplot2_facet_wrap_decade(ncol = length(unique(p1$Dekade_Label))) +
+      ggplot2_theme() + 
+      ggplot2_labels_monthly_mean(what, title= unique(p1$Label))
+    
+    plot(gg)
+  }
 }
+
+plot_for_all_sites(
+  master_data_agg = surfacewater_level_master_agg,
+  master_data = surfacewater_level_master,
+  summarise_fun = summarise_daily_mean_levels,
+  y_column = "Monatsmittelwert_Pegelstand_mNN",
+  what = "Pegelstand (m NN)"
+)
 
 dev.off()
 ```
@@ -325,47 +338,13 @@ kwb.utils::preparePdf(
   height.cm = 21
 )
 
-ids <- unique(surfacewater_flow_master_agg$Messstellennummer)
-
-for (id in ids) {
-  
-  p1 <- surfacewater_flow_master_agg %>% 
-    dplyr::filter(.data$Messstellennummer == id) 
-  
-  p2 <- surfacewater_flow_master %>% 
-    dplyr::filter(.data$Jahr == max(.data$Jahr)) %>% 
-    group_by_site_year_month_label() %>% 
-    summarise_daily_mean_values() %>% 
-    dplyr::filter(.data$Messstellennummer == id) 
-  
-  gg <- p1 %>% 
-    ggplot2::ggplot(mapping = ggplot2::aes(
-      x = as.integer(.data$Monat), 
-      y = .data$Monatsmittelwert,
-      col = as.factor(.data$Dekade_Label))
-    ) + 
-    #ggplot2::geom_point(alpha = 0.5) + 
-    decade_ribbons() + 
-    kwb.impetus::scale_fill_decades(decades) +
-    kwb.impetus::scale_color_decades(decades) +
-    ggplot2::geom_point() +
-    ggplot2::geom_point(ggplot2::aes(
-      x = as.integer(.data$Monat),
-      y = .data$Monatsmittelwert), 
-      data = p2,
-      col = "darkgrey",
-      alpha = 0.5, 
-      inherit.aes = FALSE,
-      show.legend = FALSE
-    ) +
-    ggplot2_scale_x_continuous_12() +
-    #ggplot2::geom_boxplot() +
-    ggplot2_facet_wrap_decade(ncol = length(unique(p1$Dekade_Label))) +
-    ggplot2_theme() + 
-    ggplot2_labels_monthly_mean("Durchfluss (m\u00B3/s)", title = unique(p1$Label))
-
-  plot(gg)
-}
+plot_for_all_sites(
+  master_data_agg = surfacewater_flow_master_agg, 
+  master_data = surfacewater_flow_master, 
+  summarise_fun = summarise_daily_mean_values, 
+  y_column = "Monatsmittelwert", 
+  what = "Durchfluss (m\u00B3/s)"
+)
 
 dev.off()
 ```
@@ -404,47 +383,13 @@ kwb.utils::preparePdf(
   height.cm = 21
 )
 
-ids <- unique(groundwater_level_master_agg$Messstellennummer)
-
-for (id in ids) {
-  
-  p1 <- groundwater_level_master_agg %>% 
-    dplyr::filter(.data$Messstellennummer == id) 
-  
-  p2 <- groundwater_level_master %>% 
-    dplyr::filter(.data$Jahr == max(.data$Jahr)) %>% 
-    group_by_site_year_month_label() %>% 
-    summarise_measurements() %>% 
-    dplyr::filter(.data$Messstellennummer == id) 
-  
-  gg <- p1 %>% 
-    ggplot2::ggplot(mapping = ggplot2::aes(
-      x = as.integer(.data$Monat), 
-      y = .data$Monatsmittelwert,
-      col = as.factor(.data$Dekade_Label)
-    )) + 
-    #ggplot2::geom_point(alpha = 0.5) + 
-    decade_ribbons() + 
-    kwb.impetus::scale_fill_decades(decades) +
-    kwb.impetus::scale_color_decades(decades) +
-    ggplot2::geom_point() +
-    ggplot2::geom_point(ggplot2::aes(
-      x = as.integer(.data$Monat),
-      y = .data$Monatsmittelwert), 
-      data = p2,
-      col = "darkgrey",
-      alpha = 0.5, 
-      inherit.aes = FALSE,
-      show.legend = FALSE
-    ) +
-    ggplot2_scale_x_continuous_12() +
-    #ggplot2::geom_boxplot() +
-    ggplot2_facet_wrap_decade(ncol = length(unique(p1$Dekade_Label))) +
-    ggplot2_theme() +
-    ggplot2_labels_monthly_mean("Grundwasserstand (m NN)", title = unique(p1$Label))
-
-  plot(gg)
-}
+plot_for_all_sites(
+  master_data_agg = groundwater_level_master_agg,
+  master_data = groundwater_level_master, 
+  summarise_fun = summarise_measurements,
+  y_column = "Monatsmittelwert", 
+  what = "Grundwasserstand (m NN)"
+)
 
 dev.off()
 ```
