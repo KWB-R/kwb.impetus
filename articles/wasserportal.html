@@ -311,7 +311,7 @@
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">stations</span> <span class="op">&lt;-</span> <span class="fu">wasserportal</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/wasserportal/man/get_stations.html" class="external-link">get_stations</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing 9 station overviews from Wasserportal Berlin ... ok. (10.71s)</span></span>
+<span><span class="co">#&gt; Importing 9 station overviews from Wasserportal Berlin ... ok. (9.63s)</span></span>
 <span></span>
 <span><span class="va">variables</span> <span class="op">&lt;-</span> <span class="fu">wasserportal</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/wasserportal/man/get_surfacewater_variables.html" class="external-link">get_surfacewater_variables</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">variables</span> <span class="op">&lt;-</span> <span class="va">variables</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span>
@@ -463,20 +463,6 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
-<span><span class="co">#&gt; ⠙ 0 extracted |  44 MB ( 14 MB/s) | 3.2s</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ⠹ 0 extracted |  79 MB ( 13 MB/s) | 6.2s</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ⠸ 0 extracted | 118 MB ( 13 MB/s) | 9.3s</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ⠼ 0 extracted | 158 MB ( 13 MB/s) | 12.3s</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ⠴ 0 extracted | 193 MB ( 13 MB/s) | 15.4s</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ⠦ 0 extracted | 234 MB ( 13 MB/s) | 18.4s</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ⠧ 0 extracted | 282 MB ( 13 MB/s) | 21.5s</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">7285207</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">5</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Delimiter:</span> ","</span></span>
@@ -542,7 +528,7 @@
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Tagesmittelwert_Pegelstand_mNN</span> <span class="op">!=</span> <span class="op">-</span><span class="fl">777</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span> <span class="va">.data</span><span class="op">$</span><span class="va">Pegelnullpunkt_m</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Label <span class="op">=</span> <span class="fu">label_river_km</span><span class="op">(</span><span class="va">.data</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing 63 station metadata from Wasserportal Berlin ... ok. (39.69s)</span></span>
+<span><span class="co">#&gt; Importing 63 station metadata from Wasserportal Berlin ... ok. (24.48s)</span></span>
 <span><span class="co">#&gt; Joining, by = "Messstellennummer"</span></span>
 <span></span>
 <span><span class="fu">plot_to_pdf</span><span class="op">(</span></span>
@@ -570,7 +556,7 @@
 <span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="fu">get_master</span><span class="op">(</span><span class="va">wp_master</span><span class="op">[[</span><span class="fu">get_master_name</span><span class="op">(</span><span class="va">para_name</span><span class="op">)</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Label <span class="op">=</span> <span class="fu">label_river_km</span><span class="op">(</span><span class="va">.data</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing 16 station metadata from Wasserportal Berlin ... ok. (9.67s)</span></span>
+<span><span class="co">#&gt; Importing 16 station metadata from Wasserportal Berlin ... ok. (10.54s)</span></span>
 <span><span class="co">#&gt; Joining, by = "Messstellennummer"</span></span>
 <span></span>
 <span><span class="fu">plot_to_pdf</span><span class="op">(</span></span>
@@ -604,7 +590,7 @@
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">as.double</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Filteroberkante_m_u_GOK</span><span class="op">)</span>, </span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">as.double</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Filterunterkante_m_u_GOK</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing 878 station metadata from Wasserportal Berlin ... ok. (8.79s)</span></span>
+<span><span class="co">#&gt; Importing 878 station metadata from Wasserportal Berlin ... ok. (6.85s)</span></span>
 <span><span class="co">#&gt; Joining, by = "Messstellennummer"</span></span>
 <span></span>
 <span><span class="fu">plot_to_pdf</span><span class="op">(</span></span>
