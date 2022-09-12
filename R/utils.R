@@ -21,7 +21,17 @@ decades_tibble <- function(decade_labels, colors = c(
   
   n_colors_missing <- length(decade_labels) - length(colors)
   
-  if (n_colors_missing) {
+  if (n_colors_missing < 0L) {
+    
+    message(sprintf(
+      "More colors (%d) than labels (%d). Removing last colors", 
+      length(colors), length(decade_labels)
+    ))
+    
+    colors <- colors[seq_along(decade_labels)]
+  }
+  
+  if (n_colors_missing > 0L) {
     colors <- c(rep("black", n_colors_missing), colors)
   }
   
