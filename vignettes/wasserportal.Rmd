@@ -165,6 +165,53 @@ ggplot2_theme <- function() {
   ggplot2::theme_bw() + 
     ggplot2::theme(legend.position = "bottom")
 }
+
+plot_for_all_sites <- function(
+    master_data_agg, master_data, summarise_fun, y_column, what
+)
+{
+  ids <- unique(master_data_agg$Messstellennummer)
+
+  for (id in ids) {
+    
+    p1 <- master_data_agg %>% 
+      dplyr::filter(.data$Messstellennummer == id) 
+    
+    p2 <- master_data %>% 
+      dplyr::filter(.data$Jahr == max(.data$Jahr)) %>% 
+      group_by_site_year_month_label() %>% 
+      summarise_fun() %>% 
+      dplyr::filter(.data$Messstellennummer == id) 
+    
+    gg <- p1 %>% 
+      ggplot2::ggplot(mapping = ggplot2::aes(
+        x = as.integer(.data$Monat), 
+        y = .data[[y_column]],
+        col = as.factor(.data$Dekade_Label))
+      ) + 
+      #ggplot2::geom_point(alpha = 0.5) + 
+      decade_ribbons() + 
+      kwb.impetus::scale_fill_decades(decades) +
+      kwb.impetus::scale_color_decades(decades) +
+      ggplot2::geom_point() +
+      ggplot2::geom_point(ggplot2::aes(
+        x = as.integer(.data$Monat),
+        y = .data[[y_column]]), 
+        data = p2,
+        col = "darkgrey",
+        alpha = 0.5, 
+        inherit.aes = FALSE,
+        show.legend = FALSE
+      ) +
+      ggplot2_scale_x_continuous_12() +
+      #ggplot2::geom_boxplot() +
+      ggplot2_facet_wrap_decade(ncol = length(unique(p1$Dekade_Label))) +
+      ggplot2_theme() + 
+      ggplot2_labels_monthly_mean(what, title= unique(p1$Label))
+    
+    plot(gg)
+  }
+}
 ```
 
 ```{r no_messages, echo = FALSE}
@@ -249,53 +296,6 @@ kwb.utils::preparePdf(
   width.cm = 29.7, 
   height.cm = 21
 )
-
-plot_for_all_sites <- function(
-    master_data_agg, master_data, summarise_fun, y_column, what
-)
-{
-  ids <- unique(master_data_agg$Messstellennummer)
-
-  for (id in ids) {
-    
-    p1 <- master_data_agg %>% 
-      dplyr::filter(.data$Messstellennummer == id) 
-    
-    p2 <- master_data %>% 
-      dplyr::filter(.data$Jahr == max(.data$Jahr)) %>% 
-      group_by_site_year_month_label() %>% 
-      summarise_fun() %>% 
-      dplyr::filter(.data$Messstellennummer == id) 
-    
-    gg <- p1 %>% 
-      ggplot2::ggplot(mapping = ggplot2::aes(
-        x = as.integer(.data$Monat), 
-        y = .data[[y_column]],
-        col = as.factor(.data$Dekade_Label))
-      ) + 
-      #ggplot2::geom_point(alpha = 0.5) + 
-      decade_ribbons() + 
-      kwb.impetus::scale_fill_decades(decades) +
-      kwb.impetus::scale_color_decades(decades) +
-      ggplot2::geom_point() +
-      ggplot2::geom_point(ggplot2::aes(
-        x = as.integer(.data$Monat),
-        y = .data[[y_column]]), 
-        data = p2,
-        col = "darkgrey",
-        alpha = 0.5, 
-        inherit.aes = FALSE,
-        show.legend = FALSE
-      ) +
-      ggplot2_scale_x_continuous_12() +
-      #ggplot2::geom_boxplot() +
-      ggplot2_facet_wrap_decade(ncol = length(unique(p1$Dekade_Label))) +
-      ggplot2_theme() + 
-      ggplot2_labels_monthly_mean(what, title= unique(p1$Label))
-    
-    plot(gg)
-  }
-}
 
 plot_for_all_sites(
   master_data_agg = surfacewater_level_master_agg,
