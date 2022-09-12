@@ -174,8 +174,9 @@ options(dplyr.summarise.inform = FALSE)
 
 ## Surface Water 
 
-```{r surface_water, eval = is_ghactions}
+```{r surface_water_ghactions, eval = is_ghactions}
 stations <- wasserportal::get_stations()
+
 variables <- wasserportal::get_surfacewater_variables()
 variables <- variables[1:2]
 
@@ -193,9 +194,35 @@ wp_data <- wasserportal::wp_timeseries_data_to_list(overview_names)
 #wp_data <- c(wp_sw_data, wp_gw_data)
 ```
 
+```{r surface_water_local, eval = !is_ghactions}
+stations <- wasserportal::get_stations()
+
+variables <- wasserportal::get_surfacewater_variables()
+variables <- variables[1:2]
+
+# Downloads pre-compiled data (daily updated at 5am UTC) 
+# from https://kwb-r.github.io/wasserportal/daily_surface_water.<parameter_name>.csv
+# see also: https://kwb-r.github.io/wasserportal/articles/surface-water.html
+overview_names <- names(stations$overview_list)
+
+wp_master <- wasserportal::wp_masters_data_to_list(overview_names)
+
+### Limit to 3 stations per parameter of run locally to increase speed 
+### otherwise rendering would last ~ 2 hours
+for(i in seq_len(length(wp_master))) {
+  wp_master[[i]] <- wp_master[[i]][1:3,]
+}
+wp_data <- wasserportal::wp_timeseries_data_to_list(overview_names)
+
+### Alternatively: download latest data from Wasserportal Berlin (takes a while)
+#wp_sw_data <- wasserportal::get_daily_surfacewater_data(stations, variables) 
+#wp_gw_data <- wasserportal::get_groundwater_data(stations)
+#wp_data <- c(wp_sw_data, wp_gw_data)
+```
+
 ### Surface Water Level 
 
-```{r surface_water_level, eval = is_ghactions}
+```{r surface_water_level}
 para_name <- "surface-water_water-level"
 
 surfacewater_level_master <- wp_data[[get_data_name(para_name)]] %>% 
@@ -270,7 +297,7 @@ dev.off()
 
 ### Surface Water Flow 
 
-```{r surface_water_flow, eval = is_ghactions}
+```{r surface_water_flow}
 para_name <- "surface-water_flow"
 
 surfacewater_flow_master <- wp_data[[get_data_name(para_name)]] %>% 
@@ -346,7 +373,7 @@ dev.off()
 
 ### Grundwater Level
 
-```{r groundwater_level, eval = is_ghactions}
+```{r groundwater_level}
 para_name <- "groundwater_level"
 
 groundwater_level_master <- wp_data[[get_data_name(para_name)]] %>% 
@@ -427,11 +454,11 @@ available for download here:
 
 - **Surface Water**
 
-+ [surface-water_level.pdf](https://kwb-r.github.io/kwb.impetus/surface-water_level.pdf)
+  + [surface-water_level.pdf](https://kwb-r.github.io/kwb.impetus/surface-water_level.pdf)
 
-+ [surface-water_flow.pdf](https://kwb-r.github.io/kwb.impetus/surface-water_flow.pdf)
+  + [surface-water_flow.pdf](https://kwb-r.github.io/kwb.impetus/surface-water_flow.pdf)
 
 
 - **Groundwater**
 
-+ [groundwater_level.pdf](https://kwb-r.github.io/kwb.impetus/groundwater_level.pdf)
+  + [groundwater_level.pdf](https://kwb-r.github.io/kwb.impetus/groundwater_level.pdf)
