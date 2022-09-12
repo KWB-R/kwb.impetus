@@ -284,28 +284,39 @@ surfacewater_level_master <- wp_data[[get_data_name(para_name)]] %>%
   dplyr::select(- .data$Pegelnullpunkt_m) %>% 
   dplyr::mutate(Label = label_river_km(.data))
 
-surfacewater_level_master_agg <- surfacewater_level_master %>% 
+plot_to_pdf <- function(master_data, summarise_fun, y_column, what, file)
+{
+master_data_agg <- master_data %>% 
   group_by_site_decade_month_label() %>% 
-  summarise_daily_mean_levels()
+  summarise_fun()
 
-decades <- kwb.impetus::decades_tibble(surfacewater_level_master_agg$Dekade_Label)
+decades <- kwb.impetus::decades_tibble(master_data_agg$Dekade_Label)
 
 kwb.utils::preparePdf(
-  "surface-water_level.pdf",
+  file,
   landscape = TRUE,
   width.cm = 29.7, 
   height.cm = 21
 )
 
 plot_for_all_sites(
-  master_data_agg = surfacewater_level_master_agg,
-  master_data = surfacewater_level_master,
-  summarise_fun = summarise_daily_mean_levels,
-  y_column = "Monatsmittelwert_Pegelstand_mNN",
-  what = "Pegelstand (m NN)"
+  master_data_agg = master_data_agg,
+  master_data = master_data,
+  summarise_fun = summarise_fun,
+  y_column = y_column,
+  what = what
 )
 
 dev.off()
+}
+
+plot_to_pdf(
+  master_data = surfacewater_level_master,
+  summarise_fun = summarise_daily_mean_levels,
+  y_column = "Monatsmittelwert_Pegelstand_mNN",
+  what = "Pegelstand (m NN)",
+  file = "surface-water_level.pdf"
+)
 ```
 
 ### Surface Water Flow 
@@ -325,28 +336,13 @@ surfacewater_flow_master <- wp_data[[get_data_name(para_name)]] %>%
   dplyr::left_join(get_master(wp_master[[get_master_name(para_name)]])) %>% 
   dplyr::mutate(Label = label_river_km(.data))
 
-surfacewater_flow_master_agg <- surfacewater_flow_master %>%  
-  group_by_site_decade_month_label() %>% 
-  summarise_daily_mean_values()
-
-decades <- kwb.impetus::decades_tibble(surfacewater_flow_master_agg$Dekade_Label)
-
-kwb.utils::preparePdf(
-  "surface-water_flow.pdf",
-  landscape = TRUE,
-  width.cm = 29.7, 
-  height.cm = 21
-)
-
-plot_for_all_sites(
-  master_data_agg = surfacewater_flow_master_agg, 
+plot_to_pdf(
   master_data = surfacewater_flow_master, 
-  summarise_fun = summarise_daily_mean_values, 
+  summarise_fun = summarise_daily_mean_values,
   y_column = "Monatsmittelwert", 
-  what = "Durchfluss (m\u00B3/s)"
+  what = "Durchfluss (m\u00B3/s)",
+  file = "surface-water_flow.pdf"
 )
-
-dev.off()
 ```
 
 ## Groundwater 
@@ -370,28 +366,13 @@ groundwater_level_master <- wp_data[[get_data_name(para_name)]] %>%
     as.double(.data$Filterunterkante_m_u_GOK)
   ))
 
-groundwater_level_master_agg <- groundwater_level_master %>%
-  group_by_site_decade_month_label() %>% 
-  summarise_measurements()
-
-decades <- kwb.impetus::decades_tibble(groundwater_level_master_agg$Dekade_Label)
-
-kwb.utils::preparePdf(
-  "groundwater_level.pdf",
-  landscape = TRUE,
-  width.cm = 29.7, 
-  height.cm = 21
-)
-
-plot_for_all_sites(
-  master_data_agg = groundwater_level_master_agg,
-  master_data = groundwater_level_master, 
-  summarise_fun = summarise_measurements,
+plot_to_pdf(
+  master_data = groundwater_level_master,
+  summarise_fun = summarise_measurements, 
   y_column = "Monatsmittelwert", 
-  what = "Grundwasserstand (m NN)"
+  what = "Grundwasserstand (m NN)", 
+  file = "groundwater_level.pdf"
 )
-
-dev.off()
 ```
 
 ## Download
