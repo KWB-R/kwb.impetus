@@ -166,10 +166,35 @@ ggplot2_theme <- function() {
     ggplot2::theme(legend.position = "bottom")
 }
 
+plot_to_pdf <- function(master_data, summarise_fun, y_column, what, file) {
+  
+  master_data_agg <- master_data %>% 
+    group_by_site_decade_month_label() %>% 
+    summarise_fun()
+  
+  decades <- kwb.impetus::decades_tibble(master_data_agg$Dekade_Label)
+  
+  kwb.utils::preparePdf(
+    file,
+    landscape = TRUE,
+    width.cm = 29.7, 
+    height.cm = 21
+  )
+  
+  on.exit(dev.off())
+  
+  plot_for_all_sites(
+    master_data_agg = master_data_agg,
+    master_data = master_data,
+    summarise_fun = summarise_fun,
+    y_column = y_column,
+    what = what
+  )
+}
+
 plot_for_all_sites <- function(
     master_data_agg, master_data, summarise_fun, y_column, what
-)
-{
+) {
   ids <- unique(master_data_agg$Messstellennummer)
 
   for (id in ids) {
@@ -283,32 +308,6 @@ surfacewater_level_master <- wp_data[[get_data_name(para_name)]] %>%
   dplyr::filter(.data$Tagesmittelwert_Pegelstand_mNN != -777) %>%
   dplyr::select(- .data$Pegelnullpunkt_m) %>% 
   dplyr::mutate(Label = label_river_km(.data))
-
-plot_to_pdf <- function(master_data, summarise_fun, y_column, what, file)
-{
-master_data_agg <- master_data %>% 
-  group_by_site_decade_month_label() %>% 
-  summarise_fun()
-
-decades <- kwb.impetus::decades_tibble(master_data_agg$Dekade_Label)
-
-kwb.utils::preparePdf(
-  file,
-  landscape = TRUE,
-  width.cm = 29.7, 
-  height.cm = 21
-)
-
-plot_for_all_sites(
-  master_data_agg = master_data_agg,
-  master_data = master_data,
-  summarise_fun = summarise_fun,
-  y_column = y_column,
-  what = what
-)
-
-dev.off()
-}
 
 plot_to_pdf(
   master_data = surfacewater_level_master,
