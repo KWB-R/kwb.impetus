@@ -172,8 +172,6 @@ plot_to_pdf <- function(master_data, summarise_fun, y_column, what, file) {
     group_by_site_decade_month_label() %>% 
     summarise_fun()
   
-  decades <- kwb.impetus::decades_tibble(master_data_agg$Dekade_Label)
-  
   kwb.utils::preparePdf(
     file,
     landscape = TRUE,
@@ -195,6 +193,9 @@ plot_to_pdf <- function(master_data, summarise_fun, y_column, what, file) {
 plot_for_all_sites <- function(
     master_data_agg, master_data, summarise_fun, y_column, what
 ) {
+  
+  decades <- kwb.impetus::decades_tibble(master_data_agg$Dekade_Label)
+
   ids <- unique(master_data_agg$Messstellennummer)
 
   for (id in ids) {
