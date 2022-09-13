@@ -27,34 +27,49 @@
 #' library(kwb.impetus)
 #' 
 #' yearmonth_start <- "188101"
-#' yearmonth_end <- paste0(format(Sys.Date(), "%Y"),
-#'                         sprintf("%02d", 
-#'                         as.numeric(format(Sys.Date(), "%m"))-1))
+#' yearmonth_end <- paste0(
+#'   format(Sys.Date(), "%Y"),
+#'   sprintf("%02d", as.numeric(format(Sys.Date(), "%m")) - 1L)
+#' )
 #'                         
-#'system.time(dwd_berlin_precipitation <- kwb.dwd::load_precipitation_berlin(
-#'from = yearmonth_start,
-#'to = yearmonth_end)
-#')
+#' system.time(
+#'   dwd_berlin_precipitation <- kwb.dwd::load_precipitation_berlin(
+#'     from = yearmonth_start,
+#'     to = yearmonth_end
+#'   )
+#' )
 #'
-#'system.time(dwd_berlin_potentialevaporation <- kwb.dwd::load_potential_evaporation_berlin(
-#'from = yearmonth_start,
-#'to = yearmonth_end)
-#')
+#' system.time(
+#'   dwd_berlin_evapo_p <- kwb.dwd::load_potential_evaporation_berlin(
+#'     from = yearmonth_start,
+#'     to = yearmonth_end
+#'   )
+#' )
 #'
-#'dwd_berlin_monthly <- dwd_berlin_precipitation %>%  
-#'dplyr::mutate(parameter = "precipitation", 
-#'url = sprintf("%s/grids_germany/monthly/%s/%s", 
-#'kwb.dwd:::dwd_url_climate_dir(),
-#'"precipitation",
-#'.data$file)) %>%
-#'dplyr::bind_rows(
-#'dwd_berlin_potentialevaporation %>%
-#'dplyr::mutate(parameter ="potential evaporation",
-#'url = sprintf("%s/grids_germany/monthly/%s/%s",
-#'kwb.dwd:::dwd_url_climate_dir(),
-#'"evapo_p",
-#'.data$file)))
+#' add_parameter_and_url <- function(data, parameter, subdir) {
+#'   dplyr::mutate(
+#'     data,
+#'     parameter = parameter, 
+#'     url = sprintf(
+#'       "%s/grids_germany/monthly/%s/%s", 
+#'       kwb.dwd:::dwd_url_climate_dir(), subdir, .data$file
+#'     )
+#'   )
+#' }
 #'
-#'usethis::use_data(dwd_berlin_monthly, overwrite = TRUE)
+#' dwd_berlin_monthly <- dplyr::bind_rows(
+#'   add_parameter_and_url(
+#'     dwd_berlin_precipitation,
+#'     parameter = "precipitation",
+#'     subdir = "precipitation"
+#'   ),
+#'   add_parameter_and_url(
+#'     dwd_berlin_evapo_p,
+#'     parameter = "potential evaporation",
+#'     subdir = "evapo_p"
+#'   )
+#' )
+#'
+#' usethis::use_data(dwd_berlin_monthly, overwrite = TRUE)
 #' } 
 "dwd_berlin_monthly"
