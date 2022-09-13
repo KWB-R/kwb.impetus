@@ -80,17 +80,6 @@ set_date_year_decade_month <- function(data) {
     )
 }
 
-decade_ribbons <- function(alpha = 0.1) {
-  ggplot2::geom_ribbon(
-    ggplot2::aes_string(
-      ymin = "q05", 
-      ymax = "q95", 
-      fill = "Dekade_Label"
-    ), 
-    alpha = alpha
-  )
-}
-
 summarise_daily_mean_levels <- function(data) {
   data %>%
     dplyr::summarise(
@@ -195,7 +184,7 @@ plot_for_all_sites <- function(
         col = as.factor(.data$Dekade_Label))
       ) + 
       #ggplot2::geom_point(alpha = 0.5) + 
-      decade_ribbons() + 
+      kwb.impetus::decade_ribbons() + 
       kwb.impetus::scale_fill_decades(decades) +
       kwb.impetus::scale_color_decades(decades) +
       ggplot2::geom_point() +
