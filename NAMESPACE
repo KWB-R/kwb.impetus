@@ -2,6 +2,7 @@
 
 export("%>%")
 export(decade_label)
+export(decade_ribbons)
 export(decades_tibble)
 export(floor_decade)
 export(group_by_decade_label)
