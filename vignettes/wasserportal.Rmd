@@ -81,30 +81,30 @@ set_date_year_decade_month <- function(data) {
 }
 
 summarise_daily_mean_levels <- function(data) {
+  variable <- "Tagesmittelwert_Pegelstand_mNN"
   data %>%
     dplyr::summarise(
-      Monatsmittelwert_Pegelstand_mNN = mean(.data$Tagesmittelwert_Pegelstand_mNN),
-      q05 = kwb.impetus::numeric_quantile(.data$Tagesmittelwert_Pegelstand_mNN, 0.05),
-      q95 = kwb.impetus::numeric_quantile(.data$Tagesmittelwert_Pegelstand_mNN, 0.95)
+      Monatsmittelwert_Pegelstand_mNN = mean(.data[[variable]]),
+      q05 = kwb.impetus::numeric_quantile(.data[[variable]], 0.05),
+      q95 = kwb.impetus::numeric_quantile(.data[[variable]], 0.95)
+    )
+}
+
+summarise_to_monthly_means <- function(data, variable) {
+  data %>%
+    dplyr::summarise(
+      Monatsmittelwert = mean(.data[[variable]]),
+      q05 = kwb.impetus::numeric_quantile(.data[[variable]], 0.05),
+      q95 = kwb.impetus::numeric_quantile(.data[[variable]], 0.95),
     )
 }
 
 summarise_daily_mean_values <- function(data) {
-  data %>%
-    dplyr::summarise(
-      Monatsmittelwert = mean(.data$Tagesmittelwert),
-      q05 = kwb.impetus::numeric_quantile(.data$Tagesmittelwert, 0.05),
-      q95 = kwb.impetus::numeric_quantile(.data$Tagesmittelwert, 0.95),
-    ) 
+  summarise_to_monthly_means(data, variable = "Tagesmittelwert")
 }
 
 summarise_measurements <- function(data) {
-  data %>%
-    dplyr::summarise(
-      Monatsmittelwert = mean(.data$Messwert),
-      q05 = kwb.impetus::numeric_quantile(.data$Messwert, 0.05),
-      q95 = kwb.impetus::numeric_quantile(.data$Messwert, 0.95),
-    ) 
+  summarise_to_monthly_means(data, variable = "Messwert")
 }
 
 ggplot2_labels_monthly_mean <- function(what, title) { 
