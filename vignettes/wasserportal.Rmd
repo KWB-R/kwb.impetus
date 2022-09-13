@@ -43,9 +43,9 @@ get_master <- function(stations_df) {
       dplyr::filter(.data$Betreiber == "Land Berlin") 
   }
   
-  urls <- stations_df %>% dplyr::pull(.data$stammdaten_link)
-  
-  wasserportal::get_wasserportal_masters_data(master_urls = urls) %>% 
+  stations_df %>% 
+    dplyr::pull(.data$stammdaten_link) %>%
+    wasserportal::get_wasserportal_masters_data() %>% 
     dplyr::rename(Messstellennummer = .data$Nummer) %>% 
     dplyr::mutate(Messstellennummer = as.double(.data$Messstellennummer))
 }
