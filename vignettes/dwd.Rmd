@@ -56,7 +56,7 @@ filter_for_max_year <- function(data, year) {
     dplyr::filter(.data$Jahr == max(.data$Jahr))
 }
 
-aggregate_and_plot_to_pdf <- function(parameter, colors, file) {
+aggregate_and_plot <- function(parameter, colors) {
   
   full_data <- kwb.impetus::dwd_berlin_monthly %>% 
     filter_for_parameter(parameter) %>%  
@@ -81,13 +81,6 @@ aggregate_and_plot_to_pdf <- function(parameter, colors, file) {
     group_by_decade_label() %>% 
     dplyr::summarise(annual_mean = sum(.data$mean))
   
-  kwb.utils::preparePdf(
-    file,
-    landscape = TRUE,
-    width.cm = width.cm, 
-    height.cm = 21
-  )
-  
   # p1 <- aggregated_data %>%
   #   dplyr::left_join(decade_mean_data) %>%
   #   dplyr::mutate(Dekade_Label = sprintf(
@@ -103,7 +96,7 @@ aggregate_and_plot_to_pdf <- function(parameter, colors, file) {
     group_by_year_month() %>% 
     summarise_means()
   
-  gg <- p1 %>% 
+  p1 %>% 
     ggplot2::ggplot(mapping = ggplot2::aes(
       x = as.integer(.data$Monat), 
       y = .data$mean,
@@ -150,10 +143,20 @@ aggregate_and_plot_to_pdf <- function(parameter, colors, file) {
       fill = "5%/95% Konf.-intervall",
       title = unique(p1$Label)
     )
+}
+
+print_to_pdf <- function(gg, file, width.cm) {
+  
+  kwb.utils::preparePdf(
+    file, 
+    landscape = TRUE, 
+    width.cm = width.cm, 
+    height.cm = 21
+  )
+
+  on.exit(dev.off())
   
   print(gg)
-  
-  dev.off()
 }
 ```
 
@@ -172,25 +175,21 @@ options(dplyr.summarise.inform = FALSE)
 ### Precipitation
 
 ```{r precipitation}
-aggregate_and_plot_to_pdf(
-  parameter = "precipitation",
-  colors = c(
-    'darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'
-  ),
-  file = "dwd_monthly_precipitation.pdf",
-  width.cm = 50
-)
+gg <- aggregate_and_plot(parameter = "precipitation", colors = c(
+  'darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'
+))
+
+print_to_pdf(gg, file = "dwd_monthly_precipitation.pdf", width.cm = 50)
 ```
 
 ### Potential Evaporation
 
 ```{r potential_evaporation}
-aggregate_and_plot_to_pdf(
-  parameter = "potential evaporation",
-  colors = c('darkgreen', 'lightgreen', 'orange', 'red'),
-  file = "dwd_monthly_potential-evaporation.pdf",
-  width.cm = 35
-)
+gg <- aggregate_and_plot(parameter = "potential evaporation", colors = c(
+  'darkgreen', 'lightgreen', 'orange', 'red'
+))
+
+print_to_pdf(gg, file = "dwd_monthly_potential-evaporation.pdf", width.cm = 35)
 ```
 
 ## Download
