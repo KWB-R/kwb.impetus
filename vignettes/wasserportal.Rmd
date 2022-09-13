@@ -293,14 +293,8 @@ plot_to_pdf(
 para_name <- "surface-water_flow"
 
 surfacewater_flow_master <- wp_data[[get_data_name(para_name)]] %>% 
-  dplyr::filter(.data$Parameter == "Durchfluss") %>%    
-  dplyr::mutate(
-    Datum = as.Date(.data$Datum),
-    Jahr = as.integer(format(.data$Datum, "%Y")), 
-    Dekade = kwb.impetus::floor_decade(.data$Jahr),
-    Dekade_Label = kwb.impetus::decade_label(.data$Dekade),
-    Monat = as.factor(format(.data$Datum, "%m"))
-  ) %>% 
+  dplyr::filter(.data$Parameter == "Durchfluss") %>%
+  set_date_year_decade_month() %>% 
   dplyr::left_join(get_master(wp_master[[get_master_name(para_name)]])) %>% 
   dplyr::mutate(Label = label_river_km(.data))
 
