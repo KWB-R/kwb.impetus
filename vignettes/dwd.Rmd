@@ -72,8 +72,10 @@ options(dplyr.summarise.inform = FALSE)
 ### Precipitation
 
 ```{r precipitation}
-precipitation <- kwb.impetus::dwd_berlin_monthly %>% 
-  filter_for_parameter("precipitation") %>%  
+aggregate_and_plot_to_pdf <- function(parameter, colors, file)
+{
+full_data <- kwb.impetus::dwd_berlin_monthly %>% 
+  filter_for_parameter(parameter) %>%  
   dplyr::mutate(
     Jahr = as.integer(.data$year), 
     Dekade = kwb.impetus::floor_decade(.data$year),
@@ -82,35 +84,35 @@ precipitation <- kwb.impetus::dwd_berlin_monthly %>%
     Label = sprintf("DWD, monthly %s", .data$parameter)
   )
 
-precipitation_agg <- precipitation %>% 
+aggregated_data <- full_data %>% 
   group_by_decade_month_label() %>% 
   summarise_means()
 
 decades <- kwb.impetus::decades_tibble(
-  decade_labels = precipitation_agg$Dekade_Label,
-  colors = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red')
+  decade_labels = aggregated_data$Dekade_Label,
+  colors = colors
 )
 
-precipitation_decade_annual <- precipitation_agg %>%  
+decade_mean_data <- aggregated_data %>%  
   group_by_decade_label() %>% 
   dplyr::summarise(annual_mean = sum(.data$mean))
 
 kwb.utils::preparePdf(
-  "dwd_monthly_precipitation.pdf",
+  file,
   landscape = TRUE,
-  width.cm = 50, 
+  width.cm = width.cm, 
   height.cm = 21
 )
 
-# p1 <- precipitation_agg %>%  
-#   dplyr::left_join(precipitation_decade_annual) %>% 
+# p1 <- aggregated_data %>%  
+#   dplyr::left_join(decade_mean_data) %>% 
 #   dplyr::mutate(Dekade_Label = sprintf("%s\n%3.1f mm/Jahr)",
 #                                        .data$Dekade_Label,
 #                                        round(.data$annual_mean, 1)))
 
-p1 <- precipitation_agg
+p1 <- aggregated_data
 
-p2 <- precipitation %>% 
+p2 <- full_data %>% 
   filter_for_max_year() %>% 
   group_by_year_month() %>% 
   summarise_means()
@@ -166,100 +168,27 @@ gg <- p1 %>%
 print(gg)
 
 dev.off()
+}
+
+aggregate_and_plot_to_pdf(
+  parameter = "precipitation",
+  colors = c(
+    'darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'
+  ),
+  file = "dwd_monthly_precipitation.pdf",
+  width.cm = 50
+)
 ```
 
 ### Potential Evaporation
 
 ```{r potential_evaporation}
-potential_evaporation <- kwb.impetus::dwd_berlin_monthly %>% 
-  filter_for_parameter("potential evaporation") %>%  
-  dplyr::mutate(
-    Jahr = as.integer(.data$year), 
-    Dekade = kwb.impetus::floor_decade(.data$year),
-    Dekade_Label = kwb.impetus::decade_label(.data$Dekade),
-    Monat = as.factor(.data$month),
-    Label = sprintf("DWD, monthly %s", .data$parameter)
-  )
-
-potential_evaporation_agg <- potential_evaporation %>% 
-  group_by_decade_month_label %>% 
-  summarise_means()
-
-decades <- kwb.impetus::decades_tibble(
-  decade_labels = potential_evaporation_agg$Dekade_Label,
-  colors = c('darkgreen', 'lightgreen', 'orange', 'red')
+aggregate_and_plot_to_pdf(
+  parameter = "potential evaporation",
+  colors = c('darkgreen', 'lightgreen', 'orange', 'red'),
+  file = "dwd_monthly_potential-evaporation.pdf",
+  width.cm = 35
 )
-
-potential_evaporation_decade_annual <- potential_evaporation_agg %>%  
-  group_by_decade_label() %>% 
-  dplyr::summarise(annual_mean = sum(.data$mean))
-
-kwb.utils::preparePdf(
-  "dwd_monthly_potential-evaporation.pdf",
-  landscape = TRUE,
-  width.cm = 35, 
-  height.cm = 21
-)
-
-# p1 <- precipitation_agg %>%  
-#   dplyr::left_join(precipitation_decade_annual) %>% 
-#   dplyr::mutate(Dekade_Label = sprintf("%s\n%3.1f mm/Jahr)",
-#                                        .data$Dekade_Label,
-#                                        round(.data$annual_mean, 1)))
-
-p1 <- potential_evaporation_agg
-
-p2 <- potential_evaporation %>% 
-  filter_for_max_year() %>% 
-  group_by_year_month() %>% 
-  summarise_means()
-
-gg <- p1 %>% 
-  ggplot2::ggplot(mapping = ggplot2::aes(
-    x = as.integer(.data$Monat), 
-    y = .data$mean,
-    col = as.factor(.data$Dekade_Label)
-  )) + 
-  #ggplot2::geom_point(alpha = 0.5) + 
-  ggplot2::geom_ribbon(
-    ggplot2::aes_string(
-      ymin = "q05", 
-      ymax = "q95", 
-      fill = "Dekade_Label"
-    ), 
-    alpha = 0.1
-  ) + 
-  kwb.impetus::scale_fill_decades(decades) +
-  kwb.impetus::scale_color_decades(decades) +
-  ggplot2::geom_point() +
-  ggplot2::geom_point(
-    ggplot2::aes(x = as.integer(.data$Monat), y = .data$mean), 
-    data = p2,
-    col = "darkgrey",
-    alpha = 0.5, 
-    inherit.aes = FALSE,
-    show.legend = FALSE
-  ) +
-  ggplot2::scale_x_continuous(breaks = 1:12, labels = 1:12, minor_breaks = NULL) +
-  #ggplot2::geom_boxplot() +
-  ggplot2::facet_wrap(
-    ~ .data$Dekade_Label,
-    nrow = 1L, 
-    ncol = length(unique(p1$Dekade_Label))
-  ) +
-  ggplot2::theme_bw() + 
-  ggplot2::theme(legend.position="bottom") +
-  ggplot2::labs(
-    y = "Monatsmittel potentielle Verdunstung (mm/Monat)", 
-    x = "Monatsnummer", 
-    col = "Mittelwert", 
-    fill = "5%/95% Konf.-intervall",
-    title = unique(p1$Label)
-  )
-
-print(gg)
-
-dev.off()
 ```
 
 ## Download
