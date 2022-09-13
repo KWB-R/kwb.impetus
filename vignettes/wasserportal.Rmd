@@ -91,27 +91,6 @@ decade_ribbons <- function(alpha = 0.1) {
   )
 }
 
-group_by_site_decade_month_label <- function(data) {
-  data %>%
-    dplyr::group_by(
-      .data$Messstellennummer, 
-      .data$Dekade,
-      .data$Dekade_Label, 
-      .data$Monat, 
-      .data$Label
-    )
-}
-
-group_by_site_year_month_label <- function(data) {
-  data %>%
-    dplyr::group_by(
-      .data$Messstellennummer, 
-      .data$Jahr,
-      .data$Monat, 
-      .data$Label
-    )
-}
-
 summarise_daily_mean_levels <- function(data) {
   data %>%
     dplyr::summarise(
@@ -169,7 +148,7 @@ ggplot2_theme <- function() {
 plot_to_pdf <- function(master_data, summarise_fun, y_column, what, file) {
   
   master_data_agg <- master_data %>% 
-    group_by_site_decade_month_label() %>% 
+    kwb.impetus::group_by_site_decade_month_label() %>% 
     summarise_fun()
   
   kwb.utils::preparePdf(
@@ -205,7 +184,7 @@ plot_for_all_sites <- function(
     
     p2 <- master_data %>% 
       dplyr::filter(.data$Jahr == max(.data$Jahr)) %>% 
-      group_by_site_year_month_label() %>% 
+      kwb.impetus::group_by_site_year_month_label() %>% 
       summarise_fun() %>% 
       dplyr::filter(.data$Messstellennummer == id) 
     
