@@ -117,14 +117,6 @@ ggplot2_labels_monthly_mean <- function(what, title) {
   )
 }
 
-ggplot2_scale_x_continuous_12 <- function() {
-  ggplot2::scale_x_continuous(
-    breaks = 1:12, 
-    labels = 1:12, 
-    minor_breaks = NULL
-  )
-}
-
 ggplot2_facet_wrap_decade <- function(ncol) {
   ggplot2::facet_wrap(~ .data$Dekade_Label, nrow = 1L, ncol = ncol)
 }
@@ -134,11 +126,30 @@ ggplot2_theme <- function() {
     ggplot2::theme(legend.position = "bottom")
 }
 
-plot_to_pdf <- function(master_data, summarise_fun, y_column, what, file) {
+create_pdf_with_plots <- function(
+    master_data, 
+    summarise_fun, 
+    y_column, 
+    what, 
+    file
+) {
   
   master_data_agg <- master_data %>% 
     kwb.impetus::group_by_site_decade_month_label() %>% 
     summarise_fun()
+  
+  plots <- plot_for_all_sites(
+    master_data_agg = master_data_agg,
+    master_data = master_data,
+    summarise_fun = summarise_fun,
+    y_column = y_column,
+    what = what
+  )
+
+  print_to_pdf(plots, file)
+}
+
+print_to_pdf <- function(plots, file) {
   
   kwb.utils::preparePdf(
     file,
@@ -149,13 +160,7 @@ plot_to_pdf <- function(master_data, summarise_fun, y_column, what, file) {
   
   on.exit(dev.off())
   
-  plot_for_all_sites(
-    master_data_agg = master_data_agg,
-    master_data = master_data,
-    summarise_fun = summarise_fun,
-    y_column = y_column,
-    what = what
-  )
+  plot(plots)
 }
 
 plot_for_all_sites <- function(
@@ -166,7 +171,7 @@ plot_for_all_sites <- function(
 
   ids <- unique(master_data_agg$Messstellennummer)
 
-  for (id in ids) {
+  lapply(ids, function(id) {
     
     p1 <- master_data_agg %>% 
       dplyr::filter(.data$Messstellennummer == id) 
@@ -177,7 +182,7 @@ plot_for_all_sites <- function(
       summarise_fun() %>% 
       dplyr::filter(.data$Messstellennummer == id) 
     
-    gg <- p1 %>% 
+    p1 %>% 
       ggplot2::ggplot(mapping = ggplot2::aes(
         x = as.integer(.data$Monat), 
         y = .data[[y_column]],
@@ -197,14 +202,12 @@ plot_for_all_sites <- function(
         inherit.aes = FALSE,
         show.legend = FALSE
       ) +
-      ggplot2_scale_x_continuous_12() +
+      kwb.impetus::ggplot2_scale_x_continuous_12() +
       #ggplot2::geom_boxplot() +
       ggplot2_facet_wrap_decade(ncol = length(unique(p1$Dekade_Label))) +
       ggplot2_theme() + 
       ggplot2_labels_monthly_mean(what, title= unique(p1$Label))
-    
-    plot(gg)
-  }
+  })
 }
 ```
 
@@ -278,7 +281,7 @@ surfacewater_level_master <- wp_data[[get_data_name(para_name)]] %>%
   dplyr::select(- .data$Pegelnullpunkt_m) %>% 
   dplyr::mutate(Label = label_river_km(.data))
 
-plot_to_pdf(
+create_pdf_with_plots(
   master_data = surfacewater_level_master,
   summarise_fun = summarise_daily_mean_levels,
   y_column = "Monatsmittelwert_Pegelstand_mNN",
@@ -298,7 +301,7 @@ surfacewater_flow_master <- wp_data[[get_data_name(para_name)]] %>%
   dplyr::left_join(get_master(wp_master[[get_master_name(para_name)]])) %>% 
   dplyr::mutate(Label = label_river_km(.data))
 
-plot_to_pdf(
+create_pdf_with_plots(
   master_data = surfacewater_flow_master, 
   summarise_fun = summarise_daily_mean_values,
   y_column = "Monatsmittelwert", 
@@ -328,7 +331,7 @@ groundwater_level_master <- wp_data[[get_data_name(para_name)]] %>%
     as.double(.data$Filterunterkante_m_u_GOK)
   ))
 
-plot_to_pdf(
+create_pdf_with_plots(
   master_data = groundwater_level_master,
   summarise_fun = summarise_measurements, 
   y_column = "Monatsmittelwert", 

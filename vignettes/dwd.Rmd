@@ -97,11 +97,7 @@ aggregate_and_plot <- function(parameter, colors) {
     inherit.aes = FALSE,
     show.legend = FALSE
     ) +
-    ggplot2::scale_x_continuous(
-      breaks = 1:12, 
-      labels = 1:12, 
-      minor_breaks = NULL
-    ) +
+    kwb.impetus::ggplot2_scale_x_continuous_12() +
     #ggplot2::geom_boxplot() +
     ggplot2::facet_wrap( 
       ~ .data$Dekade_Label,
