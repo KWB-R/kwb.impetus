@@ -42,6 +42,11 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@master
 
+      - name: Install spatial dependencies for R package terra on Ubuntu
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt install -y libproj-dev
+
       - name: Query dependencies
         run: |
           install.packages('remotes')
