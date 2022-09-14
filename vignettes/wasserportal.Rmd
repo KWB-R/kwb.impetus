@@ -160,7 +160,7 @@ print_to_pdf <- function(plots, file) {
   
   on.exit(dev.off())
   
-  plot(plots)
+  print(plots)
 }
 
 plot_for_all_sites <- function(
