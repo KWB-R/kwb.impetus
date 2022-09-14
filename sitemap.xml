@@ -34,6 +34,9 @@
     <loc>https://kwb-r.github.io/kwb.impetus/reference/decade_label.html</loc>
   </url>
   <url>
+    <loc>https://kwb-r.github.io/kwb.impetus/reference/decade_ribbons.html</loc>
+  </url>
+  <url>
     <loc>https://kwb-r.github.io/kwb.impetus/reference/decades_tibble.html</loc>
   </url>
   <url>
@@ -41,6 +44,24 @@
   </url>
   <url>
     <loc>https://kwb-r.github.io/kwb.impetus/reference/floor_decade.html</loc>
+  </url>
+  <url>
+    <loc>https://kwb-r.github.io/kwb.impetus/reference/ggplot2_scale_x_continuous_12.html</loc>
+  </url>
+  <url>
+    <loc>https://kwb-r.github.io/kwb.impetus/reference/group_by_decade_label.html</loc>
+  </url>
+  <url>
+    <loc>https://kwb-r.github.io/kwb.impetus/reference/group_by_decade_month_label.html</loc>
+  </url>
+  <url>
+    <loc>https://kwb-r.github.io/kwb.impetus/reference/group_by_site_decade_month_label.html</loc>
+  </url>
+  <url>
+    <loc>https://kwb-r.github.io/kwb.impetus/reference/group_by_site_year_month_label.html</loc>
+  </url>
+  <url>
+    <loc>https://kwb-r.github.io/kwb.impetus/reference/group_by_year_month.html</loc>
   </url>
   <url>
     <loc>https://kwb-r.github.io/kwb.impetus/reference/index.html</loc>
