@@ -45,7 +45,7 @@ jobs:
       - name: Install spatial dependencies for R package terra on Ubuntu
         if: runner.os == 'Linux'
         run: |
-          sudo apt install -y libproj-dev
+          sudo apt install -y libgdal-dev libproj-dev
 
       - name: Query dependencies
         run: |
