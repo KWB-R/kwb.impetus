@@ -30,7 +30,7 @@ Suggests:
 VignetteBuilder: 
     knitr
 Remotes:
-    github::kwb-r/kwb.dwd@dev,
+    github::kwb-r/kwb.dwd,
     github::kwb-r/kwb.utils,
     github::kwb-r/kwb.pkgbuild,
     github::kwb-r/wasserportal
