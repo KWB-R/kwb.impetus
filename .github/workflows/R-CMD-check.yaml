@@ -42,10 +42,10 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@master
 
-      - name: Install spatial dependencies for R package terra on Ubuntu
-        if: runner.os == 'Linux'
+      - name: Install spatial dependencies
+        if: runner.os != 'Windows'
         run: |
-          sudo apt install -y libgdal-dev libproj-dev
+          brew install gdal proj
 
       - name: Query dependencies
         run: |
