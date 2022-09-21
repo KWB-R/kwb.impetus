@@ -2,12 +2,13 @@
 #' 
 #' @param data data frame
 #' @export
+#' @importFrom dplyr group_by
 group_by_site_decade_month_label <- function(data) {
   data %>%
     dplyr::group_by(
       .data$Messstellennummer, 
-      .data$Dekade,
-      .data$Dekade_Label, 
+      .data$Decade,
+      .data$Decade_Label, 
       .data$Monat, 
       .data$Label
     )
@@ -17,12 +18,13 @@ group_by_site_decade_month_label <- function(data) {
 #' 
 #' @param data data frame
 #' @export
+#' @importFrom dplyr group_by
 group_by_site_year_month_label <- function(data) {
   data %>%
     dplyr::group_by(
       .data$Messstellennummer, 
-      .data$Jahr,
-      .data$Monat, 
+      .data$Year,
+      .data$Month, 
       .data$Label
     )
 }
@@ -31,12 +33,13 @@ group_by_site_year_month_label <- function(data) {
 #' 
 #' @param data data frame
 #' @export
+#' @importFrom rlang .data
 group_by_decade_month_label <- function(data) {
   data %>%
     dplyr::group_by(
-      .data$Dekade,
-      .data$Dekade_Label, 
-      .data$Monat, 
+      .data$Decade,
+      .data$Decade_Label, 
+      .data$Month, 
       .data$Label
     )
 }
@@ -47,7 +50,7 @@ group_by_decade_month_label <- function(data) {
 #' @export
 group_by_decade_label <- function(data) {
   data %>%
-    dplyr::group_by(.data$Dekade_Label)
+    dplyr::group_by(.data$Decade_Label)
 }
 
 #' Group by Jahr, Monat
@@ -56,5 +59,5 @@ group_by_decade_label <- function(data) {
 #' @export
 group_by_year_month <- function(data) {
   data %>%
-    dplyr::group_by(.data$Jahr, .data$Monat)
+    dplyr::group_by(.data$Year, .data$Month)
 }
