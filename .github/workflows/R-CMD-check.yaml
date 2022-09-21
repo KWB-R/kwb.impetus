@@ -42,6 +42,11 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@master
 
+      - name: Install spatial dependencies
+        if: runner.os != 'Windows'
+        run: |
+          brew install gdal proj
+
       - name: Query dependencies
         run: |
           install.packages('remotes')

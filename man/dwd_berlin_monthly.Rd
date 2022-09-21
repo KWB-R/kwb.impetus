@@ -5,8 +5,10 @@
 \alias{dwd_berlin_monthly}
 \title{DWD Dataset (Precipitation and Potential Evaporation) Averaged for Berlin}
 \format{
-A data frame with 53940 rows and 10 variables:
+A data frame with 3852 rows and 12 variables:
 \describe{
+\item{parameter_name}{self-defined name for parameter}
+\item{parameter}{original DWD parameter name (required for requests)}
 \item{file}{name of raw data file}
 \item{year}{year}
 \item{month}{month}
@@ -32,40 +34,77 @@ diamonds.
 #### R code used for creation of "dwd_berlin_monthly.rds"
 ############################################################################
 
-remotes::install_github("kwb-r/kwb.dwd@dev")
+remotes::install_github("kwb-r/kwb.dwd")
 
 library(kwb.impetus)
 
+shape_obj <- kwb.dwd:::get_shape_of_german_region(name = "berlin")
+shape_file <- "berlin.shp"
+
+shape_obj \%>\% 
+ sf::st_as_sf() \%>\% 
+ sf::write_sf(shape_file)
+
+### Plot to check if Berlin boundaries are plotted correctly.
+### Set target CRS
+crs_target <- 4326
+shape_pt <- sf::st_read(shape_file) \%>\%
+ sf::st_transform(crs = crs_target)
+basemap <- shape_pt \%>\%
+ leaflet::leaflet() \%>\%
+ leaflet::addTiles() \%>\%
+ leaflet::addProviderTiles(leaflet::providers$CartoDB.Positron) \%>\%
+ leaflet::addPolygons(color = "red", fill = FALSE)
+basemap
 yearmonth_start <- "188101"
-yearmonth_end <- paste0(format(Sys.Date(), "\%Y"),
-                        sprintf("\%02d", 
-                        as.numeric(format(Sys.Date(), "\%m"))-1))
-                        
-system.time(dwd_berlin_precipitation <- kwb.dwd::load_precipitation_berlin(
-from = yearmonth_start,
-to = yearmonth_end)
+yearmonth_end <- "202208"
+kwb.dwd:::list_monthly_grids_germany_asc_gz("x")
+dwd_monthly_vars <- c(#"air temperature (mean)" = "air_temperature_mean"#,
+ "drought index" = "drought_index",
+ "evaporation, potential" = "evapo_p",
+ "evaporation, real" = "evapo_r",
+ "precipitation" = "precipitation",
+ "soil moisture" = "soil_moist",
+ "soil temperature (5 cm)" = "soil_temperature_5cm"
 )
 
-system.time(dwd_berlin_potentialevaporation <- kwb.dwd::load_potential_evaporation_berlin(
-from = yearmonth_start,
-to = yearmonth_end)
-)
+system.time(
+ dwd_berlin_monthly_list <- stats::setNames(lapply(dwd_monthly_vars, function(dwd_var) {
+   kwb.dwd::read_monthly_data_over_shape(
+     file = shape_file,
+     variable = dwd_var,
+     from = yearmonth_start,
+     to = yearmonth_end,
+     quiet = TRUE
+   )
+ }), nm = dwd_monthly_vars))
 
-dwd_berlin_monthly <- dwd_berlin_precipitation \%>\%  
-dplyr::mutate(parameter = "precipitation", 
-url = sprintf("\%s/grids_germany/monthly/\%s/\%s", 
-kwb.dwd:::dwd_url_climate_dir(),
-"precipitation",
-.data$file)) \%>\%
-dplyr::bind_rows(
-dwd_berlin_potentialevaporation \%>\%
-dplyr::mutate(parameter ="potential evaporation",
-url = sprintf("\%s/grids_germany/monthly/\%s/\%s",
-kwb.dwd:::dwd_url_climate_dir(),
-"evapo_p",
-.data$file)))
+
+dwd_berlin_monthly <- dplyr::bind_rows(dwd_berlin_monthly_list, .id = "parameter")
+
+dwd_berlin_monthly <- tibble::tibble(parameter_name = names(dwd_monthly_vars), 
+                                    parameter = as.character(dwd_monthly_vars)) \%>\%  
+ dplyr::left_join(dwd_berlin_monthly)
+
 
 usethis::use_data(dwd_berlin_monthly, overwrite = TRUE)
+
 } 
+
+
+
+# Dataset
+
+dwd_berlin_monthly
+
+
+# Covered time period for each parameter
+
+dwd_berlin_monthly \%>\%  
+dplyr::group_by(.data$parameter_name,
+.data$parameter) \%>\%
+dplyr::summarise(date_min = min(.data$date),
+date_max = max(.data$date))
+
 }
 \keyword{datasets}
