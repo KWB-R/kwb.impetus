@@ -92,9 +92,7 @@ floor_decade <- function(value) {
 #'
 #' @return re-scales ggplot2
 #' @importFrom stats setNames
-#' @keywords internal
-#' @noRd
-#' @noMd
+#' @export
 scale_fill_decades <- function(decades, ...){
   ggplot2:::manual_scale(
     'fill', 
@@ -110,9 +108,7 @@ scale_fill_decades <- function(decades, ...){
 #' @param ... additional arguments passed to xxx 
 #'
 #' @return re-scales ggplot2
-#' @keywords internal
-#' @noRd
-#' @noMd
+#' @export
 scale_color_decades <- function(decades, ...){
   ggplot2:::manual_scale(
     'color', 
