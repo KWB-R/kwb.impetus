@@ -75,4 +75,10 @@
   <url>
     <loc>https://kwb-r.github.io/kwb.impetus/reference/round_to_decade.html</loc>
   </url>
+  <url>
+    <loc>https://kwb-r.github.io/kwb.impetus/reference/scale_color_decades.html</loc>
+  </url>
+  <url>
+    <loc>https://kwb-r.github.io/kwb.impetus/reference/scale_fill_decades.html</loc>
+  </url>
 </urlset>

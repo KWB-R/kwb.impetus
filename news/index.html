@@ -57,7 +57,11 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.0.9000" id="kwbimpetus-0009000">kwb.impetus 0.0.0.9000<a class="anchor" aria-label="anchor" href="#kwbimpetus-0009000"></a></h2>
-<ul><li><p>Added a <code>NEWS.md</code> file to track changes to the package.</p></li>
+<ul><li><p>Added two workflows for data analysis (<code>monthly</code> values were grouped to <code>decades</code>, and for each month the <code>mean</code> as well as <code>5%</code> and <code>95%</code> confidence intervals are given). The two workflows are based on open-data from</p></li>
+<li><p><a href="https://wasserportal.berlin.de" class="external-link">Wasserportal Berlin</a> covered data period starts on <code>1970-01-01</code> up to the recent year. Time resolution varied but are mostly <code>daily</code> for quantitative <code>surface/groundwater</code> monitoring stations. These were summarized to <code>monthly means</code>.</p></li>
+<li><p><a href="https://opendata.dwd.de/" class="external-link">Deutscher Wetterdienst (DWD)</a> with spatially averaged parameters (e.g. <code>precipitation</code>, evaporation: <code>real</code> and <code>potential</code> for Berlin (see <a href="../articles/dwd.html">DWD workflow</a>). The longest time period with data<br>
+is available for <code>precipitation</code>, which starts on <code>1881-01-01</code> and ends on <code>2022-08-31</code>. For more details checkout the dataset <code>dwd_berlin_monthly</code> which is provided within this R package.</p></li>
+<li><p>Added a <code>NEWS.md</code> file to track changes to the package.</p></li>
 <li><p>see <a href="https://style.tidyverse.org/news.html" class="external-link uri">https://style.tidyverse.org/news.html</a> for writing a good <code>NEWS.md</code></p></li>
 </ul></div>
   </main></div>
