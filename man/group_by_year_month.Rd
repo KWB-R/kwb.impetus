@@ -2,7 +2,7 @@
 % Please edit documentation in R/group_by.R
 \name{group_by_year_month}
 \alias{group_by_year_month}
-\title{Group by Jahr, Monat}
+\title{Group by Year, Month}
 \usage{
 group_by_year_month(data)
 }
@@ -10,5 +10,5 @@ group_by_year_month(data)
 \item{data}{data frame}
 }
 \description{
-Group by Jahr, Monat
+Group by Year, Month
 }

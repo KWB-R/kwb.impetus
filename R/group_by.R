@@ -1,4 +1,4 @@
-#' Group by Messstellennummer, Dekade, Dekade_Label, Monat, Label
+#' Group by Messstellennummer, Decade, Decade_Label, Month, Label
 #' 
 #' @param data data frame
 #' @export
@@ -9,12 +9,12 @@ group_by_site_decade_month_label <- function(data) {
       .data$Messstellennummer, 
       .data$Decade,
       .data$Decade_Label, 
-      .data$Monat, 
+      .data$Month, 
       .data$Label
     )
 }
 
-#' Group by Messstellennummer, Jahr, Monat, Label
+#' Group by Messstellennummer, Year, Month, Label
 #' 
 #' @param data data frame
 #' @export
@@ -29,7 +29,7 @@ group_by_site_year_month_label <- function(data) {
     )
 }
 
-#' Group by Dekade, Dekade_Label, Monat, Label
+#' Group by Decade, Decade_Label, Month, Label
 #' 
 #' @param data data frame
 #' @export
@@ -53,7 +53,7 @@ group_by_decade_label <- function(data) {
     dplyr::group_by(.data$Decade_Label)
 }
 
-#' Group by Jahr, Monat
+#' Group by Year, Month
 #' 
 #' @param data data frame
 #' @export
