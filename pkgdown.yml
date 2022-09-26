@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   dwd: dwd.html
   wasserportal: wasserportal.html
-last_built: 2022-09-21T15:35Z
+last_built: 2022-09-26T10:04Z
 urls:
   reference: https://kwb-r.github.io/kwb.impetus/reference
   article: https://kwb-r.github.io/kwb.impetus/articles
