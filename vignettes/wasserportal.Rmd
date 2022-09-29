@@ -14,6 +14,7 @@ knitr::opts_chunk$set(
 )
 
 is_ghactions <- identical(Sys.getenv("CI"), "true") && nchar(Sys.getenv("GH_ACTIONS_KWB_R")) > 0
+is_ghactions <- FALSE
 ```
 
 ## Install R Package

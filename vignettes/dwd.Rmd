@@ -20,7 +20,7 @@ options(dplyr.summarise.inform = FALSE)
 
 ## DWD Dataset 
 
-## Temperiod Coverage 
+## Temporal Coverage 
 
 ```{r data_availability}
 library(kwb.impetus)
@@ -278,6 +278,12 @@ download_csv <- sprintf("CSV:\n\n%s", paste0(
   collapse = "\n\n"
 ))
 }
+
+download_csv <- sprintf("CSV:\n\n%s", paste0(
+  sprintf("- [%s](https://kwb-r.github.io/kwb.impetus/%s)", files_csv, files_csv),
+  collapse = "\n\n"
+))
+list.files(pattern = "^precipitation-evapo.*\\.pdf$")
 
 if(length(download_pdf) > 0) {
 download_pdf <- sprintf("PDF:\n\n%s",paste0(
