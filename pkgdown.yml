@@ -3,8 +3,9 @@ pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   dwd: dwd.html
+  dwd_climate-water-balance: dwd_climate-water-balance.html
   wasserportal: wasserportal.html
-last_built: 2022-09-29T07:17Z
+last_built: 2022-09-29T07:22Z
 urls:
   reference: https://kwb-r.github.io/kwb.impetus/reference
   article: https://kwb-r.github.io/kwb.impetus/articles
