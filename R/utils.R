@@ -42,6 +42,18 @@ decades_tibble <- function(decade_labels, colors = c(
   )
 }
 
+# existing_files ---------------------------------------------------------------
+
+#' Reduce to File Paths that Exist
+#' 
+#' @param files vector of file paths
+#' @return \code{x} with paths that do not exist removed
+#' @export
+existing_files <- function(files)
+{
+  files[fs::file_exists(files)]
+}
+
 #' Unnamed Quantile Value
 #' 
 #' @param x vector of numeric
