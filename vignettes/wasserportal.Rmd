@@ -62,8 +62,12 @@ get_master_name <- function(para_name) {
   paste0("stations_", para_name)
 }
 
-
-
+markdown_link <- function(base_name) {
+  markdown_link(
+    name = base_name, 
+    url = paste0("https://kwb-r.github.io/kwb.impetus/", base_name)
+  )
+}
 ```
 
 ```{r no_messages, echo = FALSE}
@@ -413,32 +417,29 @@ dev.off()
 The plots created with the code above were exported into `pdf` files, which are 
 available for download here:
 
-
 ### CSV
 
 - **Surface Water**
   
-  + [surface-water_level.csv](https://kwb-r.github.io/kwb.impetus/surface-water_level.csv)
+  + `r markdown_link("surface-water_level.csv")`
 
-  + [surface-water_flow.csv](https://kwb-r.github.io/kwb.impetus/surface-water_flow.csv)
+  + `r markdown_link("surface-water_flow.csv")`
 
 
 - **Groundwater**
   
-  + [groundwater_level.csv](https://kwb-r.github.io/kwb.impetus/groundwater_level.csv)
-
+  + `r markdown_link("groundwater_level.csv")`
 
 
 ### PDF
 
 - **Surface Water**
   
-  + [surface-water_level.pdf](https://kwb-r.github.io/kwb.impetus/surface-water_level.pdf)
+  + `r markdown_link("surface-water_level.pdf")`
 
-  + [surface-water_flow.pdf](https://kwb-r.github.io/kwb.impetus/surface-water_flow.pdf)
+  + `r markdown_link("surface-water_flow.pdf")`
 
 
 - **Groundwater**
   
-  + [groundwater_level.pdf](https://kwb-r.github.io/kwb.impetus/groundwater_level.pdf)
-
+  + `r markdown_link("groundwater_level.pdf")`
