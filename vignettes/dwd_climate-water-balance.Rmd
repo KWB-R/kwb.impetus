@@ -12,13 +12,13 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-
 ```
 
 ### Helper Functions
 
 ```{r helper functions}
 library(kwb.impetus)
+
 summarise_means <- function(data) {
   data %>%
     dplyr::summarise(
@@ -28,14 +28,11 @@ summarise_means <- function(data) {
     )  
 }
 
-
-decade_year_sums <- function(data, 
-                             full_years = TRUE,
-                             unit = "mm/a") {
-  
+decade_year_sums <- function(data, full_years = TRUE, unit = "mm/a")
+{
   years <- unique(data$year)
   
-  if(full_years) {
+  if (full_years) {
     years <- data %>%  
       dplyr::count(Decade, Decade_Label, Year) %>% 
       dplyr::filter(.data$n == 12) %>% 
@@ -47,22 +44,27 @@ decade_year_sums <- function(data,
     dplyr::group_by(Decade, Decade_Label, Year) %>%  
     dplyr::summarise(mean = sum(mean)) %>% 
     summarise_means() %>% 
-    dplyr::mutate(Decade_Label_new = sprintf("%s\nq95: %3.1f %s\nmean: %3.1f %s\nq05: %3.1f %s",
-                                             .data$Decade_Label, 
-                                             .data$q95, 
-                                             unit,
-                                             .data$mean,
-                                             unit,
-                                             .data$q05,
-                                             unit))
-  
+    dplyr::mutate(
+      Decade_Label_new = sprintf(
+        "%s\nq95: %3.1f %s\nmean: %3.1f %s\nq05: %3.1f %s",
+        .data$Decade_Label, 
+        .data$q95, 
+        unit,
+        .data$mean,
+        unit,
+        .data$q05,
+        unit
+      )
+    )
 }
 
-filter_for_max_year <- function(data) {
-  data[data$Year == max(data$Year),]
+filter_for_max_year <- function(data)
+{
+  data[data$Year == max(data$Year), ]
 }
 
-plot_yearly <- function(data, y_label) {
+plot_yearly <- function(data, y_label)
+{
   data %>%  
     dplyr::group_by(year) %>% 
     dplyr::summarise(mean = sum(mean)) %>% 
@@ -70,22 +72,27 @@ plot_yearly <- function(data, y_label) {
       Year = as.integer(.data$year), 
       Decade = kwb.impetus::floor_decade(.data$year),
       Decade_Label = kwb.impetus::decade_label(.data$Decade)) %>%
-    ggplot2::ggplot(mapping = ggplot2::aes(x = year, 
-                                           y = mean)) +
-                      ggplot2::geom_point() +
-                      ggplot2::geom_line() +
+    ggplot2::ggplot(mapping = ggplot2::aes(
+      x = year, 
+      y = mean
+    )) +
+    ggplot2::geom_point() +
+    ggplot2::geom_line() +
     ggplot2::theme_bw() +
-    ggplot2::labs(x = "Year", 
-                  y = sprintf("%s (mm/a)", y_label))
-  }
+    ggplot2::labs(
+      x = "Year", 
+      y = sprintf("%s (mm/a)", y_label)
+    )
+}
 
-plot_decades <- function(data, unit = "mm/a") {
-  
+plot_decades <- function(data, unit = "mm/a") 
+{
   decade_sums <- decade_year_sums(data) %>% 
     dplyr::ungroup() %>% 
-    dplyr::select(Decade_Label, 
-                  Decade_Label_new)
-  
+    dplyr::select(
+      Decade_Label, 
+      Decade_Label_new
+    )
   
   aggregated_data <- data %>% 
     kwb.impetus::group_by_decade_month_label() %>% 
@@ -94,7 +101,6 @@ plot_decades <- function(data, unit = "mm/a") {
     dplyr::left_join(decade_sums, by = "Decade_Label") %>% 
     dplyr::select(-.data$Decade_Label) %>% 
     dplyr::rename(Decade_Label = .data$Decade_Label_new)
-  
   
   decades <- kwb.impetus::decades_tibble(
     decade_labels = aggregated_data$Decade_Label,
@@ -140,9 +146,7 @@ plot_decades <- function(data, unit = "mm/a") {
     ggplot2::theme_bw() + 
     ggplot2::theme(legend.position = "bottom") +
     ggplot2::labs(
-      y = sprintf("Mean '%s' (%s)", 
-                  parameter_name, 
-                  unit), 
+      y = sprintf("Mean '%s' (%s)", parameter_name, unit), 
       x = "Month Number", 
       col = "Mean", 
       fill = "5%/95% Conf.-Interval",
@@ -150,9 +154,8 @@ plot_decades <- function(data, unit = "mm/a") {
     )
 }
 
-
-print_to_pdf <- function(gg, file, width.cm) {
-  
+print_to_pdf <- function(gg, file, width.cm)
+{
   kwb.utils::preparePdf(
     file, 
     landscape = TRUE, 
@@ -171,7 +174,6 @@ print_to_pdf <- function(gg, file, width.cm) {
 ### Precipitation - Evaporation, potential
 
 ```{r waterbalance_1}
-
 parameter_name <- "Precipitation - Evaporation, real"
 parameter_id <- "evapo_p"
 file_name_base <- sprintf("precipitation-%s_", parameter_id)
@@ -179,8 +181,10 @@ file_name_base <- sprintf("precipitation-%s_", parameter_id)
 data <- kwb.impetus::dwd_berlin_monthly %>%  
   dplyr::select(parameter, date, year, month, mean) %>% 
   dplyr::filter(parameter %in% c("precipitation", parameter_id)) %>% 
-  tidyr::pivot_wider(names_from = "parameter", 
-                     values_from = "mean") %>% 
+  tidyr::pivot_wider(
+    names_from = "parameter", 
+    values_from = "mean"
+  ) %>% 
   dplyr::mutate(
     Year = as.integer(.data$year), 
     Decade = kwb.impetus::floor_decade(.data$year),
@@ -190,8 +194,10 @@ data <- kwb.impetus::dwd_berlin_monthly %>%
     mean = .data$precipitation - .data[[parameter_id]]
   ) %>% 
   dplyr::filter(!is.na(mean)) %>% 
-  dplyr::select(- .data$precipitation, 
-                - .data[[parameter_id]])
+  dplyr::select(
+    - .data$precipitation, 
+    - .data[[parameter_id]]
+  )
 
 ```
 
@@ -199,30 +205,35 @@ data <- kwb.impetus::dwd_berlin_monthly %>%
 
 ```{r waterbalance_1_by_year}
 gg1 <- plot_yearly(data, y_label = parameter_name)
+
 plotly::ggplotly(gg1)
-print_to_pdf(gg1, 
-             file = sprintf("%syearly.pdf", file_name_base), 
-             width.cm = 35)
+
+print_to_pdf(
+  gg1, 
+  file = sprintf("%syearly.pdf", file_name_base), 
+  width.cm = 35
+)
 ```
 
 **By Decade**
 
 ```{r waterbalance_1_by_decade_table}
-DT::datatable(decade_year_sums(data)[,-6])
+DT::datatable(decade_year_sums(data)[, -6L])
 ```
 
 ```{r waterbalance_1_by_decade_plot}
 gg2 <- plot_decades(data)
-print_to_pdf(gg2,
-             file = sprintf("%sdecades.pdf", file_name_base), 
-             width.cm = 35)
+
+print_to_pdf(
+  gg2,
+  file = sprintf("%sdecades.pdf", file_name_base), 
+  width.cm = 35
+)
 ```
 
 ### Precipitation - Evaporation, real
 
-
 ```{r waterbalance_2}
-
 parameter_name <- "Precipitation - Evaporation, real"
 parameter_id <- "evapo_r"
 file_name_base <- sprintf("precipitation-%s_", parameter_id)
@@ -230,8 +241,10 @@ file_name_base <- sprintf("precipitation-%s_", parameter_id)
 data <- kwb.impetus::dwd_berlin_monthly %>%  
   dplyr::select(parameter, date, year, month, mean) %>% 
   dplyr::filter(parameter %in% c("precipitation", parameter_id)) %>% 
-  tidyr::pivot_wider(names_from = "parameter", 
-                     values_from = "mean") %>% 
+  tidyr::pivot_wider(
+    names_from = "parameter", 
+    values_from = "mean"
+  ) %>% 
   dplyr::mutate(
     Year = as.integer(.data$year), 
     Decade = kwb.impetus::floor_decade(.data$year),
@@ -241,32 +254,40 @@ data <- kwb.impetus::dwd_berlin_monthly %>%
     mean = .data$precipitation - .data[[parameter_id]]
   ) %>% 
   dplyr::filter(!is.na(mean)) %>% 
-  dplyr::select(- .data$precipitation, 
-                - .data[[parameter_id]])
-
+  dplyr::select(
+    - .data$precipitation, 
+    - .data[[parameter_id]]
+  )
 ```
 
 **By Year**
 
 ```{r waterbalance_2_by_year}
 gg1 <- plot_yearly(data, y_label = parameter_name)
+
 plotly::ggplotly(gg1)
-print_to_pdf(gg1, 
-             file = sprintf("%syearly.pdf", file_name_base), 
-             width.cm = 35)
+
+print_to_pdf(
+  gg1, 
+  file = sprintf("%syearly.pdf", file_name_base), 
+  width.cm = 35
+)
 ```
 
 **By Decade**
 
 ```{r waterbalance_2_by_decade_table}
-DT::datatable(decade_year_sums(data)[,-6])
+DT::datatable(decade_year_sums(data)[, -6L])
 ```
 
 ```{r waterbalance_2_by_decade_plot}
 gg2 <- plot_decades(data)
-print_to_pdf(gg2,
-             file = sprintf("%sdecades.pdf", file_name_base), 
-             width.cm = 35)
+
+print_to_pdf(
+  gg2,
+  file = sprintf("%sdecades.pdf", file_name_base), 
+  width.cm = 35
+)
 ```
 
 ## Download
@@ -275,15 +296,12 @@ The plots created with the code above were exported into `pdf` files, which are
 available for download here:
 
 ```{r download, echo = FALSE, results ='asis'}
-
 files_pdf <- list.files(pattern = "^precipitation-evapo.*\\.pdf$")
+
 download_pdf <- sprintf("**PDF**:\n\n%s", paste0(
   sprintf("- [%s](https://kwb-r.github.io/kwb.impetus/%s)", files_pdf, files_pdf),
   collapse = "\n\n")
 )
+
 cat(download_pdf)
-
 ```
-
-
-
