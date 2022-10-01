@@ -24,20 +24,29 @@ options(dplyr.summarise.inform = FALSE)
 
 ```{r data_availability}
 library(kwb.impetus)
-dwd_timeperiod <- kwb.impetus::dwd_berlin_monthly %>%  
-  dplyr::group_by(.data$parameter_name, 
-                  .data$parameter) %>%  
-  dplyr::summarise(date_min = min(.data$date), 
-                   date_max = max(.data$date), 
-                   number_of_datapoints = dplyr::n()) %>%  
-  dplyr::mutate(file_postfix = stringr::str_replace_all(.data$parameter, "_", "-"))
 
-DT::datatable(dwd_timeperiod, caption = "Monthly DWD Data availability for Berlin")
+dwd_timeperiod <- kwb.impetus::dwd_berlin_monthly %>%  
+  dplyr::group_by(
+    .data$parameter_name, 
+    .data$parameter
+  ) %>%  
+  dplyr::summarise(
+    date_min = min(.data$date), 
+    date_max = max(.data$date), 
+    number_of_datapoints = dplyr::n()
+  ) %>%  
+  dplyr::mutate(
+    file_postfix = stringr::str_replace_all(.data$parameter, "_", "-")
+  )
+
+DT::datatable(
+  dwd_timeperiod, 
+  caption = "Monthly DWD Data availability for Berlin"
+)
 ```
 ### Content
 
 ```{r dataset_content}
-
 DT::datatable(kwb.impetus::dwd_berlin_monthly)
 ```
 
