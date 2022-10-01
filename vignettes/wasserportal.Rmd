@@ -3,10 +3,8 @@ title: "Wasserportal"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Wasserportal}
-  %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
-  chunk_output_type: console
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -15,7 +13,8 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-is_ghactions <- identical(Sys.getenv("CI"), "true")
+is_ghactions <- identical(Sys.getenv("CI"), "true") && nchar(Sys.getenv("GH_ACTIONS_KWB_R")) > 0
+is_ghactions <- FALSE
 ```
 
 ## Install R Package
@@ -24,12 +23,11 @@ is_ghactions <- identical(Sys.getenv("CI"), "true")
 # Enable repository from kwb-r
 options(repos = c(
   kwbr = 'https://kwb-r.r-universe.dev',
-  CRAN = 'https://cloud.r-project.org'
-))
-
+  CRAN = 'https://cloud.r-project.org'))
 # Download and install kwb.impetus in R
 install.packages('kwb.impetus')
 ```
+
 
 ## Define Helper Functions 
 
@@ -38,20 +36,25 @@ library(kwb.impetus)
 
 get_master <- function(stations_df) {
   
-  if ("Betreiber" %in% names(stations_df)) {
+  if("Betreiber" %in% names(stations_df)) {
     stations_df <- stations_df %>% 
-      dplyr::filter(.data$Betreiber == "Land Berlin") 
+  dplyr::filter(.data$Betreiber == "Land Berlin") 
   }
   
-  stations_df %>% 
-    dplyr::pull(.data$stammdaten_link) %>%
-    wasserportal::get_wasserportal_masters_data() %>% 
-    dplyr::rename(Messstellennummer = .data$Nummer) %>% 
-    dplyr::mutate(Messstellennummer = as.double(.data$Messstellennummer))
+urls <- stations_df %>% dplyr::pull(.data$stammdaten_link)
+
+wasserportal::get_wasserportal_masters_data(master_urls = urls) %>% 
+  dplyr::rename(Messstellennummer = .data$Nummer) %>% 
+  dplyr::mutate(Messstellennummer = as.double(.data$Messstellennummer))
+
+
 }
 
 get_data_name <- function(para_name) {
-  prefix <- ifelse(startsWith(para_name, "surface"), "daily_", "")
+  prefix <- ""
+  if(startsWith(para_name, "surface")) {
+    prefix <- "daily_"
+  }
   paste0(prefix, para_name)
 }
 
@@ -59,156 +62,8 @@ get_master_name <- function(para_name) {
   paste0("stations_", para_name)
 }
 
-label_river_km <- function(data) {
-  sprintf(
-    "%s (%s, id: %s, fluss-km: %2.2f)", 
-    data$Name,
-    data$Gewaesser, 
-    data$Messstellennummer, 
-    as.numeric(data$Flusskilometer)
-  )
-}
 
-set_date_year_decade_month <- function(data) {
-  data %>% 
-    dplyr::mutate(
-      Datum = as.Date(.data$Datum),
-      Jahr = as.integer(format(.data$Datum, "%Y")), 
-      Dekade = kwb.impetus::floor_decade(.data$Jahr),
-      Dekade_Label = kwb.impetus::decade_label(.data$Dekade),
-      Monat = as.factor(format(.data$Datum, "%m"))
-    )
-}
 
-summarise_daily_mean_levels <- function(data) {
-  variable <- "Tagesmittelwert_Pegelstand_mNN"
-  data %>%
-    dplyr::summarise(
-      Monatsmittelwert_Pegelstand_mNN = mean(.data[[variable]]),
-      q05 = kwb.impetus::numeric_quantile(.data[[variable]], 0.05),
-      q95 = kwb.impetus::numeric_quantile(.data[[variable]], 0.95)
-    )
-}
-
-summarise_to_monthly_means <- function(data, variable) {
-  data %>%
-    dplyr::summarise(
-      Monatsmittelwert = mean(.data[[variable]]),
-      q05 = kwb.impetus::numeric_quantile(.data[[variable]], 0.05),
-      q95 = kwb.impetus::numeric_quantile(.data[[variable]], 0.95),
-    )
-}
-
-summarise_daily_mean_values <- function(data) {
-  summarise_to_monthly_means(data, variable = "Tagesmittelwert")
-}
-
-summarise_measurements <- function(data) {
-  summarise_to_monthly_means(data, variable = "Messwert")
-}
-
-ggplot2_labels_monthly_mean <- function(what, title) { 
-  ggplot2::labs(
-    y = paste("Monatsmittel", what), 
-    x = "Monatsnummer", 
-    col = "Mittelwert", 
-    fill = "5%/95% Konf.-intervall",
-    title = title
-  )
-}
-
-ggplot2_facet_wrap_decade <- function(ncol) {
-  ggplot2::facet_wrap(~ .data$Dekade_Label, nrow = 1L, ncol = ncol)
-}
-
-ggplot2_theme <- function() {
-  ggplot2::theme_bw() + 
-    ggplot2::theme(legend.position = "bottom")
-}
-
-create_pdf_with_plots <- function(
-    master_data, 
-    summarise_fun, 
-    y_column, 
-    what, 
-    file
-) {
-  
-  master_data_agg <- master_data %>% 
-    kwb.impetus::group_by_site_decade_month_label() %>% 
-    summarise_fun()
-  
-  plots <- plot_for_all_sites(
-    master_data_agg = master_data_agg,
-    master_data = master_data,
-    summarise_fun = summarise_fun,
-    y_column = y_column,
-    what = what
-  )
-
-  print_to_pdf(plots, file)
-}
-
-print_to_pdf <- function(plots, file) {
-  
-  kwb.utils::preparePdf(
-    file,
-    landscape = TRUE,
-    width.cm = 29.7, 
-    height.cm = 21
-  )
-  
-  on.exit(dev.off())
-  
-  print(plots)
-}
-
-plot_for_all_sites <- function(
-    master_data_agg, master_data, summarise_fun, y_column, what
-) {
-  
-  decades <- kwb.impetus::decades_tibble(master_data_agg$Dekade_Label)
-
-  ids <- unique(master_data_agg$Messstellennummer)
-
-  lapply(ids, function(id) {
-    
-    p1 <- master_data_agg %>% 
-      dplyr::filter(.data$Messstellennummer == id) 
-    
-    p2 <- master_data %>% 
-      dplyr::filter(.data$Jahr == max(.data$Jahr)) %>% 
-      kwb.impetus::group_by_site_year_month_label() %>% 
-      summarise_fun() %>% 
-      dplyr::filter(.data$Messstellennummer == id) 
-    
-    p1 %>% 
-      ggplot2::ggplot(mapping = ggplot2::aes(
-        x = as.integer(.data$Monat), 
-        y = .data[[y_column]],
-        col = as.factor(.data$Dekade_Label))
-      ) + 
-      #ggplot2::geom_point(alpha = 0.5) + 
-      kwb.impetus::decade_ribbons() + 
-      kwb.impetus::scale_fill_decades(decades) +
-      kwb.impetus::scale_color_decades(decades) +
-      ggplot2::geom_point() +
-      ggplot2::geom_point(ggplot2::aes(
-        x = as.integer(.data$Monat),
-        y = .data[[y_column]]), 
-        data = p2,
-        col = "darkgrey",
-        alpha = 0.5, 
-        inherit.aes = FALSE,
-        show.legend = FALSE
-      ) +
-      kwb.impetus::ggplot2_scale_x_continuous_12() +
-      #ggplot2::geom_boxplot() +
-      ggplot2_facet_wrap_decade(ncol = length(unique(p1$Dekade_Label))) +
-      ggplot2_theme() + 
-      ggplot2_labels_monthly_mean(what, title= unique(p1$Label))
-  })
-}
 ```
 
 ```{r no_messages, echo = FALSE}
@@ -217,143 +72,373 @@ options(dplyr.summarise.inform = FALSE)
 
 ## Surface Water 
 
-```{r surface_water_always, eval = TRUE}
+```{r surface_water, eval = is_ghactions}
 stations <- wasserportal::get_stations()
-overview_names <- names(stations$overview_list)
-
 variables <- wasserportal::get_surfacewater_variables()
 variables <- variables[1:2]
-
-# The following code downloads pre-compiled data (daily updated at 5am UTC) 
-# from https://kwb-r.github.io/wasserportal/
-#   daily_surface_water.<parameter_name>.csv
-# see also: 
-#   https://kwb-r.github.io/wasserportal/articles/surface-water.html
-```
-
-```{r surface_water_ghactions, eval = is_ghactions}
-wp_master <- wasserportal::wp_masters_data_to_list(overview_names)
-wp_data <- wasserportal::wp_timeseries_data_to_list(overview_names)
-```
-
-```{r surface_water_local, eval = !is_ghactions}
-overview_names <- c(
-  "surface_water.water_level", 
-  "surface_water.flow",
-  "groundwater.level"
-)
+ 
+# Downloads pre-compiled data (daily updated at 5am UTC) 
+# from https://kwb-r.github.io/wasserportal/daily_surface_water.<parameter_name>.csv
+# see also: https://kwb-r.github.io/wasserportal/articles/surface-water.html
+overview_names <- names(stations$overview_list)
 
 wp_master <- wasserportal::wp_masters_data_to_list(overview_names)
-
-### Limit to 3 stations per parameter of run locally to increase speed 
-### otherwise rendering would last ~ 2 hours
-wp_master <- lapply(wp_master, function(data) data[1:3,])
 wp_data <- wasserportal::wp_timeseries_data_to_list(overview_names)
-```
 
-```{r surface_water_always_alternative, eval = FALSE}
 ### Alternatively: download latest data from Wasserportal Berlin (takes a while)
-wp_sw_data <- wasserportal::get_daily_surfacewater_data(stations, variables) 
-wp_gw_data <- wasserportal::get_groundwater_data(stations)
-wp_data <- c(wp_sw_data, wp_gw_data)
+#wp_sw_data <- wasserportal::get_daily_surfacewater_data(stations, variables) 
+#wp_gw_data <- wasserportal::get_groundwater_data(stations)
+#wp_data <- c(wp_sw_data, wp_gw_data)
+
 ```
 
 ### Surface Water Level 
 
-```{r surface_water_level}
+```{r surface_water_level, eval = is_ghactions}
 para_name <- "surface-water_water-level"
 
-surfacewater_level_master <- wp_data %>%
-  kwb.utils::selectElements(get_data_name(para_name)) %>% 
+surfacewater_level_master <- wp_data[[get_data_name(para_name)]] %>% 
   dplyr::filter(.data$Parameter == "Wasserstand") %>%  
-  set_date_year_decade_month() %>%
+  dplyr::mutate(Datum = as.Date(.data$Datum),
+                Year = as.integer(format(.data$Datum, "%Y")), 
+                Decade = kwb.impetus::floor_decade(.data$Year),
+                Decade_Label = sprintf("%d - %d", 
+                                       .data$Decade, 
+                                       .data$Decade + 9),
+                Month = as.factor(format(.data$Datum, "%m"))) %>% 
   dplyr::left_join(get_master(wp_master[[get_master_name(para_name)]])) %>% 
-  dplyr::mutate(
-    Tagesmittelwert_Pegelstand_mNN = as.numeric(.data$Pegelnullpunkt_m) +
-      .data$Tagesmittelwert / 100
-  ) %>%
-  ### remove -777 for messstellennummer 5867000 (few values in 2000) 
-  ### resulted by step above
+  dplyr::mutate(Tagesmittelwert_Pegelstand_mNN = as.numeric(.data$Pegelnullpunkt_m) + .data$Tagesmittelwert/100) %>%
+  ### remove -777 for messstellennummer 5867000 (few values in 2000) resulted by step above
   dplyr::filter(.data$Tagesmittelwert_Pegelstand_mNN != -777) %>%
   dplyr::select(- .data$Pegelnullpunkt_m) %>% 
-  dplyr::mutate(Label = label_river_km(.data))
+  dplyr::mutate(Label = sprintf("%s (%s, id: %s, fluss-km: %2.2f)", 
+                                .data$Name,
+                                .data$Gewaesser, 
+                                .data$Messstellennummer, 
+                                as.numeric(.data$Flusskilometer)))
 
-create_pdf_with_plots(
-  master_data = surfacewater_level_master,
-  summarise_fun = summarise_daily_mean_levels,
-  y_column = "Monatsmittelwert_Pegelstand_mNN",
-  what = "Pegelstand (m NN)",
-  file = "surface-water_level.pdf"
-)
+surfacewater_level_master_agg <- surfacewater_level_master %>% 
+  dplyr::group_by(.data$Messstellennummer, 
+                  .data$Decade,
+                  .data$Decade_Label, 
+                  .data$Month, 
+                  .data$Label) %>% 
+  dplyr::summarise(Monatsmittelwert_Pegelstand_mNN = mean(.data$Tagesmittelwert_Pegelstand_mNN),
+                   q05 = as.numeric(quantile(.data$Tagesmittelwert_Pegelstand_mNN, probs = 0.05)),
+                   q95 = as.numeric(quantile(.data$Tagesmittelwert_Pegelstand_mNN, probs = 0.95)),
+                   ) 
+
+para_name_export <- "surface-water_level"
+
+readr::write_csv(surfacewater_level_master_agg, sprintf("%s.csv", para_name_export ))
+
+decades <- tibble::tibble(names = unique(surfacewater_level_master_agg$Decade_Label)[order(unique(surfacewater_level_master_agg$Decade_Label))],
+                          values = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'))
+
+
+kwb.utils::preparePdf(sprintf("%s.pdf", para_name_export),
+                      landscape = TRUE,
+                      width.cm = 29.7, 
+                      height.cm = 21)
+
+ids <- unique(surfacewater_level_master_agg$Messstellennummer)
+
+for(id in ids) {
+p1 <- surfacewater_level_master_agg %>% 
+  dplyr::filter(.data$Messstellennummer == id) 
+
+p2 <- surfacewater_level_master %>% 
+  dplyr::filter(.data$Year == max(.data$Year)) %>% 
+  dplyr::group_by(.data$Messstellennummer, 
+                  .data$Year,
+                  .data$Month, 
+                  .data$Label) %>% 
+  dplyr::summarise(Monatsmittelwert_Pegelstand_mNN = mean(.data$Tagesmittelwert_Pegelstand_mNN),
+                   q05 = quantile(.data$Tagesmittelwert_Pegelstand_mNN, probs = 0.05),
+                   q95 = quantile(.data$Tagesmittelwert_Pegelstand_mNN, probs = 0.95)) %>% 
+  dplyr::filter(.data$Messstellennummer == id) 
+
+n_decades <- length(unique(p1$Decade_Label))
+
+gg <- p1 %>% 
+  ggplot2::ggplot(mapping = ggplot2::aes(x = as.integer(.data$Month), 
+                                         y = .data$Monatsmittelwert_Pegelstand_mNN,
+                                         col = as.factor(.data$Decade_Label))) + 
+  #ggplot2::geom_point(alpha = 0.5) + 
+  ggplot2::geom_ribbon(ggplot2::aes_string(ymin = "q05", 
+                                           ymax = "q95", 
+                                           fill = "Decade_Label"), 
+                       alpha = 0.1) + 
+  kwb.impetus::scale_fill_decades(decades) +
+  kwb.impetus::scale_color_decades(decades) +
+  ggplot2::geom_point() +
+  ggplot2::geom_point(ggplot2::aes(x = as.integer(.data$Month),
+                                   y = .data$Monatsmittelwert_Pegelstand_mNN), 
+                      data = p2,
+                      col = "darkgrey",
+                      alpha = 0.5, 
+                      inherit.aes = FALSE,
+                      show.legend = FALSE) +
+  ggplot2::scale_x_continuous(breaks = 1:12, labels = 1:12, minor_breaks = NULL) +
+  #ggplot2::geom_boxplot() +
+  ggplot2::facet_wrap( ~ .data$Decade_Label,
+                       nrow = 1, 
+                       ncol = n_decades) +
+  ggplot2::theme_bw() + 
+  ggplot2::theme(legend.position="bottom") +
+  ggplot2::labs(y = "Monthly Mean Water Level (m NN)", 
+                x = "Month Number", 
+                col = "Mean", 
+                fill = "5%/95% Conf.-Interval",
+                title = unique(p1$Label))
+
+plot(gg)
+}
+dev.off()
+
 ```
+
 
 ### Surface Water Flow 
 
-```{r surface_water_flow}
+```{r surface_water_flow, eval = is_ghactions}
 para_name <- "surface-water_flow"
 
-surfacewater_flow_master <- wp_data %>%
-  kwb.utils::selectElements(get_data_name(para_name)) %>% 
-  dplyr::filter(.data$Parameter == "Durchfluss") %>%
-  set_date_year_decade_month() %>% 
+surfacewater_flow_master <- wp_data[[get_data_name(para_name)]] %>% 
+  dplyr::filter(.data$Parameter == "Durchfluss") %>%    
+  dplyr::mutate(Datum = as.Date(.data$Datum),
+                Year = as.integer(format(.data$Datum, "%Y")), 
+                Decade = kwb.impetus::floor_decade(.data$Year),
+                Decade_Label = sprintf("%d - %d", 
+                                       .data$Decade, 
+                                       .data$Decade + 9),
+                Month = as.factor(format(.data$Datum, "%m"))) %>% 
   dplyr::left_join(get_master(wp_master[[get_master_name(para_name)]])) %>% 
-  dplyr::mutate(Label = label_river_km(.data))
+  dplyr::mutate(Label = sprintf("%s (%s, id: %s, fluss-km: %2.2f)", 
+                                .data$Name,
+                                .data$Gewaesser, 
+                                .data$Messstellennummer, 
+                                as.numeric(.data$Flusskilometer)))
 
-create_pdf_with_plots(
-  master_data = surfacewater_flow_master, 
-  summarise_fun = summarise_daily_mean_values,
-  y_column = "Monatsmittelwert", 
-  what = "Durchfluss (m\u00B3/s)",
-  file = "surface-water_flow.pdf"
-)
+surfacewater_flow_master_agg <- surfacewater_flow_master %>%  
+  dplyr::group_by(.data$Messstellennummer, 
+                  .data$Decade,
+                  .data$Decade_Label, 
+                  .data$Month, 
+                  .data$Label) %>% 
+  dplyr::summarise(Monatsmittelwert = mean(.data$Tagesmittelwert),
+                   q05 = as.numeric(quantile(.data$Tagesmittelwert, probs = 0.05)),
+                   q95 = as.numeric(quantile(.data$Tagesmittelwert, probs = 0.95)),
+                   ) 
+
+readr::write_csv(surfacewater_flow_master_agg, sprintf("%s.csv", para_name))
+
+
+
+decades <- tibble::tibble(names = unique(surfacewater_flow_master_agg$Decade_Label)[order(unique(surfacewater_flow_master_agg$Decade_Label))],
+                          values = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'))
+
+
+
+kwb.utils::preparePdf(sprintf("%s.pdf", para_name),
+                      landscape = TRUE,
+                      width.cm = 29.7, 
+                      height.cm = 21)
+
+ids <- unique(surfacewater_flow_master_agg$Messstellennummer)
+
+for(id in ids) {
+p1 <- surfacewater_flow_master_agg %>% 
+  dplyr::filter(.data$Messstellennummer == id) 
+
+p2 <- surfacewater_flow_master %>% 
+  dplyr::filter(.data$Year == max(.data$Year)) %>% 
+  dplyr::group_by(.data$Messstellennummer, 
+                  .data$Year,
+                  .data$Month, 
+                  .data$Label) %>% 
+  dplyr::summarise(Monatsmittelwert = mean(.data$Tagesmittelwert),
+                   q05 = quantile(.data$Tagesmittelwert, probs = 0.05),
+                   q95 = quantile(.data$Tagesmittelwert, probs = 0.95)) %>% 
+  dplyr::filter(.data$Messstellennummer == id) 
+
+n_decades <- length(unique(p1$Decade_Label))
+
+gg <- p1 %>% 
+  ggplot2::ggplot(mapping = ggplot2::aes(x = as.integer(.data$Month), 
+                                         y = .data$Monatsmittelwert,
+                                         col = as.factor(.data$Decade_Label))) + 
+  #ggplot2::geom_point(alpha = 0.5) + 
+  ggplot2::geom_ribbon(ggplot2::aes_string(ymin = "q05", 
+                                           ymax = "q95", 
+                                           fill = "Decade_Label"), 
+                       alpha = 0.1) + 
+  kwb.impetus::scale_fill_decades(decades) +
+  kwb.impetus::scale_color_decades(decades) +
+  ggplot2::geom_point() +
+  ggplot2::geom_point(ggplot2::aes(x = as.integer(.data$Month),
+                                   y = .data$Monatsmittelwert), 
+                      data = p2,
+                      col = "darkgrey",
+                      alpha = 0.5, 
+                      inherit.aes = FALSE,
+                      show.legend = FALSE) +
+  ggplot2::scale_x_continuous(breaks = 1:12, labels = 1:12, minor_breaks = NULL) +
+  #ggplot2::geom_boxplot() +
+  ggplot2::facet_wrap( ~ .data$Decade_Label,
+                       nrow = 1, 
+                       ncol = n_decades) +
+  ggplot2::theme_bw() + 
+  ggplot2::theme(legend.position="bottom") +
+  ggplot2::labs(y = "Monthly mean Surface Water Flow (m\u00B3/s)", 
+                x = "Month Number", 
+                col = "Mean", 
+                fill = "5%/95% Conf.-Interval",
+                title = unique(p1$Label))
+
+plot(gg)
+}
+dev.off()
 ```
 
 ## Groundwater 
 
 ### Grundwater Level
 
-```{r groundwater_level}
+```{r groundwater_level, eval = is_ghactions}
+
 para_name <- "groundwater_level"
 
-groundwater_level_master <- wp_data %>%
-  kwb.utils::selectElements(get_data_name(para_name)) %>% 
-  dplyr::filter(.data$Parameter == "GW-Stand") %>%    
-  set_date_year_decade_month() %>% 
-  dplyr::left_join(get_master(wp_master[[get_master_name(para_name)]])) %>% 
-  dplyr::mutate(Label = sprintf(
-    "%s (%s, %s, gok: %.1f m, fok-fuk: %.1f-%.1f m)", 
-    .data$Messstellennummer,
-    .data$Bezirk, 
-    .data$Grundwasserleiter, 
-    as.double(.data$Gelaendeoberkante_GOK_m_ue_NHN),
-    as.double(.data$Filteroberkante_m_u_GOK), 
-    as.double(.data$Filterunterkante_m_u_GOK)
-  ))
 
-create_pdf_with_plots(
-  master_data = groundwater_level_master,
-  summarise_fun = summarise_measurements, 
-  y_column = "Monatsmittelwert", 
-  what = "Grundwasserstand (m NN)", 
-  file = "groundwater_level.pdf"
-)
+groundwater_level_master <- wp_data[[get_data_name(para_name)]] %>% 
+  dplyr::filter(.data$Parameter == "GW-Stand") %>%    
+  dplyr::mutate(Datum = as.Date(.data$Datum),
+                Year = as.integer(format(.data$Datum, "%Y")), 
+                Decade = kwb.impetus::floor_decade(.data$Year),
+                Decade_Label = sprintf("%d - %d", 
+                                       .data$Decade, 
+                                       .data$Decade + 9),
+                Month = as.factor(format(.data$Datum, "%m"))) %>% 
+  dplyr::left_join(get_master(wp_master[[get_master_name(para_name)]])) %>% 
+  dplyr::mutate(Label = sprintf("%s (%s, %s, gok: %.1f m, fok-fuk: %.1f-%.1f m)", 
+                                .data$Messstellennummer,
+                                .data$Bezirk, 
+                                .data$Grundwasserleiter, 
+                                as.double(.data$Gelaendeoberkante_GOK_m_ue_NHN),
+                                as.double(.data$Filteroberkante_m_u_GOK), 
+                                as.double(.data$Filterunterkante_m_u_GOK)))
+
+groundwater_level_master_agg <- groundwater_level_master %>%  
+  dplyr::group_by(.data$Messstellennummer, 
+                  .data$Decade,
+                  .data$Decade_Label, 
+                  .data$Month, 
+                  .data$Label) %>% 
+  dplyr::summarise(Monatsmittelwert = mean(.data$Messwert),
+                   q05 = as.numeric(quantile(.data$Messwert, probs = 0.05)),
+                   q95 = as.numeric(quantile(.data$Messwert, probs = 0.95)),
+                   ) 
+
+readr::write_csv(groundwater_level_master_agg, sprintf("%s.csv", para_name))
+
+decades <- tibble::tibble(names = unique(groundwater_level_master_agg$Decade_Label)[order(unique(groundwater_level_master_agg$Decade_Label))],
+                          values = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'))
+
+
+
+kwb.utils::preparePdf(sprintf("%s.pdf", para_name),
+                      landscape = TRUE,
+                      width.cm = 29.7, 
+                      height.cm = 21)
+
+ids <- unique(groundwater_level_master_agg$Messstellennummer)
+
+for(id in ids) {
+p1 <- groundwater_level_master_agg %>% 
+  dplyr::filter(.data$Messstellennummer == id) 
+
+p2 <- groundwater_level_master %>% 
+  dplyr::filter(.data$Year == max(.data$Year)) %>% 
+  dplyr::group_by(.data$Messstellennummer, 
+                  .data$Year,
+                  .data$Month, 
+                  .data$Label) %>% 
+  dplyr::summarise(Monatsmittelwert = mean(.data$Messwert),
+                   q05 = quantile(.data$Messwert, probs = 0.05),
+                   q95 = quantile(.data$Messwert, probs = 0.95)) %>% 
+  dplyr::filter(.data$Messstellennummer == id) 
+
+n_decades <- length(unique(p1$Decade_Label))
+
+gg <- p1 %>% 
+  ggplot2::ggplot(mapping = ggplot2::aes(x = as.integer(.data$Month), 
+                                         y = .data$Monatsmittelwert,
+                                         col = as.factor(.data$Decade_Label))) + 
+  #ggplot2::geom_point(alpha = 0.5) + 
+  ggplot2::geom_ribbon(ggplot2::aes_string(ymin = "q05", 
+                                           ymax = "q95", 
+                                           fill = "Decade_Label"), 
+                       alpha = 0.1) + 
+  kwb.impetus::scale_fill_decades(decades) +
+  kwb.impetus::scale_color_decades(decades) +
+  ggplot2::geom_point() +
+  ggplot2::geom_point(ggplot2::aes(x = as.integer(.data$Month),
+                                   y = .data$Monatsmittelwert), 
+                      data = p2,
+                      col = "darkgrey",
+                      alpha = 0.5, 
+                      inherit.aes = FALSE,
+                      show.legend = FALSE) +
+  ggplot2::scale_x_continuous(breaks = 1:12, labels = 1:12, minor_breaks = NULL) +
+  #ggplot2::geom_boxplot() +
+  ggplot2::facet_wrap( ~ .data$Decade_Label,
+                       nrow = 1, 
+                       ncol = n_decades) +
+  ggplot2::theme_bw() + 
+  ggplot2::theme(legend.position="bottom") +
+  ggplot2::labs(y = "Monthly Mean Groundwater Level (m NN)", 
+                x = "Month Number", 
+                col = "Month", 
+                fill = "5%/95% Conf.-Interval",
+                title = unique(p1$Label))
+
+plot(gg)
+}
+dev.off()
 ```
+
 
 ## Download
-
-```{r}
-base_url <- "https://kwb-r.github.io/kwb.impetus"
-```
 
 The plots created with the code above were exported into `pdf` files, which are 
 available for download here:
 
+
+### CSV
+
 - **Surface Water**
+  
+  + [surface-water_level.csv](https://kwb-r.github.io/kwb.impetus/surface-water_level.csv)
 
-  + [surface-water_level.pdf](`r base_url`/surface-water_level.pdf)
+  + [surface-water_flow.csv](https://kwb-r.github.io/kwb.impetus/surface-water_flow.csv)
 
-  + [surface-water_flow.pdf](`r base_url`/surface-water_flow.pdf)
 
 - **Groundwater**
+  
+  + [groundwater_level.csv](https://kwb-r.github.io/kwb.impetus/groundwater_level.csv)
 
-  + [groundwater_level.pdf](`r base_url`/groundwater_level.pdf)
+
+
+### PDF
+
+- **Surface Water**
+  
+  + [surface-water_level.pdf](https://kwb-r.github.io/kwb.impetus/surface-water_level.pdf)
+
+  + [surface-water_flow.pdf](https://kwb-r.github.io/kwb.impetus/surface-water_flow.pdf)
+
+
+- **Groundwater**
+  
+  + [groundwater_level.pdf](https://kwb-r.github.io/kwb.impetus/groundwater_level.pdf)
+

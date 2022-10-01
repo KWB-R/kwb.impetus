@@ -14,9 +14,37 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r no_messages, echo = FALSE}
+options(dplyr.summarise.inform = FALSE)
+```
+
+## DWD Dataset 
+
+## Temporal Coverage 
+
+```{r data_availability}
+library(kwb.impetus)
+dwd_timeperiod <- kwb.impetus::dwd_berlin_monthly %>%  
+  dplyr::group_by(.data$parameter_name, 
+               .data$parameter) %>%  
+  dplyr::summarise(date_min = min(.data$date), 
+                   date_max = max(.data$date), 
+                   number_of_datapoints = dplyr::n()) %>%  
+  dplyr::mutate(file_postfix = stringr::str_replace_all(.data$parameter, "_", "-"))
+
+DT::datatable(dwd_timeperiod, caption = "Monthly DWD Data availability for Berlin")
+```
+### Content
+
+```{r dataset_content}
+
+DT::datatable(kwb.impetus::dwd_berlin_monthly)
+```
+
 ## Define Helper Functions
 
 ```{r define_helpers}
+
 summarise_means <- function(data) {
   data %>%
     dplyr::summarise(
@@ -26,26 +54,24 @@ summarise_means <- function(data) {
     )  
 }
 
-filter_for_parameter <- function(data, parameter) {
-  data %>%
-    dplyr::filter(.data$parameter == parameter)
+filter_for_parameter <- function(data, parameter_name) {
+  data[data$parameter_name == parameter_name,]
 }
 
-filter_for_max_year <- function(data, year) {
-  data %>%
-    dplyr::filter(.data$Jahr == max(.data$Jahr))
+filter_for_max_year <- function(data) {
+  data[data$Year == max(data$Year),]
 }
 
-aggregate_and_plot <- function(parameter, colors) {
+aggregate_and_plot <- function(parameter_name, colors, unit = "mm/month") {
   
   full_data <- kwb.impetus::dwd_berlin_monthly %>% 
-    filter_for_parameter(parameter) %>%  
+    filter_for_parameter(parameter_name) %>%  
     dplyr::mutate(
-      Jahr = as.integer(.data$year), 
-      Dekade = kwb.impetus::floor_decade(.data$year),
-      Dekade_Label = kwb.impetus::decade_label(.data$Dekade),
-      Monat = as.factor(.data$month),
-      Label = sprintf("DWD, monthly %s", .data$parameter)
+      Year = as.integer(.data$year), 
+      Decade = kwb.impetus::floor_decade(.data$year),
+      Decade_Label = kwb.impetus::decade_label(.data$Decade),
+      Month = as.factor(.data$month),
+      Label = sprintf("DWD, monthly '%s'", parameter_name)
     )
   
   aggregated_data <- full_data %>% 
@@ -53,7 +79,7 @@ aggregate_and_plot <- function(parameter, colors) {
     summarise_means()
   
   decades <- kwb.impetus::decades_tibble(
-    decade_labels = aggregated_data$Dekade_Label,
+    decade_labels = aggregated_data$Decade_Label,
     colors = colors
   )
   
@@ -63,9 +89,9 @@ aggregate_and_plot <- function(parameter, colors) {
   
   # p1 <- aggregated_data %>%
   #   dplyr::left_join(decade_mean_data) %>%
-  #   dplyr::mutate(Dekade_Label = sprintf(
+  #   dplyr::mutate(Decade_Label = sprintf(
   #     "%s\n%3.1f mm/Jahr)",
-  #     .data$Dekade_Label,
+  #     .data$Decade_Label,
   #     round(.data$annual_mean, 1)
   #   ))
   
@@ -73,14 +99,15 @@ aggregate_and_plot <- function(parameter, colors) {
   
   p2 <- full_data %>% 
     filter_for_max_year() %>% 
+    kwb.impetus::group_by_decade_label() %>% 
     kwb.impetus::group_by_year_month() %>% 
     summarise_means()
   
   p1 %>% 
     ggplot2::ggplot(mapping = ggplot2::aes(
-      x = as.integer(.data$Monat), 
+      x = as.integer(.data$Month), 
       y = .data$mean,
-      col = as.factor(.data$Dekade_Label)
+      col = as.factor(.data$Decade_Label)
     )) + 
     #ggplot2::geom_point(alpha = 0.5) + 
     kwb.impetus::decade_ribbons() + 
@@ -88,7 +115,7 @@ aggregate_and_plot <- function(parameter, colors) {
     kwb.impetus::scale_color_decades(decades) +
     ggplot2::geom_point() +
     ggplot2::geom_point(ggplot2::aes(
-      x = as.integer(.data$Monat),
+      x = as.integer(.data$Month),
       y = .data$mean
     ), 
     data = p2,
@@ -100,17 +127,19 @@ aggregate_and_plot <- function(parameter, colors) {
     kwb.impetus::ggplot2_scale_x_continuous_12() +
     #ggplot2::geom_boxplot() +
     ggplot2::facet_wrap( 
-      ~ .data$Dekade_Label,
+      ~ .data$Decade_Label,
       nrow = 1L, 
-      ncol = length(unique(p1$Dekade_Label))
+      ncol = length(unique(p1$Decade_Label))
     ) +
     ggplot2::theme_bw() + 
     ggplot2::theme(legend.position = "bottom") +
     ggplot2::labs(
-      y = "Monatsmittel Niederschlag (mm/Monat)", 
-      x = "Monatsnummer", 
-      col = "Mittelwert", 
-      fill = "5%/95% Konf.-intervall",
+      y = sprintf("Mean '%s' (%s)", 
+                  parameter_name, 
+                  unit), 
+      x = "Month Number", 
+      col = "Mean", 
+      fill = "5%/95% Conf.-Interval",
       title = unique(p1$Label)
     )
 }
@@ -130,37 +159,100 @@ print_to_pdf <- function(gg, file, width.cm) {
 }
 ```
 
-```{r setup}
-library(kwb.impetus)
-
-DT::datatable(kwb.impetus::dwd_berlin_monthly)
-```
 
 ## Create Plots
 
-```{r no_messages, echo = FALSE}
-options(dplyr.summarise.inform = FALSE)
+
+### Drought index
+
+```{r drought_index}
+
+sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "drought_index",]
+file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
+gg <- aggregate_and_plot(parameter_name = sel_para$parameter_name, 
+                         colors = c(
+  'darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'
+), unit = "-")
+
+readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
+print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 50)
+```
+
+### Evaporation, potential
+
+```{r evaporation_potential}
+
+sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "evapo_p",]
+file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
+
+gg <- aggregate_and_plot(parameter_name = sel_para$parameter_name, colors = c(
+  'darkgreen', 'lightgreen', 'orange', 'red'
+))
+
+readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
+print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 35)
+```
+
+### Evaporation, real
+
+```{r evaporation_real}
+
+sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "evapo_r",]
+file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
+gg <- aggregate_and_plot(parameter_name = sel_para$parameter_name, colors = c(
+  'darkgreen', 'lightgreen', 'orange', 'red'
+))
+
+readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
+print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 35)
 ```
 
 ### Precipitation
 
 ```{r precipitation}
-gg <- aggregate_and_plot(parameter = "precipitation", colors = c(
+
+sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "precipitation",]
+file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
+
+gg <- aggregate_and_plot(parameter_name = sel_para$parameter_name, 
+                         colors = c(
   'darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'
 ))
 
-print_to_pdf(gg, file = "dwd_monthly_precipitation.pdf", width.cm = 50)
+readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
+print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 50)
 ```
 
-### Potential Evaporation
+### Soil Moisture
 
-```{r potential_evaporation}
-gg <- aggregate_and_plot(parameter = "potential evaporation", colors = c(
+```{r soil_moisture}
+
+sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "soil_moist",]
+file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
+
+gg <- aggregate_and_plot(parameter_name = sel_para$parameter_name, colors = c(
   'darkgreen', 'lightgreen', 'orange', 'red'
-))
+), unit = "%")
 
-print_to_pdf(gg, file = "dwd_monthly_potential-evaporation.pdf", width.cm = 35)
+readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
+print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 35)
 ```
+
+### Soil Temperature
+
+```{r soil_temperature}
+
+sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "soil_temperature_5cm",]
+file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
+
+gg <- aggregate_and_plot(parameter_name = sel_para$parameter_name, colors = c(
+  'darkgreen', 'lightgreen', 'orange', 'red'
+), unit = "\u00B0 C")
+
+readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
+print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 35)
+```
+
 
 ## Download
 
@@ -168,12 +260,39 @@ The plots created with the code above were exported into `pdf` files, which are
 available for download here:
 
 ```{r download, echo = FALSE, results ='asis'}
-files <- sprintf(
-  "dwd_monthly_%s.pdf", c("potential-evaporation", "precipitation")
-)
 
-cat(paste0(
-  sprintf("- [%s](https://kwb-r.github.io/kwb.impetus/%s)", files, files),
+files_csv <- sprintf("dwd_berlin_monthly_%s.csv", dwd_timeperiod$file_postfix)
+file_csv_exists <- fs::file_exists(files_csv)
+files_csv <- files_csv[file_csv_exists]
+
+files_pdf <- sprintf("dwd_berlin_monthly_%s.pdf", dwd_timeperiod$file_postfix)
+file_pdf_exists <- fs::file_exists(files_pdf)
+files_pdf <- files_pdf[file_pdf_exists]
+
+download_csv <- ""
+download_pdf <- ""
+
+if(length(download_csv) > 0) {
+download_csv <- sprintf("CSV:\n\n%s", paste0(
+  sprintf("- [%s](https://kwb-r.github.io/kwb.impetus/%s)", files_csv, files_csv),
   collapse = "\n\n"
 ))
+}
+
+download_csv <- sprintf("CSV:\n\n%s", paste0(
+  sprintf("- [%s](https://kwb-r.github.io/kwb.impetus/%s)", files_csv, files_csv),
+  collapse = "\n\n"
+))
+list.files(pattern = "^precipitation-evapo.*\\.pdf$")
+
+if(length(download_pdf) > 0) {
+download_pdf <- sprintf("PDF:\n\n%s",paste0(
+  sprintf("- [%s](https://kwb-r.github.io/kwb.impetus/%s)", files_pdf, files_pdf),
+  collapse = "\n\n"
+))
+}
+
+if(length(download_csv) > 0 | length(download_pdf) > 0) {
+cat(sprintf("%s\n\n%s", download_csv, download_pdf))
+}
 ```

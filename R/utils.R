@@ -13,6 +13,7 @@ decade_label <- function(decade) {
 #' @param colors colour values
 #' @return tibble with columns \code{names} and \code{values}
 #' @export
+#' @importFrom tibble tibble
 decades_tibble <- function(decade_labels, colors = c(
   'darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'
 ))
@@ -92,8 +93,6 @@ floor_decade <- function(value) {
 #' @return re-scales ggplot2
 #' @importFrom stats setNames
 #' @export
-#' @noRd
-#' @noMd
 scale_fill_decades <- function(decades, ...){
   ggplot2:::manual_scale(
     'fill', 
@@ -110,8 +109,6 @@ scale_fill_decades <- function(decades, ...){
 #'
 #' @return re-scales ggplot2
 #' @export
-#' @noRd
-#' @noMd
 scale_color_decades <- function(decades, ...){
   ggplot2:::manual_scale(
     'color', 
