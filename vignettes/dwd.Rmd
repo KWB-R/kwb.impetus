@@ -165,107 +165,97 @@ print_to_pdf <- function(gg, file, width.cm) {
   
   print(gg)
 }
+
+select_aggregate_save_plot <- function(
+    data, parameter, colors, width.cm, unit = "mm/month"
+)
+{
+  sel_para <- data[data$parameter == parameter, ]
+  
+  gg <- aggregate_and_plot(
+    parameter_name = sel_para$parameter_name, 
+    colors = colors,
+    unit = unit
+  )
+  
+  file_name <- paste0("dwd_berlin_monthly_", sel_para$file_postfix)
+
+  readr::write_csv(gg$data, file = paste0(file_name, ".csv"))
+  
+  print_to_pdf(gg, file = paste0(file_name, ".pdf"), width.cm = width.cm)
+}
 ```
 
-
 ## Create Plots
-
 
 ### Drought index
 
 ```{r drought_index}
-
-sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "drought_index",]
-file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
-
-gg <- aggregate_and_plot(
-  parameter_name = sel_para$parameter_name, 
+select_aggregate_save_plot(
+  data = dwd_timeperiod,
+  parameter = "drought_index", 
   colors = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'),
+  width.cm = 50,
   unit = "-"
 )
-
-readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
-print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 50)
 ```
 
 ### Evaporation, potential
 
 ```{r evaporation_potential}
-
-sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "evapo_p",]
-file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
-
-gg <- aggregate_and_plot(
-  parameter_name = sel_para$parameter_name, 
-  colors = c('darkgreen', 'lightgreen', 'orange', 'red')
+select_aggregate_save_plot(
+  data = dwd_timeperiod, 
+  parameter = "evapo_p",
+  colors = c('darkgreen', 'lightgreen', 'orange', 'red'), 
+  width.cm = 35
 )
-
-readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
-print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 35)
 ```
 
 ### Evaporation, real
 
 ```{r evaporation_real}
-
-sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "evapo_r",]
-file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
-
-gg <- aggregate_and_plot(
-  parameter_name = sel_para$parameter_name, 
-  colors = c('darkgreen', 'lightgreen', 'orange', 'red')
+select_aggregate_save_plot(
+  data = dwd_timeperiod, 
+  parameter = "evapo_r",
+  colors = c('darkgreen', 'lightgreen', 'orange', 'red'), 
+  width.cm = 35
 )
-
-readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
-print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 35)
 ```
 
 ### Precipitation
 
 ```{r precipitation}
-
-sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "precipitation",]
-file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
-
-gg <- aggregate_and_plot(
-  parameter_name = sel_para$parameter_name, 
-  colors = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red')
+select_aggregate_save_plot(
+  data = dwd_timeperiod, 
+  parameter == "precipitation",
+  colors = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'),
+  width.cm = 50
 )
-
-readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
-print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 50)
 ```
 
 ### Soil Moisture
 
 ```{r soil_moisture}
-
-sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "soil_moist",]
-file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
-
-gg <- aggregate_and_plot(parameter_name = sel_para$parameter_name, colors = c(
-  'darkgreen', 'lightgreen', 'orange', 'red'
-), unit = "%")
-
-readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
-print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 35)
+select_aggregate_save_plot(
+  data = dwd_timeperiod, 
+  parameter = "soil_moist",
+  colors = c('darkgreen', 'lightgreen', 'orange', 'red'), 
+  width.cm = 35,
+  unit = "%"
+)
 ```
 
 ### Soil Temperature
 
 ```{r soil_temperature}
-
-sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "soil_temperature_5cm",]
-file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
-
-gg <- aggregate_and_plot(parameter_name = sel_para$parameter_name, colors = c(
-  'darkgreen', 'lightgreen', 'orange', 'red'
-), unit = "\u00B0 C")
-
-readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
-print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 35)
+select_aggregate_save_plot(
+  data = dwd_timeperiod, 
+  parameter == "soil_temperature_5cm",
+  colors = c('darkgreen', 'lightgreen', 'orange', 'red'), 
+  width.cm = 35,
+  unit = "\u00B0 C"
+)
 ```
-
 
 ## Download
 
