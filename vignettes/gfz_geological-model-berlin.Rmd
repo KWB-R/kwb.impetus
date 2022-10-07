@@ -38,9 +38,9 @@ paths <- kwb.utils::resolve(paths_list)
 
 ## Download 
 
-Download the GFZ Model Dataset (`r sprintf([%s](%s)", basename(paths$dataset), paths$dataset)`).
+Download the GFZ Model Dataset (`r sprintf("[%s](%s)", basename(paths$dataset), paths$dataset)`).
 
-Metadata is available here: (`r sprintf([%s](%s)", basename(paths$metadata), paths$metadata)`) 
+Metadata is available here: (`r sprintf("[%s](%s)", basename(paths$metadata), paths$metadata)`) 
 
 
 ```{r download}
