@@ -12,7 +12,7 @@
 
 read_gfz_layer <- function(path, as_raster) {
   
-  dat <- readr::read_delim(path, delim = " ") %>% 
+  dat <- readr::read_delim(path, delim = " ", col_types = "d") %>% 
     sf::st_as_sf(coords = c("x", "y"), 
                  crs = 31468 # DHDN / 3-degree Gauss-Kruger zone 4
     )
@@ -32,16 +32,17 @@ read_gfz_layer <- function(path, as_raster) {
 #' @param  dir_model_data path to GFZ Model Layer Data as retrieved by \code{\link{
 #' download_gfz_model}} 
 #' @param as_raster convert to raster (default: TRUE)
+#' @param dbg print debug messaages (default: TRUE)
 #' @return imported layer files 
 #' @export
-#'
-#' @importFrom fs dir_ls
-#' @importFrom kwb.utils removeExtension
+#' 
+#' @importFrom kwb.utils catAndRun removeExtension 
 #' @importFrom stringr str_remove
 #' @importFrom stats setNames
 read_gfz_layers <- function(dir_model_data,
-                                type = "elevation", 
-                                as_raster = TRUE) {
+                            type = "elevation", 
+                            as_raster = TRUE, 
+                            dbg = TRUE) {
   
   paths <- list.files(path = dir_model_data, 
                       pattern = ".dat$",
@@ -55,6 +56,14 @@ read_gfz_layers <- function(dir_model_data,
     stringr::str_remove(pattern = sprintf("_%s", type))
   
   stats::setNames(lapply(paths_sel, function(path) {
-    read_gfz_layer(path, as_raster) 
+    
+    kwb.utils::catAndRun(messageText = sprintf("Reading (%d/%d): '%s'", 
+                                               which(paths_sel %in% path),
+                                               length(paths_sel), 
+                                               path), 
+                         expr = {
+                           read_gfz_layer(path, as_raster) 
+                         },
+                         dbg = dbg)
   }), nm = names_sel)
 }

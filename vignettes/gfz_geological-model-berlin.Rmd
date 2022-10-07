@@ -61,8 +61,8 @@ names(elevation)
 names(thickness)
 
 ## Dataset Structure 
-str(elevation)
-str(thickness)
+#str(elevation)
+#str(thickness)
 ```
 
 
@@ -71,11 +71,34 @@ str(thickness)
 ### Layer Thickness
 
 ```{r plot_thickness}
-kwb.impetus::plot_gfz_layer(thickness$`1_Holocene`)
+t_01 <- kwb.impetus::plot_gfz_layer(thickness$`1_Holocene`)
+htmlwidgets::saveWidget(t_01, file = "thickness_01-holocene.html")
 ```
 
 ### Layer Elevation
 
 ```{r plot_elevation}
-kwb.impetus::plot_gfz_layer(elevation$`1_Holocene`)
+e_01 <- kwb.impetus::plot_gfz_layer(elevation$`1_Holocene`)
+htmlwidgets::saveWidget(e_01, 
+                        file = "elevation_01-holocene.html")
+
+```
+
+### Leaflet Full Page Plots
+
+```{r plots_full_page, echo = FALSE, results ='asis'}
+files_elevation <- sprintf("%s%s", "elevation", "_01-holocene.html")
+files_thickness <- sprintf("%s%s", "thickness", "_01-holocene.html")
+
+pages_elevation <- sprintf("**Elevation:**\n\n%s",paste0(
+  sprintf("- [%s](https://kwb-r.github.io/kwb.impetus/%s)", files_elevation, files_elevation),
+  collapse = "\n\n"
+))
+
+pages_thickness <- sprintf("**Tickness:**\n\n%s",paste0(
+  sprintf("- [%s](https://kwb-r.github.io/kwb.impetus/%s)", files_thickness, files_thickness),
+  collapse = "\n\n"
+))
+
+cat(sprintf("%s\n\n%s", pages_elevation, pages_thickness))
 ```

@@ -4,13 +4,20 @@
 \alias{read_gfz_layers}
 \title{Reads multiple GFZ Model Layers}
 \usage{
-read_gfz_layers(dir_model_data, type = "elevation", as_raster = TRUE)
+read_gfz_layers(
+  dir_model_data,
+  type = "elevation",
+  as_raster = TRUE,
+  dbg = TRUE
+)
 }
 \arguments{
 \item{dir_model_data}{path to GFZ Model Layer Data as retrieved by \code{\link{
 download_gfz_model}}}
 
 \item{as_raster}{convert to raster (default: TRUE)}
+
+\item{dbg}{print debug messaages (default: TRUE)}
 }
 \value{
 imported layer files

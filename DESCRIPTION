@@ -29,6 +29,7 @@ Imports:
 Suggests: 
     covr,
     DT,
+    htmlwidgets,
     leaflet,
     jsonlite,
     knitr,
