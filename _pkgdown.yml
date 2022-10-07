@@ -30,6 +30,8 @@ navbar:
     - text: "Data Analysis"
     - text: DWD
       href: articles/dwd.html
+    - text: GFZ
+      href: articles/gfz_geological-model-berlin.html
     - text: Wasserportal
       href: articles/wasserportal.html
     - text: -------

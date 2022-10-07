@@ -1,0 +1,81 @@
+---
+title: "GFZ: 3D Geological Model of Berlin"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{GFZ: 3D Geological Model of Berlin}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+***Cite as:***
+Frick, Maximilian; Bott, Judith; Scheck-Wenderoth, Magdalena; Cacace, Mauro; 
+Haacke, Nasrin; Schneider, Michael (2020): 3D geological model of Berlin - 
+Germany. GFZ Data Services. [https://doi.org/10.5880/GFZ.4.5.2020.005](https://doi.org/10.5880/GFZ.4.5.2020.005)
+
+
+## Define Paths
+
+```{r define_paths}
+library(kwb.impetus)
+
+paths_list <- list(
+  base_url = "https://datapub.gfz-potsdam.de/download/10.5880.GFZ.4.5.2020.005nuirg",
+  dataset = "<base_url>/2020-005_Frick-et-al_Berlin-Model_data.zip", 
+  metadata = "<base_url>/2020-005_Frick-et-al_Berlin-Model_data-description.pdf",
+  model_data = "model_gfz"
+)
+
+paths <- kwb.utils::resolve(paths_list)
+```
+
+## Download 
+
+Download the GFZ Model Dataset (`r sprintf([%s](%s)", basename(paths$dataset), paths$dataset)`).
+
+Metadata is available here: (`r sprintf([%s](%s)", basename(paths$metadata), paths$metadata)`) 
+
+
+```{r download}
+# archive::archive_extract(archive = paths$dataset, 
+#                          dir = paths$model_data)
+
+kwb.impetus::download_gfz_model(target_dir = paths$model_data)
+```
+
+## Import
+
+```{r import}
+elevation <- kwb.impetus::read_gfz_layers(paths$model_data, type = "elevation")
+thickness <- kwb.impetus::read_gfz_layers(paths$model_data, type = "thickness")
+
+## Available Layers
+names(elevation)
+names(thickness)
+
+## Dataset Structure 
+str(elevation)
+str(thickness)
+```
+
+
+## Plot
+
+### Layer Thickness
+
+```{r plot_thickness}
+kwb.impetus::plot_gfz_layer(thickness$`1_Holocene`)
+```
+
+### Layer Elevation
+
+```{r plot_elevation}
+kwb.impetus::plot_gfz_layer(elevation$`1_Holocene`)
+```

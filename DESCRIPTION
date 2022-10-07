@@ -12,9 +12,16 @@ License: MIT + file LICENSE
 URL: https://github.com/KWB-R/kwb.impetus
 BugReports: https://github.com/KWB-R/kwb.impetus/issues
 Imports: 
+    archive,
     dplyr,
     ggplot2,
+    kwb.utils,
+    leaflet,
+    leafem,
     magrittr,
+    sf,
+    stars,
+    readr,
     rlang,
     tibble
 Suggests: 
@@ -24,12 +31,9 @@ Suggests:
     jsonlite,
     knitr,
     kwb.dwd,
-    kwb.utils,
     kwb.pkgbuild,
     plotly,
-    readr,
     rmarkdown,
-    sf,
     wasserportal
 VignetteBuilder: 
     knitr
