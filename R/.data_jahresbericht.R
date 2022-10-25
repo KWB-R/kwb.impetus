@@ -67,9 +67,14 @@ dwd.1991_2017 <- kwb.impetus::dwd_berlin_monthly %>%
 
 
 ### Effektive Verdunstungsverluste ueber Wasserflaechen (Millionen m3/a)
-(dwd.1991_2017$evapo_p - dwd.1991_2017$precipitation)/1000 * area_water / 1000000
-
-
+### to do: do on monthly basis ! 
+wasserbilanz_gewaesser <- tibble::tibble(
+  evapo_p = 775, # default Wert ABIMO Gewaesserverdunstung, 
+  precipitation = dwd.1991_2017$precipitation,
+  wasserflaeche_m2 = area_water,
+  million_m3.per_year = (.data$evapo_p - .data$precipitation)/1000 * .data$wasserflaeche_m2 / 1000000,
+  m3_per_second = m3_per_year_in_m3_per_second(.data$million_m3.per_year*1E6)
+  )
 ## ABIMO Mass Balance Error 
 
 ## Regen, Unkorrigiert (x 1.09)
@@ -111,6 +116,20 @@ verdunstung <- tibble::tibble(
   )
 
 
+oberflaechenabfluss_m3 <- sum(gwneu2017$row/1000*gwneu2017$flaeche)
+oberflaechenabfluss_m3 # m3/Jahr
+m3_per_year_in_m3_per_second(oberflaechenabfluss_m3) # m3/s
+
+oberflaechenabfluss_mm <- sum(gwneu2017$row*gwneu2017$flaeche)/sum(gwneu2017$flaeche)
+oberflaechenabfluss_mm # mm/Jahr
+
+oberflaechenabfluss <- tibble::tibble(
+  mm.per_year = round(oberflaechenabfluss_mm,0),
+  million_m3.per_year = m3_to_million_m3(oberflaechenabfluss_m3),
+  m3_per_second = m3_per_year_in_m3_per_second(oberflaechenabfluss_m3)
+)
+
+
 interflow_m3 <- sum((gwneu2017$ri-gwneu2017$ri_k)/1000*gwneu2017$flaeche)
 interflow_mm <- sum((gwneu2017$ri-gwneu2017$ri_k)*gwneu2017$flaeche)/sum(gwneu2017$flaeche)
 
@@ -133,6 +152,7 @@ gwn <- tibble::tibble(
 
 wasserhaushalt_berlin <- dplyr::bind_rows(regen, 
                         verdunstung,  .id = "parameter") %>% 
+  dplyr::bind_rows(oberflaechenabfluss, .id = "parameter") %>% 
   dplyr::bind_rows(zwischenabfluss, .id = "parameter") %>% 
   dplyr::bind_rows(gwn, .id = "parameter") %>% 
   dplyr::mutate(referenz = "https://fbinter.stadt-berlin.de/fb/berlin/service_intern.jsp?id=s02_17gwneu2017@senstadt&type=WFS&type=WFS")
@@ -140,6 +160,7 @@ wasserhaushalt_berlin <- dplyr::bind_rows(regen,
 
 wasserhaushalt_berlin$parameter <- c("Regen", 
                                      "Verdunstung", 
+                                     "Oberflächenabfluss",
                                      "Zwischenabfluss", 
                                      "Grundwasserneubildung")
 
