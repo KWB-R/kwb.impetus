@@ -37,6 +37,9 @@
     <loc>https://kwb-r.github.io/kwb.impetus/authors.html</loc>
   </url>
   <url>
+    <loc>https://kwb-r.github.io/kwb.impetus/elevation_01-holocene.html</loc>
+  </url>
+  <url>
     <loc>https://kwb-r.github.io/kwb.impetus/index.html</loc>
   </url>
   <url>
@@ -104,5 +107,8 @@
   </url>
   <url>
     <loc>https://kwb-r.github.io/kwb.impetus/reference/scale_fill_decades.html</loc>
+  </url>
+  <url>
+    <loc>https://kwb-r.github.io/kwb.impetus/thickness_01-holocene.html</loc>
   </url>
 </urlset>
