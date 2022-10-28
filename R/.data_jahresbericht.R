@@ -1,6 +1,7 @@
 ### Zufluesse Berlin
 library(kwb.impetus)
 
+if (FALSE) {
 kwb.impetus::q_surface_water
 
 surface_inflows <- kwb.impetus::q_surface_water %>%  
@@ -66,15 +67,6 @@ dwd.1991_2017 <- kwb.impetus::dwd_berlin_monthly %>%
   tidyr::pivot_wider(names_from = parameter, values_from = value)
 
 
-### Effektive Verdunstungsverluste ueber Wasserflaechen (Millionen m3/a)
-### to do: do on monthly basis ! 
-wasserbilanz_gewaesser <- tibble::tibble(
-  evapo_p = 775, # default Wert ABIMO Gewaesserverdunstung, 
-  precipitation = dwd.1991_2017$precipitation,
-  wasserflaeche_m2 = area_water,
-  million_m3.per_year = (.data$evapo_p - .data$precipitation)/1000 * .data$wasserflaeche_m2 / 1000000,
-  m3_per_second = m3_per_year_in_m3_per_second(.data$million_m3.per_year*1E6)
-  )
 ## ABIMO Mass Balance Error 
 
 ## Regen, Unkorrigiert (x 1.09)
@@ -86,13 +78,6 @@ regen_kor_mm
 regen_korrektur_faktor <- regen_kor_mm/regen_unkor_mm
 
 regen_kor_m3 <- regen_kor_mm / 1000 * sum(gwneu2017$flaeche)
-
-m3_to_million_m3 <- function (values) {
-  round(values / 1000000, 1)
-}
-m3_per_year_in_m3_per_second <- function(values) {
-  round(values / 365 / 24 / 3600,1)
-}
 
 
 regen <- tibble::tibble( 
@@ -165,6 +150,21 @@ wasserhaushalt_berlin$parameter <- c("Regen",
                                      "Grundwasserneubildung")
 
 
+### Effektive Verdunstungsverluste ueber Wasserflaechen (Millionen m3/a)
+### to do: do on monthly basis ! 
+wasserbilanz_gewaesser <- tibble::tibble(
+  verdunstung.mm = 775, # default Wert ABIMO Gewaesserverdunstung, 
+  regen.mm = regen_kor_mm,
+  wasserflaeche.m2 = area_water,
+  verdunstung.m3_per_year = verdunstung.mm * wasserflaeche.m2 / 1000, 
+  regen.m3_per_year = regen.mm * wasserflaeche.m2 / 1000,
+  regen.m3_per_second = m3_per_year_in_m3_per_second(regen.m3_per_year),
+  verdunstung.m3_per_second = m3_per_year_in_m3_per_second(verdunstung.m3_per_year)
+) %>% 
+  tidyr::pivot_longer(names_to = "parameter.einheit",
+                      values_to = "value",
+                      tidyselect::everything())
+
 randbedingungen_intern.2021 <- tibble::tibble(
   trinkwasserfoerderung.million_m3 = 215,
   trinkwasserfoerderung.m3_per_second = m3_per_year_in_m3_per_second(.data$trinkwasserfoerderung.million_m3*1E6),
@@ -191,7 +191,16 @@ randbedingungen_intern.2021 <- tibble::tibble(
   
 flows <- list(randbedingungen_extern = randbedingungen_extern, 
      wasserhaushalt_berlin = wasserhaushalt_berlin,
+     wasserbilanz_gewaesser = wasserbilanz_gewaesser,
      randbedingungen_intern.2021 = randbedingungen_intern.2021)
 
 
-openxlsx::write.xlsx(flows, "impetus_flows.xlsx")
+openxlsx::write.xlsx(flows, "impetus_flows_v1.0.0.xlsx")
+}
+
+m3_to_million_m3 <- function (values) {
+  round(values / 1000000, 1)
+}
+m3_per_year_in_m3_per_second <- function(values) {
+  round(values / 365 / 24 / 3600,1)
+}
