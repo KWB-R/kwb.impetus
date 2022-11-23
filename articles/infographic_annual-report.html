@@ -43,7 +43,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <h6 class="dropdown-header" data-toc-skip>Data Analysis</h6>
     <a class="dropdown-item" href="../articles/dwd.html">DWD (Grid Data)</a>
-    <a class="dropdown-item" href="../articles/dwd_climatic-water-balance.html">DWD (Climatic Water Balance)</a>
+    <a class="dropdown-item" href="../articles/dwd_climate-water-balance.html">DWD (Climatic Water Balance)</a>
     <a class="dropdown-item" href="../articles/gfz_geological-model-berlin.html">GFZ</a>
     <a class="dropdown-item" href="../articles/infographic_annual-report.html">Infographic (KWB Annual Report)</a>
     <a class="dropdown-item" href="../articles/wasserportal.html">Wasserportal</a>
@@ -163,14 +163,14 @@
 <span><span class="va">berlin</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">kwb.fisbroker</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kwb.fisbroker/man/read_wfs.html" class="external-link">read_wfs</a></span><span class="op">(</span>dataset_id <span class="op">=</span> <span class="st">"s_wfs_alkis_land"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="va">crs_target</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing WFS dataset_id 's_wfs_alkis_land' from FIS-Broker ... ok. (1.83s)</span></span>
+<span><span class="co">#&gt; Importing WFS dataset_id 's_wfs_alkis_land' from FIS-Broker ... ok. (1.75s)</span></span>
 <span></span>
 <span></span>
 <span><span class="co">### Water Balance (ABIMO 2017) from FIS-Broker</span></span>
 <span><span class="va">gwneu2017</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">kwb.fisbroker</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kwb.fisbroker/man/read_wfs.html" class="external-link">read_wfs</a></span><span class="op">(</span>dataset_id <span class="op">=</span> <span class="st">"s02_17gwneu2017"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="va">crs_target</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing WFS dataset_id 's02_17gwneu2017' from FIS-Broker ... ok. (17.41s)</span></span>
+<span><span class="co">#&gt; Importing WFS dataset_id 's02_17gwneu2017' from FIS-Broker ... ok. (15.81s)</span></span>
 <span></span>
 <span><span class="co">## ohne Strassenflaechen</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html" class="external-link">st_area</a></span><span class="op">(</span><span class="va">gwneu2017</span><span class="op">)</span><span class="op">)</span></span>

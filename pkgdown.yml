@@ -6,7 +6,8 @@ articles:
   dwd_climate-water-balance: dwd_climate-water-balance.html
   gfz_geological-model-berlin: gfz_geological-model-berlin.html
   infographic_annual-report: infographic_annual-report.html
-last_built: 2022-11-23T17:11Z
+  wasserportal: wasserportal.html
+last_built: 2022-11-23T17:23Z
 urls:
   reference: https://kwb-r.github.io/kwb.impetus/reference
   article: https://kwb-r.github.io/kwb.impetus/articles
