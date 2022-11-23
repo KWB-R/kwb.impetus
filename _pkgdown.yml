@@ -28,8 +28,14 @@ navbar:
     text: Articles
     menu:
     - text: "Data Analysis"
-    - text: DWD
+    - text: DWD (Grid Data)
       href: articles/dwd.html
+    - text: DWD (Climatic Water Balance)
+      href: articles/dwd_climate-water-balance.html
+    - text: GFZ
+      href: articles/gfz_geological-model-berlin.html
+    - text: Infographic (KWB Annual Report)
+      href: articles/infographic_annual-report.html
     - text: Wasserportal
       href: articles/wasserportal.html
     - text: -------

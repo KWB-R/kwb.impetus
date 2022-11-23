@@ -2,7 +2,7 @@
 % Please edit documentation in R/group_by.R
 \name{group_by_site_decade_month_label}
 \alias{group_by_site_decade_month_label}
-\title{Group by Messstellennummer, Dekade, Dekade_Label, Monat, Label}
+\title{Group by Messstellennummer, Decade, Decade_Label, Month, Label}
 \usage{
 group_by_site_decade_month_label(data)
 }
@@ -10,5 +10,5 @@ group_by_site_decade_month_label(data)
 \item{data}{data frame}
 }
 \description{
-Group by Messstellennummer, Dekade, Dekade_Label, Monat, Label
+Group by Messstellennummer, Decade, Decade_Label, Month, Label
 }
