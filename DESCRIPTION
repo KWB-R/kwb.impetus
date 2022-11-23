@@ -34,9 +34,12 @@ Suggests:
     jsonlite,
     knitr,
     kwb.dwd,
+    kwb.fisbroker,
     kwb.pkgbuild,
     plotly,
+    openxlsx,
     rmarkdown,
+    tidyr,
     wasserportal
 VignetteBuilder: 
     knitr
