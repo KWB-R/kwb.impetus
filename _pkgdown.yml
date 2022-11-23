@@ -31,7 +31,7 @@ navbar:
     - text: DWD (Grid Data)
       href: articles/dwd.html
     - text: DWD (Climatic Water Balance)
-      href: articles/dwd_climatic-water-balance.html
+      href: articles/dwd_climate-water-balance.html
     - text: GFZ
       href: articles/gfz_geological-model-berlin.html
     - text: Infographic (KWB Annual Report)
