@@ -25,8 +25,10 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <h6 class="dropdown-header" data-toc-skip>Data Analysis</h6>
-    <a class="dropdown-item" href="../articles/dwd.html">DWD</a>
+    <a class="dropdown-item" href="../articles/dwd.html">DWD (Grid Data)</a>
+    <a class="dropdown-item" href="../articles/dwd_climatic-water-balance.html">DWD (Climatic Water Balance)</a>
     <a class="dropdown-item" href="../articles/gfz_geological-model-berlin.html">GFZ</a>
+    <a class="dropdown-item" href="../articles/infographic_annual-report.html">Infographic (KWB Annual Report)</a>
     <a class="dropdown-item" href="../articles/wasserportal.html">Wasserportal</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Modelling</h6>
@@ -58,11 +60,14 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.0.9000" id="kwbimpetus-0009000">kwb.impetus 0.0.0.9000<a class="anchor" aria-label="anchor" href="#kwbimpetus-0009000"></a></h2>
-<ul><li><p>Added two workflows for data analysis (<code>monthly</code> values were grouped to <code>decades</code>, and for each month the <code>mean</code> as well as <code>5%</code> and <code>95%</code> confidence intervals are given). The two workflows are based on open-data from</p></li>
+<p><strong>Data Analysis</strong>:</p>
+<ul><li><p>Add workfow for <a href="../articles/infographic_annual-report.html">Infographic (KWB Annual Report)</a> that will be published in the upcoming KWB annual report 2021/2022.</p></li>
+<li><p>Added three workflows for data analysis (<code>monthly</code> values were grouped to <code>decades</code>, and for each month the <code>mean</code> as well as <code>5%</code> and <code>95%</code> confidence intervals are given). The three workflows are based on open-data from</p></li>
 <li><p><a href="https://wasserportal.berlin.de" class="external-link">Wasserportal Berlin</a> covered data period starts on <code>1970-01-01</code> up to the recent year. Time resolution varied but are mostly <code>daily</code> for quantitative <code>surface/groundwater</code> monitoring stations. These were summarized to <code>monthly means</code>.</p></li>
-<li><p><a href="https://opendata.dwd.de/" class="external-link">Deutscher Wetterdienst (DWD)</a> with spatially averaged parameters (e.g. <code>precipitation</code>, evaporation: <code>real</code> and <code>potential</code> for Berlin (see <a href="../articles/dwd.html">DWD workflow</a>). The longest time period with data<br>
-is available for <code>precipitation</code>, which starts on <code>1881-01-01</code> and ends on <code>2022-08-31</code>. For more details checkout the dataset <code>dwd_berlin_monthly</code> which is provided within this R package.</p></li>
-<li><p>Added a <code>NEWS.md</code> file to track changes to the package.</p></li>
+<li><p><a href="https://opendata.dwd.de/" class="external-link">Deutscher Wetterdienst (DWD)</a> with spatially averaged parameters (e.g. <code>precipitation</code>, evaporation: <code>real</code> and <code>potential</code> for Berlin (see <a href="../articles/dwd.html">DWD (Grid Data)</a>). The longest time period with data<br>
+is available for <code>precipitation</code>, which starts on <code>1881-01-01</code> and ends on <code>2022-08-31</code>. For more details checkout the dataset <code>dwd_berlin_monthly</code> which is provided within this R package. In addition also a <a href="../articles/dwd_climatic-water-balance.html">DWD (Climatic Water Balance)</a> workflow is available by subtracting <code>evaporation, real/potential</code> from <code>precipitation</code> (based on <a href="../articles/dwd.html">DWD (Grid Data)</a>).</p></li>
+</ul><p><strong>Other</strong>:</p>
+<ul><li><p>Added a <code>NEWS.md</code> file to track changes to the package.</p></li>
 <li><p>see <a href="https://style.tidyverse.org/news.html" class="external-link uri">https://style.tidyverse.org/news.html</a> for writing a good <code>NEWS.md</code></p></li>
 </ul></div>
   </main></div>
