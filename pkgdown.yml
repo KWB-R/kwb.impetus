@@ -1,5 +1,5 @@
 pandoc: 2.19.2
-pkgdown: 2.0.6
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   dwd: dwd.html
@@ -7,7 +7,7 @@ articles:
   gfz_geological-model-berlin: gfz_geological-model-berlin.html
   infographic_annual-report: infographic_annual-report.html
   wasserportal: wasserportal.html
-last_built: 2022-12-02T05:09Z
+last_built: 2022-12-19T10:19Z
 urls:
   reference: https://kwb-r.github.io/kwb.impetus/reference
   article: https://kwb-r.github.io/kwb.impetus/articles
