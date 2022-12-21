@@ -29,8 +29,8 @@ read_gfz_layer <- function(path, as_raster) {
 
 #' Reads multiple GFZ Model Layers
 #'
-#' @param  dir_model_data path to GFZ Model Layer Data as retrieved by \code{\link{
-#' download_gfz_model}} 
+#' @param  dir_model_data path to GFZ Model Layer Data as retrieved by 
+#' [download_gfz_model()] 
 #' @param as_raster convert to raster (default: TRUE)
 #' @param dbg print debug messaages (default: TRUE)
 #' @return imported layer files 

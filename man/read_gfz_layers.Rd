@@ -12,8 +12,8 @@ read_gfz_layers(
 )
 }
 \arguments{
-\item{dir_model_data}{path to GFZ Model Layer Data as retrieved by \code{\link{
-download_gfz_model}}}
+\item{dir_model_data}{path to GFZ Model Layer Data as retrieved by
+\code{\link[=download_gfz_model]{download_gfz_model()}}}
 
 \item{as_raster}{convert to raster (default: TRUE)}
 
