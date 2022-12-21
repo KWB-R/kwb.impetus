@@ -24,27 +24,35 @@ options(dplyr.summarise.inform = FALSE)
 
 ```{r data_availability}
 library(kwb.impetus)
-dwd_timeperiod <- kwb.impetus::dwd_berlin_monthly %>%  
-  dplyr::group_by(.data$parameter_name, 
-               .data$parameter) %>%  
-  dplyr::summarise(date_min = min(.data$date), 
-                   date_max = max(.data$date), 
-                   number_of_datapoints = dplyr::n()) %>%  
-  dplyr::mutate(file_postfix = stringr::str_replace_all(.data$parameter, "_", "-"))
 
-DT::datatable(dwd_timeperiod, caption = "Monthly DWD Data availability for Berlin")
+dwd_timeperiod <- kwb.impetus::dwd_berlin_monthly %>%  
+  dplyr::group_by(
+    .data$parameter_name, 
+    .data$parameter
+  ) %>%  
+  dplyr::summarise(
+    date_min = min(.data$date), 
+    date_max = max(.data$date), 
+    number_of_datapoints = dplyr::n()
+  ) %>%  
+  dplyr::mutate(
+    file_postfix = stringr::str_replace_all(.data$parameter, "_", "-")
+  )
+
+DT::datatable(
+  dwd_timeperiod, 
+  caption = "Monthly DWD Data availability for Berlin"
+)
 ```
 ### Content
 
 ```{r dataset_content}
-
 DT::datatable(kwb.impetus::dwd_berlin_monthly)
 ```
 
 ## Define Helper Functions
 
 ```{r define_helpers}
-
 summarise_means <- function(data) {
   data %>%
     dplyr::summarise(
@@ -152,107 +160,102 @@ print_to_pdf <- function(gg, file, width.cm) {
     width.cm = width.cm, 
     height.cm = 21
   )
-
+  
   on.exit(dev.off())
   
   print(gg)
 }
+
+select_aggregate_save_plot <- function(
+    data, parameter, colors, width.cm, unit = "mm/month"
+)
+{
+  sel_para <- data[data$parameter == parameter, ]
+  
+  gg <- aggregate_and_plot(
+    parameter_name = sel_para$parameter_name, 
+    colors = colors,
+    unit = unit
+  )
+  
+  file_name <- paste0("dwd_berlin_monthly_", sel_para$file_postfix)
+
+  readr::write_csv(gg$data, file = paste0(file_name, ".csv"))
+  
+  print_to_pdf(gg, file = paste0(file_name, ".pdf"), width.cm = width.cm)
+}
 ```
 
-
 ## Create Plots
-
 
 ### Drought index
 
 ```{r drought_index}
-
-sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "drought_index",]
-file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
-gg <- aggregate_and_plot(parameter_name = sel_para$parameter_name, 
-                         colors = c(
-  'darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'
-), unit = "-")
-
-readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
-print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 50)
+select_aggregate_save_plot(
+  data = dwd_timeperiod,
+  parameter = "drought_index", 
+  colors = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'),
+  width.cm = 50,
+  unit = "-"
+)
 ```
 
 ### Evaporation, potential
 
 ```{r evaporation_potential}
-
-sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "evapo_p",]
-file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
-
-gg <- aggregate_and_plot(parameter_name = sel_para$parameter_name, colors = c(
-  'darkgreen', 'lightgreen', 'orange', 'red'
-))
-
-readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
-print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 35)
+select_aggregate_save_plot(
+  data = dwd_timeperiod, 
+  parameter = "evapo_p",
+  colors = c('darkgreen', 'lightgreen', 'orange', 'red'), 
+  width.cm = 35
+)
 ```
 
 ### Evaporation, real
 
 ```{r evaporation_real}
-
-sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "evapo_r",]
-file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
-gg <- aggregate_and_plot(parameter_name = sel_para$parameter_name, colors = c(
-  'darkgreen', 'lightgreen', 'orange', 'red'
-))
-
-readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
-print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 35)
+select_aggregate_save_plot(
+  data = dwd_timeperiod, 
+  parameter = "evapo_r",
+  colors = c('darkgreen', 'lightgreen', 'orange', 'red'), 
+  width.cm = 35
+)
 ```
 
 ### Precipitation
 
 ```{r precipitation}
-
-sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "precipitation",]
-file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
-
-gg <- aggregate_and_plot(parameter_name = sel_para$parameter_name, 
-                         colors = c(
-  'darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'
-))
-
-readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
-print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 50)
+select_aggregate_save_plot(
+  data = dwd_timeperiod, 
+  parameter == "precipitation",
+  colors = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'),
+  width.cm = 50
+)
 ```
 
 ### Soil Moisture
 
 ```{r soil_moisture}
-
-sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "soil_moist",]
-file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
-
-gg <- aggregate_and_plot(parameter_name = sel_para$parameter_name, colors = c(
-  'darkgreen', 'lightgreen', 'orange', 'red'
-), unit = "%")
-
-readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
-print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 35)
+select_aggregate_save_plot(
+  data = dwd_timeperiod, 
+  parameter = "soil_moist",
+  colors = c('darkgreen', 'lightgreen', 'orange', 'red'), 
+  width.cm = 35,
+  unit = "%"
+)
 ```
 
 ### Soil Temperature
 
 ```{r soil_temperature}
-
-sel_para <- dwd_timeperiod[dwd_timeperiod$parameter == "soil_temperature_5cm",]
-file_name <- sprintf("dwd_berlin_monthly_%s", sel_para$file_postfix)
-
-gg <- aggregate_and_plot(parameter_name = sel_para$parameter_name, colors = c(
-  'darkgreen', 'lightgreen', 'orange', 'red'
-), unit = "\u00B0 C")
-
-readr::write_csv(gg$data, file = sprintf("%s.csv", file_name))
-print_to_pdf(gg, file = sprintf("%s.pdf", file_name), width.cm = 35)
+select_aggregate_save_plot(
+  data = dwd_timeperiod, 
+  parameter == "soil_temperature_5cm",
+  colors = c('darkgreen', 'lightgreen', 'orange', 'red'), 
+  width.cm = 35,
+  unit = "\u00B0 C"
+)
 ```
-
 
 ## Download
 
@@ -260,39 +263,20 @@ The plots created with the code above were exported into `pdf` files, which are
 available for download here:
 
 ```{r download, echo = FALSE, results ='asis'}
+files_csv <- kwb.impetus::existing(
+  sprintf("dwd_berlin_monthly_%s.csv", dwd_timeperiod$file_postfix)
+)
 
-files_csv <- sprintf("dwd_berlin_monthly_%s.csv", dwd_timeperiod$file_postfix)
-file_csv_exists <- fs::file_exists(files_csv)
-files_csv <- files_csv[file_csv_exists]
+files_pdf <- kwb.impetus::existing_files(
+  sprintf("dwd_berlin_monthly_%s.pdf", dwd_timeperiod$file_postfix)
+)
 
-files_pdf <- sprintf("dwd_berlin_monthly_%s.pdf", dwd_timeperiod$file_postfix)
-file_pdf_exists <- fs::file_exists(files_pdf)
-files_pdf <- files_pdf[file_pdf_exists]
-
-download_csv <- ""
-download_pdf <- ""
-
-if(length(download_csv) > 0) {
-download_csv <- sprintf("CSV:\n\n%s", paste0(
-  sprintf("- [%s](https://kwb-r.github.io/kwb.impetus/%s)", files_csv, files_csv),
-  collapse = "\n\n"
-))
-}
-
-download_csv <- sprintf("CSV:\n\n%s", paste0(
-  sprintf("- [%s](https://kwb-r.github.io/kwb.impetus/%s)", files_csv, files_csv),
-  collapse = "\n\n"
-))
 list.files(pattern = "^precipitation-evapo.*\\.pdf$")
 
-if(length(download_pdf) > 0) {
-download_pdf <- sprintf("PDF:\n\n%s",paste0(
-  sprintf("- [%s](https://kwb-r.github.io/kwb.impetus/%s)", files_pdf, files_pdf),
-  collapse = "\n\n"
-))
-}
+download_csv <- kwb.impetus:::markdown_link_enum_if_any(files_csv, "CSV")
+download_pdf <- kwb.impetus:::markdown_link_enum_if_any(files_pdf, "PDF")
 
-if(length(download_csv) > 0 | length(download_pdf) > 0) {
-cat(sprintf("%s\n\n%s", download_csv, download_pdf))
+if (length(download_csv) > 0L || length(download_pdf) > 0L) {
+  writeLines(c(download_csv, "", download_pdf))
 }
 ```
