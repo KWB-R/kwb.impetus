@@ -117,66 +117,67 @@ Services. <a href="https://doi.org/10.5880/GFZ.4.5.2020.005" class="external-lin
 <span><span class="co">#                          dir = paths$model_data)</span></span>
 <span></span>
 <span><span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/download_gfz_model.html">download_gfz_model</a></span><span class="op">(</span>target_dir <span class="op">=</span> <span class="va">paths</span><span class="op">$</span><span class="va">model_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ⠙ 3 extracted |  28 MB ( 11 MB/s) | 2.6s</span></span>
-<span><span class="co">#&gt; ⠹ 12 extracted | 106 MB ( 18 MB/s) | 5.8s</span></span>
-<span><span class="co">#&gt; ⠸ 23 extracted | 211 MB ( 24 MB/s) | 8.8s</span></span>
-<span><span class="co">#&gt; ⠼ 33 extracted | 309 MB ( 26 MB/s) | 11.8s</span></span>
-<span><span class="co">#&gt; ⠴ 44 extracted | 417 MB ( 28 MB/s) | 15s</span></span>
-<span><span class="co">#&gt; ⠦ 47 extracted | 448 MB ( 25 MB/s) | 18s</span></span></code></pre></div>
+<span><span class="co">#&gt; ⠙ 2 extracted |  15 MB (5.2 MB/s) | 2.8s</span></span>
+<span><span class="co">#&gt; ⠹ 6 extracted |  52 MB (8.9 MB/s) | 5.9s</span></span>
+<span><span class="co">#&gt; ⠸ 13 extracted | 124 MB ( 14 MB/s) | 9s</span></span>
+<span><span class="co">#&gt; ⠼ 25 extracted | 233 MB ( 19 MB/s) | 12s</span></span>
+<span><span class="co">#&gt; ⠴ 33 extracted | 314 MB ( 21 MB/s) | 15.1s</span></span>
+<span><span class="co">#&gt; ⠦ 39 extracted | 370 MB ( 21 MB/s) | 18s</span></span>
+<span><span class="co">#&gt; ⠧ 46 extracted | 432 MB ( 20 MB/s) | 21.2s</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="import">Import<a class="anchor" aria-label="anchor" href="#import"></a>
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">elevation</span> <span class="op">&lt;-</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/read_gfz_layers.html">read_gfz_layers</a></span><span class="op">(</span><span class="va">paths</span><span class="op">$</span><span class="va">model_data</span>, type <span class="op">=</span> <span class="st">"elevation"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading (1/24): 'model_gfz/1_Holocene_elevation.dat' ... ok. (1.51s) </span></span>
-<span><span class="co">#&gt; Reading (2/24): 'model_gfz/10_Lower_Cretaceous_elevation.dat' ... ok. (1.08s) </span></span>
-<span><span class="co">#&gt; Reading (3/24): 'model_gfz/11_Jurassic_elevation.dat' ... ok. (1.35s) </span></span>
-<span><span class="co">#&gt; Reading (4/24): 'model_gfz/12_Keuper_elevation.dat' ... ok. (1.08s) </span></span>
-<span><span class="co">#&gt; Reading (5/24): 'model_gfz/13_Muschelkalk_elevation.dat' ... ok. (0.95s) </span></span>
-<span><span class="co">#&gt; Reading (6/24): 'model_gfz/14_Upper_Buntsandstein_elevation.dat' ... ok. (1.15s) </span></span>
-<span><span class="co">#&gt; Reading (7/24): 'model_gfz/15_Middle_Buntsandstein_elevation.dat' ... ok. (1.45s) </span></span>
-<span><span class="co">#&gt; Reading (8/24): 'model_gfz/16_Lower_Buntsandstein_elevation.dat' ... ok. (1.06s) </span></span>
-<span><span class="co">#&gt; Reading (9/24): 'model_gfz/17_Zechstein_elevation.dat' ... ok. (1.31s) </span></span>
-<span><span class="co">#&gt; Reading (10/24): 'model_gfz/18_Rotliegend_elevation.dat' ... ok. (0.98s) </span></span>
-<span><span class="co">#&gt; Reading (11/24): 'model_gfz/19_Permo-Carboniferous_elevation.dat' ... ok. (1.40s) </span></span>
-<span><span class="co">#&gt; Reading (12/24): 'model_gfz/2_Saalian_elevation.dat' ... ok. (1.15s) </span></span>
-<span><span class="co">#&gt; Reading (13/24): 'model_gfz/20_Pre-Permian_elevation.dat' ... ok. (1.19s) </span></span>
-<span><span class="co">#&gt; Reading (14/24): 'model_gfz/21_Upper_Crust_elevation.dat' ... ok. (1.31s) </span></span>
-<span><span class="co">#&gt; Reading (15/24): 'model_gfz/22_Lower_Crust_elevation.dat' ... ok. (1.03s) </span></span>
-<span><span class="co">#&gt; Reading (16/24): 'model_gfz/23_Upper_Mantle_elevation.dat' ... ok. (1.22s) </span></span>
-<span><span class="co">#&gt; Reading (17/24): 'model_gfz/24_LAB_elevation.dat' ... ok. (0.90s) </span></span>
-<span><span class="co">#&gt; Reading (18/24): 'model_gfz/3_Holstein_elevation.dat' ... ok. (1.28s) </span></span>
-<span><span class="co">#&gt; Reading (19/24): 'model_gfz/4_Elsterian_elevation.dat' ... ok. (1.45s) </span></span>
-<span><span class="co">#&gt; Reading (20/24): 'model_gfz/5_Miocene_elevation.dat' ... ok. (1.78s) </span></span>
-<span><span class="co">#&gt; Reading (21/24): 'model_gfz/6_Cottbus_elevation.dat' ... ok. (1.34s) </span></span>
-<span><span class="co">#&gt; Reading (22/24): 'model_gfz/7_Rupelian_elevation.dat' ... ok. (1.64s) </span></span>
-<span><span class="co">#&gt; Reading (23/24): 'model_gfz/8_Pre-Rupelian_elevation.dat' ... ok. (1.59s) </span></span>
-<span><span class="co">#&gt; Reading (24/24): 'model_gfz/9_Upper_Cretaceous_elevation.dat' ... ok. (0.94s)</span></span>
+<span><span class="co">#&gt; Reading (1/24): 'model_gfz/1_Holocene_elevation.dat' ... ok. (1.45s) </span></span>
+<span><span class="co">#&gt; Reading (2/24): 'model_gfz/10_Lower_Cretaceous_elevation.dat' ... ok. (1.14s) </span></span>
+<span><span class="co">#&gt; Reading (3/24): 'model_gfz/11_Jurassic_elevation.dat' ... ok. (1.27s) </span></span>
+<span><span class="co">#&gt; Reading (4/24): 'model_gfz/12_Keuper_elevation.dat' ... ok. (0.85s) </span></span>
+<span><span class="co">#&gt; Reading (5/24): 'model_gfz/13_Muschelkalk_elevation.dat' ... ok. (1.06s) </span></span>
+<span><span class="co">#&gt; Reading (6/24): 'model_gfz/14_Upper_Buntsandstein_elevation.dat' ... ok. (1.28s) </span></span>
+<span><span class="co">#&gt; Reading (7/24): 'model_gfz/15_Middle_Buntsandstein_elevation.dat' ... ok. (1.55s) </span></span>
+<span><span class="co">#&gt; Reading (8/24): 'model_gfz/16_Lower_Buntsandstein_elevation.dat' ... ok. (0.96s) </span></span>
+<span><span class="co">#&gt; Reading (9/24): 'model_gfz/17_Zechstein_elevation.dat' ... ok. (1.42s) </span></span>
+<span><span class="co">#&gt; Reading (10/24): 'model_gfz/18_Rotliegend_elevation.dat' ... ok. (0.89s) </span></span>
+<span><span class="co">#&gt; Reading (11/24): 'model_gfz/19_Permo-Carboniferous_elevation.dat' ... ok. (0.97s) </span></span>
+<span><span class="co">#&gt; Reading (12/24): 'model_gfz/2_Saalian_elevation.dat' ... ok. (1.40s) </span></span>
+<span><span class="co">#&gt; Reading (13/24): 'model_gfz/20_Pre-Permian_elevation.dat' ... ok. (0.97s) </span></span>
+<span><span class="co">#&gt; Reading (14/24): 'model_gfz/21_Upper_Crust_elevation.dat' ... ok. (1.25s) </span></span>
+<span><span class="co">#&gt; Reading (15/24): 'model_gfz/22_Lower_Crust_elevation.dat' ... ok. (1.04s) </span></span>
+<span><span class="co">#&gt; Reading (16/24): 'model_gfz/23_Upper_Mantle_elevation.dat' ... ok. (1.87s) </span></span>
+<span><span class="co">#&gt; Reading (17/24): 'model_gfz/24_LAB_elevation.dat' ... ok. (0.87s) </span></span>
+<span><span class="co">#&gt; Reading (18/24): 'model_gfz/3_Holstein_elevation.dat' ... ok. (1.13s) </span></span>
+<span><span class="co">#&gt; Reading (19/24): 'model_gfz/4_Elsterian_elevation.dat' ... ok. (1.37s) </span></span>
+<span><span class="co">#&gt; Reading (20/24): 'model_gfz/5_Miocene_elevation.dat' ... ok. (1.08s) </span></span>
+<span><span class="co">#&gt; Reading (21/24): 'model_gfz/6_Cottbus_elevation.dat' ... ok. (1.00s) </span></span>
+<span><span class="co">#&gt; Reading (22/24): 'model_gfz/7_Rupelian_elevation.dat' ... ok. (1.45s) </span></span>
+<span><span class="co">#&gt; Reading (23/24): 'model_gfz/8_Pre-Rupelian_elevation.dat' ... ok. (1.26s) </span></span>
+<span><span class="co">#&gt; Reading (24/24): 'model_gfz/9_Upper_Cretaceous_elevation.dat' ... ok. (1.29s)</span></span>
 <span><span class="va">thickness</span> <span class="op">&lt;-</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="fu"><a href="../reference/read_gfz_layers.html">read_gfz_layers</a></span><span class="op">(</span><span class="va">paths</span><span class="op">$</span><span class="va">model_data</span>, type <span class="op">=</span> <span class="st">"thickness"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Reading (1/23): 'model_gfz/1_Holocene_thickness.dat' ... ok. (1.09s) </span></span>
-<span><span class="co">#&gt; Reading (2/23): 'model_gfz/10_Lower_Cretaceous_thickness.dat' ... ok. (0.97s) </span></span>
-<span><span class="co">#&gt; Reading (3/23): 'model_gfz/11_Jurassic_thickness.dat' ... ok. (1.61s) </span></span>
-<span><span class="co">#&gt; Reading (4/23): 'model_gfz/12_Keuper_thickness.dat' ... ok. (0.88s) </span></span>
-<span><span class="co">#&gt; Reading (5/23): 'model_gfz/13_Muschelkalk_thickness.dat' ... ok. (1.07s) </span></span>
-<span><span class="co">#&gt; Reading (6/23): 'model_gfz/14_Upper_Buntsandstein_thickness.dat' ... ok. (0.87s) </span></span>
-<span><span class="co">#&gt; Reading (7/23): 'model_gfz/15_Middle_Buntsandstein_thickness.dat' ... ok. (0.92s) </span></span>
-<span><span class="co">#&gt; Reading (8/23): 'model_gfz/16_Lower_Buntsandstein_thickness.dat' ... ok. (1.16s) </span></span>
-<span><span class="co">#&gt; Reading (9/23): 'model_gfz/17_Zechstein_thickness.dat' ... ok. (0.90s) </span></span>
-<span><span class="co">#&gt; Reading (10/23): 'model_gfz/18_Rotliegend_thickness.dat' ... ok. (0.91s) </span></span>
-<span><span class="co">#&gt; Reading (11/23): 'model_gfz/19_Permo-Carboniferous_thickness.dat' ... ok. (0.93s) </span></span>
-<span><span class="co">#&gt; Reading (12/23): 'model_gfz/2_Saalian_thickness.dat' ... ok. (1.38s) </span></span>
-<span><span class="co">#&gt; Reading (13/23): 'model_gfz/20_Pre-Permian_thickness.dat' ... ok. (1.40s) </span></span>
-<span><span class="co">#&gt; Reading (14/23): 'model_gfz/21_Upper_Crust_thickness.dat' ... ok. (1.31s) </span></span>
-<span><span class="co">#&gt; Reading (15/23): 'model_gfz/22_Lower_Crust_thickness.dat' ... ok. (1.07s) </span></span>
-<span><span class="co">#&gt; Reading (16/23): 'model_gfz/23_Upper_Mantle_thickness.dat' ... ok. (1.12s) </span></span>
-<span><span class="co">#&gt; Reading (17/23): 'model_gfz/3_Holstein_thickness.dat' ... ok. (1.13s) </span></span>
-<span><span class="co">#&gt; Reading (18/23): 'model_gfz/4_Elsterian_thickness.dat' ... ok. (1.52s) </span></span>
-<span><span class="co">#&gt; Reading (19/23): 'model_gfz/5_Miocene_thickness.dat' ... ok. (0.88s) </span></span>
-<span><span class="co">#&gt; Reading (20/23): 'model_gfz/6_Cottbus_thickness.dat' ... ok. (1.14s) </span></span>
-<span><span class="co">#&gt; Reading (21/23): 'model_gfz/7_Rupelian_thickness.dat' ... ok. (0.93s) </span></span>
-<span><span class="co">#&gt; Reading (22/23): 'model_gfz/8_Pre-Rupelian_thickness.dat' ... ok. (0.95s) </span></span>
-<span><span class="co">#&gt; Reading (23/23): 'model_gfz/9_Upper_Cretaceous_thickness.dat' ... ok. (1.24s)</span></span>
+<span><span class="co">#&gt; Reading (1/23): 'model_gfz/1_Holocene_thickness.dat' ... ok. (1.27s) </span></span>
+<span><span class="co">#&gt; Reading (2/23): 'model_gfz/10_Lower_Cretaceous_thickness.dat' ... ok. (0.99s) </span></span>
+<span><span class="co">#&gt; Reading (3/23): 'model_gfz/11_Jurassic_thickness.dat' ... ok. (1.98s) </span></span>
+<span><span class="co">#&gt; Reading (4/23): 'model_gfz/12_Keuper_thickness.dat' ... ok. (0.98s) </span></span>
+<span><span class="co">#&gt; Reading (5/23): 'model_gfz/13_Muschelkalk_thickness.dat' ... ok. (1.13s) </span></span>
+<span><span class="co">#&gt; Reading (6/23): 'model_gfz/14_Upper_Buntsandstein_thickness.dat' ... ok. (0.94s) </span></span>
+<span><span class="co">#&gt; Reading (7/23): 'model_gfz/15_Middle_Buntsandstein_thickness.dat' ... ok. (0.90s) </span></span>
+<span><span class="co">#&gt; Reading (8/23): 'model_gfz/16_Lower_Buntsandstein_thickness.dat' ... ok. (1.29s) </span></span>
+<span><span class="co">#&gt; Reading (9/23): 'model_gfz/17_Zechstein_thickness.dat' ... ok. (1.30s) </span></span>
+<span><span class="co">#&gt; Reading (10/23): 'model_gfz/18_Rotliegend_thickness.dat' ... ok. (1.17s) </span></span>
+<span><span class="co">#&gt; Reading (11/23): 'model_gfz/19_Permo-Carboniferous_thickness.dat' ... ok. (1.34s) </span></span>
+<span><span class="co">#&gt; Reading (12/23): 'model_gfz/2_Saalian_thickness.dat' ... ok. (1.19s) </span></span>
+<span><span class="co">#&gt; Reading (13/23): 'model_gfz/20_Pre-Permian_thickness.dat' ... ok. (0.85s) </span></span>
+<span><span class="co">#&gt; Reading (14/23): 'model_gfz/21_Upper_Crust_thickness.dat' ... ok. (0.86s) </span></span>
+<span><span class="co">#&gt; Reading (15/23): 'model_gfz/22_Lower_Crust_thickness.dat' ... ok. (0.85s) </span></span>
+<span><span class="co">#&gt; Reading (16/23): 'model_gfz/23_Upper_Mantle_thickness.dat' ... ok. (0.92s) </span></span>
+<span><span class="co">#&gt; Reading (17/23): 'model_gfz/3_Holstein_thickness.dat' ... ok. (0.87s) </span></span>
+<span><span class="co">#&gt; Reading (18/23): 'model_gfz/4_Elsterian_thickness.dat' ... ok. (1.21s) </span></span>
+<span><span class="co">#&gt; Reading (19/23): 'model_gfz/5_Miocene_thickness.dat' ... ok. (0.86s) </span></span>
+<span><span class="co">#&gt; Reading (20/23): 'model_gfz/6_Cottbus_thickness.dat' ... ok. (0.99s) </span></span>
+<span><span class="co">#&gt; Reading (21/23): 'model_gfz/7_Rupelian_thickness.dat' ... ok. (0.85s) </span></span>
+<span><span class="co">#&gt; Reading (22/23): 'model_gfz/8_Pre-Rupelian_thickness.dat' ... ok. (0.92s) </span></span>
+<span><span class="co">#&gt; Reading (23/23): 'model_gfz/9_Upper_Cretaceous_thickness.dat' ... ok. (0.89s)</span></span>
 <span></span>
 <span><span class="co">## Available Layers</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">elevation</span><span class="op">)</span></span>
