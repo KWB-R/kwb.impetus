@@ -111,16 +111,16 @@
 <span><span class="co">### Surface water inflows to Berlin</span></span>
 <span><span class="fu">kwb.impetus</span><span class="fu">::</span><span class="va"><a href="../reference/q_surface_water.html">q_surface_water</a></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 10</span></span></span>
-<span><span class="co">#&gt;   fliess…¹ pegel mq.19…² mnq.1…³ nq.19…⁴ nnq.v…⁵ nnq.d…⁶ mq.2018 mq.2019 mq.2020</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Dahme    Neue…    9.13    0.69    0.2     0.03 1954-0…   11.4     4.38    2.82</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Oder-Sp… Wern…    7.9     0.95    0.54    0.1  1905-0…    5.44    2.95    2.64</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Spree    Groß…   12.3     3.04    1.01    1.01 2001-0…    9.37    9.33    9.03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Havel    Borg…   12.3     2.69    1.7     1.66 2009-0…   16.9     6.97    7.71</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Wuhle    Am B…    0.51    0.23    0.06    0.06 2014-0…    0.3     0.16    0.17</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Freders… Hege…    0.2     0       0       0    <span style="color: #BB0000;">NA</span>         0       0       0   </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names ¹​fliessgewaesser, ²​mq.1991_2017,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ³​mnq.1991_2017, ⁴​nq.1991_2017, ⁵​nnq.value, ⁶​nnq.date</span></span></span>
+<span><span class="co">#&gt;   fliessgewaesser        pegel mq.1991_2017 mnq.1991_2017 nq.1991_2017 nnq.value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Dahme                  Neue…         9.13          0.69         0.2       0.03</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Oder-Spree-Kanal       Wern…         7.9           0.95         0.54      0.1 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Spree                  Groß…        12.3           3.04         1.01      1.01</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Havel                  Borg…        12.3           2.69         1.7       1.66</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Wuhle                  Am B…         0.51          0.23         0.06      0.06</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Fredersdorfer Mühlenf… Hege…         0.2           0            0         0   </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: nnq.date &lt;chr&gt;, mq.2018 &lt;dbl&gt;, mq.2019 &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   mq.2020 &lt;dbl&gt;</span></span></span>
 <span></span>
 <span><span class="va">surface_inflows</span> <span class="op">&lt;-</span> <span class="fu">kwb.impetus</span><span class="fu">::</span><span class="va"><a href="../reference/q_surface_water.html">q_surface_water</a></span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"mq."</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -162,20 +162,23 @@
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html" class="external-link">relocate</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">parameter</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"parameter"` instead of `.data$parameter`</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span></span>
 <span><span class="va">crs_target</span> <span class="op">&lt;-</span> <span class="fl">4326</span></span>
 <span></span>
 <span><span class="va">berlin</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">kwb.fisbroker</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kwb.fisbroker/man/read_wfs.html" class="external-link">read_wfs</a></span><span class="op">(</span>dataset_id <span class="op">=</span> <span class="st">"s_wfs_alkis_land"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="va">crs_target</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing WFS dataset_id 's_wfs_alkis_land' from FIS-Broker ... ok. (1.16s)</span></span>
+<span><span class="co">#&gt; Importing WFS dataset_id 's_wfs_alkis_land' from FIS-Broker ... ok. (1.18 secs)</span></span>
 <span></span>
 <span></span>
 <span><span class="co">### Water Balance (ABIMO 2017) from FIS-Broker</span></span>
 <span><span class="va">gwneu2017</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">kwb.fisbroker</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kwb.fisbroker/man/read_wfs.html" class="external-link">read_wfs</a></span><span class="op">(</span>dataset_id <span class="op">=</span> <span class="st">"s02_17gwneu2017"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="va">crs_target</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Importing WFS dataset_id 's02_17gwneu2017' from FIS-Broker ... ok. (13.70s)</span></span>
+<span><span class="co">#&gt; Importing WFS dataset_id 's02_17gwneu2017' from FIS-Broker ... ok. (13.60 secs)</span></span>
 <span></span>
 <span><span class="co">## ohne Strassenflaechen</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html" class="external-link">st_area</a></span><span class="op">(</span><span class="va">gwneu2017</span><span class="op">)</span><span class="op">)</span></span>
