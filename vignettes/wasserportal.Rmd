@@ -368,7 +368,7 @@ kwb.utils::preparePdf(sprintf("%s.pdf", para_name),
 ids <- unique(groundwater_level_master_agg$Messstellennummer)
 
 for(id in ids) {
-  print(id)
+
 p1 <- groundwater_level_master_agg %>% 
   dplyr::filter(.data$Messstellennummer == id) 
 
