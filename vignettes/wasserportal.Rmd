@@ -59,6 +59,7 @@ get_data_name <- function(para_name) {
 }
 
 get_master_name <- function(para_name) {
+  para_name <- stringr::str_remove(para_name, "daily_") 
   paste0("stations_", para_name)
 }
 
@@ -81,7 +82,7 @@ variables <- variables[1:2]
 # from https://kwb-r.github.io/wasserportal/daily_surface_water.<parameter_name>.csv
 # see also: https://kwb-r.github.io/wasserportal/articles/surface-water.html
 overview_names <- names(stations$overview_list)
-
+overview_names <- overview_names[overview_names != "surface_water.quality"]
 wp_master <- wasserportal::wp_masters_data_to_list(overview_names)
 wp_data <- wasserportal::wp_timeseries_data_to_list(overview_names)
 
@@ -95,7 +96,7 @@ wp_data <- wasserportal::wp_timeseries_data_to_list(overview_names)
 ### Surface Water Level 
 
 ```{r surface_water_level, eval = is_ghactions}
-para_name <- "surface-water_water-level"
+para_name <- "daily_surface-water_water-level"
 
 surfacewater_level_master <- wp_data[[get_data_name(para_name)]] %>% 
   dplyr::filter(.data$Parameter == "Wasserstand") %>%  
@@ -107,10 +108,10 @@ surfacewater_level_master <- wp_data[[get_data_name(para_name)]] %>%
                                        .data$Decade + 9),
                 Month = as.factor(format(.data$Datum, "%m"))) %>% 
   dplyr::left_join(get_master(wp_master[[get_master_name(para_name)]])) %>% 
-  dplyr::mutate(Tagesmittelwert_Pegelstand_mNN = as.numeric(.data$Pegelnullpunkt_m) + .data$Tagesmittelwert/100) %>%
+  dplyr::mutate(Tagesmittelwert_Pegelstand_m_NHN = as.numeric(.data$Pegelnullpunkt_m_NHN) + .data$Tagesmittelwert/100) %>%
   ### remove -777 for messstellennummer 5867000 (few values in 2000) resulted by step above
-  dplyr::filter(.data$Tagesmittelwert_Pegelstand_mNN != -777) %>%
-  dplyr::select(- .data$Pegelnullpunkt_m) %>% 
+  dplyr::filter(.data$Tagesmittelwert_Pegelstand_m_NHN != -777) %>%
+  dplyr::select(- .data$Pegelnullpunkt_m_NHN) %>% 
   dplyr::mutate(Label = sprintf("%s (%s, id: %s, fluss-km: %2.2f)", 
                                 .data$Name,
                                 .data$Gewaesser, 
@@ -123,9 +124,9 @@ surfacewater_level_master_agg <- surfacewater_level_master %>%
                   .data$Decade_Label, 
                   .data$Month, 
                   .data$Label) %>% 
-  dplyr::summarise(Monatsmittelwert_Pegelstand_mNN = mean(.data$Tagesmittelwert_Pegelstand_mNN),
-                   q05 = as.numeric(quantile(.data$Tagesmittelwert_Pegelstand_mNN, probs = 0.05)),
-                   q95 = as.numeric(quantile(.data$Tagesmittelwert_Pegelstand_mNN, probs = 0.95)),
+  dplyr::summarise(Monatsmittelwert_Pegelstand_m_NHN = mean(.data$Tagesmittelwert_Pegelstand_m_NHN),
+                   q05 = as.numeric(quantile(.data$Tagesmittelwert_Pegelstand_m_NHN, probs = 0.05)),
+                   q95 = as.numeric(quantile(.data$Tagesmittelwert_Pegelstand_m_NHN, probs = 0.95)),
                    ) 
 
 para_name_export <- "surface-water_level"
@@ -133,7 +134,7 @@ para_name_export <- "surface-water_level"
 readr::write_csv(surfacewater_level_master_agg, sprintf("%s.csv", para_name_export ))
 
 decades <- tibble::tibble(names = unique(surfacewater_level_master_agg$Decade_Label)[order(unique(surfacewater_level_master_agg$Decade_Label))],
-                          values = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'))
+                          values = c('brown','darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'))
 
 
 kwb.utils::preparePdf(sprintf("%s.pdf", para_name_export),
@@ -153,16 +154,16 @@ p2 <- surfacewater_level_master %>%
                   .data$Year,
                   .data$Month, 
                   .data$Label) %>% 
-  dplyr::summarise(Monatsmittelwert_Pegelstand_mNN = mean(.data$Tagesmittelwert_Pegelstand_mNN),
-                   q05 = quantile(.data$Tagesmittelwert_Pegelstand_mNN, probs = 0.05),
-                   q95 = quantile(.data$Tagesmittelwert_Pegelstand_mNN, probs = 0.95)) %>% 
+  dplyr::summarise(Monatsmittelwert_Pegelstand_m_NHN = mean(.data$Tagesmittelwert_Pegelstand_m_NHN),
+                   q05 = quantile(.data$Tagesmittelwert_Pegelstand_m_NHN, probs = 0.05),
+                   q95 = quantile(.data$Tagesmittelwert_Pegelstand_m_NHN, probs = 0.95)) %>% 
   dplyr::filter(.data$Messstellennummer == id) 
 
 n_decades <- length(unique(p1$Decade_Label))
 
 gg <- p1 %>% 
   ggplot2::ggplot(mapping = ggplot2::aes(x = as.integer(.data$Month), 
-                                         y = .data$Monatsmittelwert_Pegelstand_mNN,
+                                         y = .data$Monatsmittelwert_Pegelstand_m_NHN,
                                          col = as.factor(.data$Decade_Label))) + 
   #ggplot2::geom_point(alpha = 0.5) + 
   ggplot2::geom_ribbon(ggplot2::aes_string(ymin = "q05", 
@@ -173,7 +174,7 @@ gg <- p1 %>%
   kwb.impetus::scale_color_decades(decades) +
   ggplot2::geom_point() +
   ggplot2::geom_point(ggplot2::aes(x = as.integer(.data$Month),
-                                   y = .data$Monatsmittelwert_Pegelstand_mNN), 
+                                   y = .data$Monatsmittelwert_Pegelstand_m_NHN), 
                       data = p2,
                       col = "darkgrey",
                       alpha = 0.5, 
@@ -202,7 +203,7 @@ dev.off()
 ### Surface Water Flow 
 
 ```{r surface_water_flow, eval = is_ghactions}
-para_name <- "surface-water_flow"
+para_name <- "daily_surface-water_flow"
 
 surfacewater_flow_master <- wp_data[[get_data_name(para_name)]] %>% 
   dplyr::filter(.data$Parameter == "Durchfluss") %>%    
@@ -229,18 +230,19 @@ surfacewater_flow_master_agg <- surfacewater_flow_master %>%
   dplyr::summarise(Monatsmittelwert = mean(.data$Tagesmittelwert),
                    q05 = as.numeric(quantile(.data$Tagesmittelwert, probs = 0.05)),
                    q95 = as.numeric(quantile(.data$Tagesmittelwert, probs = 0.95)),
-                   ) 
+                   )
 
-readr::write_csv(surfacewater_flow_master_agg, sprintf("%s.csv", para_name))
+para_name_export <- "surface-water_flow"
 
+readr::write_csv(surfacewater_flow_master_agg, sprintf("%s.csv", para_name_export))
 
 
 decades <- tibble::tibble(names = unique(surfacewater_flow_master_agg$Decade_Label)[order(unique(surfacewater_flow_master_agg$Decade_Label))],
-                          values = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'))
+                          values = c('brown', 'darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'))
 
 
 
-kwb.utils::preparePdf(sprintf("%s.pdf", para_name),
+kwb.utils::preparePdf(sprintf("%s.pdf", para_name_export),
                       landscape = TRUE,
                       width.cm = 29.7, 
                       height.cm = 21)
@@ -342,7 +344,19 @@ groundwater_level_master_agg <- groundwater_level_master %>%
 readr::write_csv(groundwater_level_master_agg, sprintf("%s.csv", para_name))
 
 decades <- tibble::tibble(names = unique(groundwater_level_master_agg$Decade_Label)[order(unique(groundwater_level_master_agg$Decade_Label))],
-                          values = c('darkblue', 'blue', 'darkgreen', 'lightgreen', 'orange', 'red'))
+                          values = c('black',
+                                     'brown', 
+                                     'darkblue', 
+                                     'blue', 
+                                     'lightblue', 
+                                     'darkgreen', 
+                                     'green', 
+                                     'lightgreen', 
+                                     'magenta',
+                                     'darkorange', 
+                                     'orange',
+                                     'darkred',
+                                     'red'))
 
 
 
@@ -354,6 +368,7 @@ kwb.utils::preparePdf(sprintf("%s.pdf", para_name),
 ids <- unique(groundwater_level_master_agg$Messstellennummer)
 
 for(id in ids) {
+  print(id)
 p1 <- groundwater_level_master_agg %>% 
   dplyr::filter(.data$Messstellennummer == id) 
 
