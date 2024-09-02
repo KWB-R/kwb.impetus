@@ -1,120 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/404.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/articles/dwd.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/articles/dwd_climate-water-balance.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/articles/elevation_01-holocene.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/articles/gfz_geological-model-berlin.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/articles/infographic_annual-report.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/articles/thickness_01-holocene.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/articles/wasserportal.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/articles/workflow.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/elevation_01-holocene.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/index.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/decade_label.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/decade_ribbons.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/decades_tibble.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/download_gfz_model.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/dwd_berlin_monthly.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/floor_decade.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/ggplot2_scale_x_continuous_12.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/group_by_decade_label.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/group_by_decade_month_label.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/group_by_site_decade_month_label.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/group_by_site_year_month_label.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/group_by_year_month.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/numeric_quantile.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/plot_gfz_layer.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/q_surface_water.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/read_gfz_layer.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/read_gfz_layers.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/round_to_decade.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/scale_color_decades.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/reference/scale_fill_decades.html</loc>
-  </url>
-  <url>
-    <loc>https://kwb-r.github.io/kwb.impetus/thickness_01-holocene.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://kwb-r.github.io/kwb.impetus/404.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/LICENSE-text.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/LICENSE.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/articles/dwd.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/articles/dwd_climate-water-balance.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/articles/elevation_01-holocene.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/articles/gfz_geological-model-berlin.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/articles/index.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/articles/infographic_annual-report.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/articles/thickness_01-holocene.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/articles/wasserportal.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/articles/workflow.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/authors.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/elevation_01-holocene.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/index.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/news/index.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/decade_label.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/decade_ribbons.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/decades_tibble.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/download_gfz_model.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/dwd_berlin_monthly.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/floor_decade.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/ggplot2_scale_x_continuous_12.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/group_by_decade_label.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/group_by_decade_month_label.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/group_by_site_decade_month_label.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/group_by_site_year_month_label.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/group_by_year_month.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/index.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/numeric_quantile.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/pipe.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/plot_gfz_layer.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/q_surface_water.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/read_gfz_layer.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/read_gfz_layers.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/round_to_decade.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/scale_color_decades.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/reference/scale_fill_decades.html</loc></url>
+<url><loc>https://kwb-r.github.io/kwb.impetus/thickness_01-holocene.html</loc></url>
 </urlset>
+
